@@ -1,0 +1,50 @@
+binds {
+    Mod+T { spawn "kitty"; }
+    Mod+B { spawn "helium-browser"; }
+    Mod+D { spawn "zed"; }
+    Mod+E { spawn-sh "kitty yazi"; }
+    Mod+Shift+E { spawn "nautilus"; }
+    Mod+Shift+R { spawn "bash" "-c" "niri msg action load-config-file && notify-send -e -a 'Niri' -i 'preferences-desktop' 'Niri Configuration' 'Reloaded successfully'"; }
+
+    // Vicinae UI Trigger
+    Mod+Space { spawn "vicinae" "toggle"; }
+
+    Mod+V { spawn "bash" "-c" "cliphist list | fuzzel -d | cliphist decode | wl-copy"; }
+
+    XF86AudioPlay allow-when-locked=true { spawn "playerctl" "play-pause"; }
+    XF86AudioPause allow-when-locked=true { spawn "playerctl" "play-pause"; }
+    XF86AudioNext allow-when-locked=true { spawn "playerctl" "next"; }
+    XF86AudioPrev allow-when-locked=true { spawn "playerctl" "previous"; }
+
+    XF86AudioRaiseVolume allow-when-locked=true { spawn "swayosd-client" "--output-volume" "raise"; }
+    XF86AudioLowerVolume allow-when-locked=true { spawn "swayosd-client" "--output-volume" "lower"; }
+    XF86AudioMute allow-when-locked=true { spawn "swayosd-client" "--output-volume" "mute-toggle"; }
+    XF86AudioMicMute allow-when-locked=true { spawn "swayosd-client" "--input-volume" "mute-toggle"; }
+    XF86MonBrightnessUp allow-when-locked=true { spawn "swayosd-client" "--brightness" "raise"; }
+    XF86MonBrightnessDown allow-when-locked=true { spawn "swayosd-client" "--brightness" "lower"; }
+
+    Mod+P { spawn "bash" "-c" "grim -g \"$(slurp -c '#00000040')\" -t ppm - | satty --filename - --fullscreen --output-filename ~/Pictures/satty-$(date '+%Y%m%d-%H%M%S').png"; }
+    Mod+Ctrl+P { spawn "bash" "-c" "grim -g \"$(slurp -c '#00000040')\" -t ppm - | satty --filename - --fullscreen --output-filename ~/Pictures/satty-$(date '+%Y%m%d-%H%M%S').png"; }
+
+    Mod+N { spawn "swaync-client" "-t" "-sw"; }
+
+    Mod+Q { close-window; }
+    Mod+S { switch-preset-column-width; }
+    Mod+M { maximize-column; }
+    Mod+F { fullscreen-window; }
+
+    Alt+Tab { focus-window-previous; }
+
+    Mod+Left { focus-column-left; }
+    Mod+Right { focus-column-right; }
+    Mod+Ctrl+Left { focus-column-left; }
+    Mod+Ctrl+Right { focus-column-right; }
+
+    Mod+Shift+Left { move-column-left; }
+    Mod+Shift+Right { move-column-right; }
+
+    Mod+Ctrl+Up { focus-workspace-up; }
+    Mod+Ctrl+Down { focus-workspace-down; }
+    Mod+Shift+Up { move-window-to-workspace-up; }
+    Mod+Shift+Down { move-window-to-workspace-down; }
+}
