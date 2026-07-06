@@ -1,0 +1,10 @@
+@import 'colors.css';
+
+/* Make headerbar/titlebar/navigation-bar transparent/frosted */
+headerbar,
+.titlebar,
+.navigation-bar {
+    background-color: rgba(20, 20, 20, 0.6) !important;
+    background-image: none !important;
+    box-shadow: none !important;
+}
