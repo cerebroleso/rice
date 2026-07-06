@@ -1,0 +1,242 @@
+1. Underlying Utilities & Background Services
+
+    niri: Core Wayland compositor.
+
+    xwayland-satellite: Rootless X11 compatibility bridge.
+
+    hyprpolkitagent: Qt-based authentication daemon.
+
+    wl-clipboard: Native Wayland clipboard protocol interface.
+
+    cliphist: Background daemon for clipboard history persistence.
+
+    xdg-desktop-portal: Core IPC router for sandbox bridging.
+
+    xdg-desktop-portal-gnome: Portal backend required for screen captures.
+
+    xdg-desktop-portal-gtk: Fallback portal for GTK file pickers.
+
+    hypridle: DPMS state manager.
+
+    hyprlock: GPU-accelerated screen locker.
+
+    awww: Client/server wallpaper daemon.
+
+    pipewire: Low-latency multimedia routing daemon.
+
+    wireplumber: Session and policy manager for PipeWire.
+
+    brightnessctl: Interface for sysfs backlight manipulation.
+
+    networkmanager: System daemon for network states.
+
+    bluez: Core Bluetooth protocol stack.
+
+    bluez-utils: CLI utilities for Bluetooth management.
+
+    nwg-look: GTK visual settings injector.
+
+    qt5ct: Qt5 environment variable injector.
+
+    qt6ct: Qt6 environment variable injector.
+
+    ttf-jetbrains-mono-nerd: Base typography and icon glyphs.
+
+    noto-fonts: System UI fallback typography.
+
+    swayosd: Hardware-accelerated on-screen display for volume and brightness.
+
+    swaync: Notification daemon and control center.
+
+    playerctl: MPRIS command-line controller for media keys.
+
+2. User-Facing GUI & TUI Applications
+
+    waybar: Highly customizable, C++ based Wayland status bar.
+
+    vicinae-git: Application launcher and indexer.
+
+    fuzzel: Lightweight Wayland dmenu replacement.
+
+    nautilus: Graphical file manager.
+
+    dolphin: Qt-based graphical file manager.
+
+    file-roller: Graphical archive manager.
+
+    zip, unzip, p7zip, unrar: Compression algorithms.
+
+    yazi: Asynchronous terminal file manager.
+
+    kitty: GPU-accelerated Wayland terminal emulator.
+
+    zed: Vulkan-rendered code editor.
+
+    helium-browser-bin: Minimal web browser.
+
+    google-chrome: Monolithic web browser.
+
+    discord: Electron-based communication client.
+
+    pwvucontrol: Graphical PipeWire audio router.
+
+    network-manager-applet: System tray interface for Wi-Fi.
+
+    blueman: System tray interface for Bluetooth.
+
+    nirimod-git: GTK4 graphical settings application for Niri.
+
+    grim: Frame grabber for the Wayland buffer.
+
+    slurp: Coordinate mapping utility for screen captures.
+
+    satty: Wayland screenshot annotation GUI.
+
+The Master Deployment Pipeline
+
+Execute this block in its entirety. It handles provisioning, daemon registration, display manager session injection, default UI scaffolding, and your exact Niri layout specifications.
+Bash
+
+paru -Syu
+
+paru -S niri xwayland-satellite wl-clipboard cliphist xdg-desktop-portal xdg-desktop-portal-gnome xdg-desktop-portal-gtk hypridle hyprlock awww pipewire wireplumber brightnessctl networkmanager bluez bluez-utils nwg-look qt5ct qt6ct ttf-jetbrains-mono-nerd noto-fonts nautilus dolphin file-roller zip unzip p7zip unrar yazi kitty zed helium-browser-bin google-chrome discord pwvucontrol network-manager-applet blueman grim slurp satty hyprpolkitagent vicinae-git nirimod-git waybar swaync swayosd fuzzel playerctl
+
+systemctl --user enable wireplumber.service
+systemctl --user enable pipewire.service
+
+sudo mkdir -p /usr/share/wayland-sessions
+
+cat << 'EOF' | sudo tee /usr/share/wayland-sessions/niri.desktop
+[Desktop Entry]
+Name=Niri
+Exec=niri-session
+Type=Application
+EOF
+
+mkdir -p ~/.config/niri
+mkdir -p ~/.config/waybar
+
+cp /etc/xdg/waybar/config.jsonc ~/.config/waybar/config.jsonc
+cp /etc/xdg/waybar/style.css ~/.config/waybar/style.css
+
+cat << 'EOF' > ~/.config/niri/config.kdl
+spawn-at-startup "xwayland-satellite"
+spawn-at-startup "awww-daemon"
+spawn-at-startup "hyprpolkitagent"
+spawn-at-startup "hypridle"
+spawn-at-startup "nm-applet"
+spawn-at-startup "blueman-applet"
+spawn-at-startup "vicinae" "server"
+spawn-at-startup "bash" "-c" "sleep 2 && waybar"
+spawn-at-startup "swaync"
+spawn-at-startup "swayosd-server"
+spawn-at-startup "wl-paste" "--watch" "cliphist" "store"
+
+binds {
+    Mod+T { spawn "kitty"; }
+    Mod+B { spawn "google-chrome-stable" "--enable-features=OzonePlatform" "--ozone-platform=wayland"; }
+    Mod+D { spawn "discord" "--enable-features=UseOzonePlatform" "--ozone-platform=wayland" "--enable-wayland-ime" "--disable-gpu"; }
+    Mod+E { spawn-sh "kitty yazi"; }
+    Mod+Space { spawn "vicinae" "toggle"; }
+    Mod+V { spawn "bash" "-c" "cliphist list | fuzzel -d | cliphist decode | wl-copy"; }
+
+    XF86AudioPlay allow-when-locked=true { spawn "playerctl" "play-pause"; }
+    XF86AudioPause allow-when-locked=true { spawn "playerctl" "play-pause"; }
+    XF86AudioNext allow-when-locked=true { spawn "playerctl" "next"; }
+    XF86AudioPrev allow-when-locked=true { spawn "playerctl" "previous"; }
+
+    XF86AudioRaiseVolume allow-when-locked=true { spawn "swayosd-client" "--output-volume" "raise"; }
+    XF86AudioLowerVolume allow-when-locked=true { spawn "swayosd-client" "--output-volume" "lower"; }
+    XF86AudioMute allow-when-locked=true { spawn "swayosd-client" "--output-volume" "mute-toggle"; }
+    XF86AudioMicMute allow-when-locked=true { spawn "swayosd-client" "--input-volume" "mute-toggle"; }
+    XF86MonBrightnessUp allow-when-locked=true { spawn "swayosd-client" "--brightness" "raise"; }
+    XF86MonBrightnessDown allow-when-locked=true { spawn "swayosd-client" "--brightness" "lower"; }
+
+    Mod+P { spawn "bash" "-c" "grim -g \"$(slurp -c '#00000040')\" -t ppm - | satty --filename - --fullscreen --output-filename ~/Pictures/satty-$(date '+%Y%m%d-%H%M%S').png"; }
+    Mod+Ctrl+P { spawn "bash" "-c" "grim -g \"$(slurp -c '#00000040')\" -t ppm - | satty --filename - --fullscreen --output-filename ~/Pictures/satty-$(date '+%Y%m%d-%H%M%S').png"; }
+
+    Mod+N { spawn "swaync-client" "-t" "-sw"; }
+
+    Mod+Q { close-window; }
+    Mod+Shift+E { quit; }
+    Mod+S { switch-preset-column-width; }
+    Mod+M { maximize-column; }
+    Mod+F { fullscreen-window; }
+
+    Alt+Tab { focus-window-previous; }
+
+    Mod+Left { focus-column-left; }
+    Mod+Right { focus-column-right; }
+    Mod+Ctrl+Left { focus-column-left; }
+    Mod+Ctrl+Right { focus-column-right; }
+
+    Mod+Shift+Left { move-column-left; }
+    Mod+Shift+Right { move-column-right; }
+
+    Mod+Ctrl+Up { focus-workspace-up; }
+    Mod+Ctrl+Down { focus-workspace-down; }
+    Mod+Shift+Up { move-window-to-workspace-up; }
+    Mod+Shift+Down { move-window-to-workspace-down; }
+}
+
+layout {
+    gaps 8
+    center-focused-column "never"
+    border {
+        width 1
+        active-color "#1f2430"
+        inactive-color "#2a2f3a"
+    }
+    shadow {
+        on
+    }
+    focus-ring {
+        width 1
+    }
+}
+
+input {
+    focus-follows-mouse max-scroll-amount="33%"
+    keyboard {
+        repeat-delay 200
+        repeat-rate 50
+    }
+    touchpad {
+        natural-scroll
+        tap
+        accel-speed 1.0
+        accel-profile "flat"
+    }
+    mouse {}
+}
+
+animations {}
+
+environment {}
+
+output "eDP-1" {
+    mode "1920x1080@144.003"
+    scale 1.0
+    transform "normal"
+    position x=0 y=0
+}
+
+window-rule {
+    geometry-corner-radius 12
+    clip-to-geometry true
+    opacity 0.9
+    background-effect {
+        blur true
+    }
+}
+
+gestures {
+    hot-corners {
+        off
+    }
+}
+
+hotkey-overlay {
+    skip-at-startup
+}
+EOF

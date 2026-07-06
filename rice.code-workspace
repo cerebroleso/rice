@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "../../.config/niri"
+		},
+		{
+			"path": "../../.config/vicinae"
+		},
+		{
+			"path": "."
+		}
+	],
+	"settings": {}
+}
