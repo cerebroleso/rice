@@ -4,7 +4,7 @@
 
     xwayland-satellite: Rootless X11 compatibility bridge.
 
-    hyprpolkitagent: Qt-based authentication daemon.
+    hyprpolkitagent: PolicyKit authentication agent.
 
     wl-clipboard: Native Wayland clipboard protocol interface.
 
@@ -99,7 +99,7 @@ Bash
 
 paru -Syu
 
-paru -S niri xwayland-satellite wl-clipboard cliphist xdg-desktop-portal xdg-desktop-portal-gnome xdg-desktop-portal-gtk hypridle hyprlock awww pipewire wireplumber brightnessctl networkmanager bluez bluez-utils nwg-look qt5ct qt6ct ttf-jetbrains-mono-nerd noto-fonts nautilus dolphin file-roller zip unzip p7zip unrar yazi kitty zed helium-browser-bin google-chrome discord pwvucontrol network-manager-applet blueman grim slurp satty hyprpolkitagent vicinae-git nirimod-git waybar swaync swayosd fuzzel playerctl
+paru -S niri xwayland-satellite wl-clipboard cliphist xdg-desktop-portal xdg-desktop-portal-gnome xdg-desktop-portal-gtk hypridle hyprlock awww pipewire wireplumber brightnessctl networkmanager bluez bluez-utils nwg-look qt5ct qt6ct ttf-jetbrains-mono-nerd noto-fonts nautilus dolphin file-roller zip unzip p7zip unrar yazi kitty zed helium-browser-bin google-chrome discord pwvucontrol network-manager-applet blueman grim slurp satty hyprutils-git hyprlang-git hyprwayland-scanner-git aquamarine-git hyprgraphics-git hyprtoolkit-git hyprland-qt-support-git hyprpolkitagent-git vicinae-git nirimod-git waybar swaync swayosd fuzzel playerctl
 
 systemctl --user enable wireplumber.service
 systemctl --user enable pipewire.service

@@ -290,6 +290,22 @@ window-rule {
     }
 }
 
+layer-rule {
+    match namespace="^launcher$"
+    geometry-corner-radius 10
+    background-effect {
+        xray false
+        blur true
+    }
+}
+
+
+
+
+
+
+
+
 // ==================================================
 // Recent Windows
 // ==================================================
