@@ -17,7 +17,7 @@ layer-rule {
   match namespace="waybar"
   opacity 0.9
   background-effect {
-    blur true
+    blur false
   }
 }
 
