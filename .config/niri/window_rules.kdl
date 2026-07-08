@@ -5,10 +5,10 @@ layer-rule {
 }
 
 layer-rule {
-  match namespace="notifications"
-  opacity 0.9
+  match namespace="swaync"
+  opacity 1.0
   background-effect {
-    blur true
+    blur false
     xray false
   }
 }
