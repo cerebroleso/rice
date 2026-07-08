@@ -1,0 +1,8 @@
+experimental/stock_latest_niri/niri/
+experimental/niri-glass-pkgbuild/niri/
+experimental/niri-glass-pkgbuild/src/
+experimental/niri-glass-pkgbuild/pkg/
+*.pkg.tar.zst
+experimental/Niri-glass/
+experimental/niri-pkgbuild/
+
