@@ -26,7 +26,7 @@ order = [ "default" ]
     capsule_thickness = 0.75999999046325684
     center = [ "media", "clock" ]
     color = "primary"
-    contact_shadow = false
+    contact_shadow = true
     enabled = true
     end = [
         "spacer_7",
@@ -375,12 +375,12 @@ ui_scale = 1.0
     floating_offset = 8
     launcher_placement = "floating"
     launcher_position = "center"
-    open_near_click_clipboard = true
+    open_near_click_clipboard = false
     open_near_click_control_center = true
     open_near_click_launcher = false
     open_near_click_session = false
-    open_near_click_wallpaper = false
-    polkit_placement = "floating"
+    open_near_click_wallpaper = true
+    polkit_placement = "attached"
     polkit_position = "center"
     session_placement = "attached"
     session_position = "auto"
@@ -586,7 +586,7 @@ type = "lock_keys"
 
 [widget.media]
 art_size = 16.0
-max_length = 220.0
+max_length = 300
 min_length = 80.0
 title_scroll = "none"
 type = "media"
