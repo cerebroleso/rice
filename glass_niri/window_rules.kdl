@@ -1,0 +1,144 @@
+// Layer rules
+
+
+layer-rule {
+  match namespace="ashell-menu-layer"
+  background-effect {
+    blur true
+    xray false
+    liquid-glass {
+    refraction-strength 3.0
+    power-factor 10
+    refraction-power 1.0
+    glow-weight 0.0001
+    edge-lighting 0.2
+    saturation 0.9
+    vibrancy 0.2
+    adaptive-dim 0.2
+    adaptive-boost 0.2
+    }
+}
+}
+
+// Window rules
+
+window-rule {
+  match app-id="Spotify"
+  opacity 0.9
+  background-effect {
+    blur true
+    liquid-glass {
+    refraction-strength 3.0
+    power-factor 10
+    refraction-power 1.0
+    glow-weight 0.0001
+    edge-lighting 0.2
+    saturation 0.9
+    vibrancy 0.2
+    adaptive-dim 0.2
+    adaptive-boost 0.2
+    }
+}
+}
+
+window-rule {
+  match app-id="signal beta"
+  default-column-width { proportion 0.25; }
+  default-window-height { proportion 0.65; }
+  open-floating true
+  default-floating-position x=550 y=250 relative-to="top-left"
+  opacity 0.9
+  background-effect {
+    blur true
+    xray false
+    liquid-glass {
+    refraction-strength 3.0
+    power-factor 10
+    refraction-power 1.0
+    glow-weight 0.0001
+    edge-lighting 0.2
+    saturation 0.9
+    vibrancy 0.2
+    adaptive-dim 0.2
+    adaptive-boost 0.2
+    }
+}
+}
+
+window-rule {
+  match title="senpai"
+  open-floating true
+  default-floating-position x=1300 y=250 relative-to="top-left"
+  min-height 850
+  min-width 750
+  opacity 0.9
+  background-effect {
+    blur true
+    liquid-glass {
+    refraction-strength 3.0
+    power-factor 10
+    refraction-power 1.0
+    glow-weight 0.0001
+    edge-lighting 0.2
+    saturation 0.9
+    vibrancy 0.2
+    adaptive-dim 0.2
+    adaptive-boost 0.2
+    }
+}
+}
+
+window-rule {
+  match app-id="zen"
+  open-on-workspace "browsers"
+  open-maximized true
+}
+
+window-rule {
+  match app-id="gimp"
+  open-on-workspace "editing"
+  open-maximized true
+}
+
+
+window-rule {
+  match app-id="foot"
+  match app-id="obsidian"
+  opacity 0.9
+  background-effect {
+    blur true
+    liquid-glass {
+    refraction-strength 3.0
+    power-factor 10
+    refraction-power 1.0
+    glow-weight 0.0001
+    edge-lighting 0.2
+    saturation 0.9
+    vibrancy 0.2
+    adaptive-dim 0.2
+    adaptive-boost 0.2
+    }
+}
+}
+
+
+window-rule {
+  match app-id="positron"
+  match app-id="anki"
+  draw-border-with-background false
+  opacity 0.9
+  background-effect {
+    blur true
+    liquid-glass {
+    refraction-strength 3.0
+    power-factor 10
+    refraction-power 1.0
+    glow-weight 0.0001
+    edge-lighting 0.2
+    saturation 0.9
+    vibrancy 0.2
+    adaptive-dim 0.2
+    adaptive-boost 0.2
+    }
+}
+}

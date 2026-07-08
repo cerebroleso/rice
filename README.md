@@ -202,3 +202,20 @@ If you want to manually set up the source tree and apply the patch:
    cargo build --release
    ```
 
+---
+
+## Toggling Liquid Glass Configuration
+
+You can easily switch between standard rendering (stock Niri) and the Liquid Glass effect.
+
+The active configuration remains at `~/.config/niri/` (symlinked from `~/dotfiles/.config/niri/`). The repository contains two reference configurations:
+- `~/dotfiles/stock_niri/`: Duplicate copy of original configuration files.
+- `~/dotfiles/glass_niri/`: Modified version containing the `liquid-glass` refraction blocks.
+
+To toggle back and forth between standard and glass modes, run:
+
+```bash
+~/dotfiles/toggle-glass.sh
+```
+
+This will copy the files from the selected mode into your active `~/.config/niri` folder and trigger an automatic configuration reload.
