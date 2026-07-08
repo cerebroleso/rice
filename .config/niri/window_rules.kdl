@@ -1,25 +1,5 @@
 // Layer rules
-layer-rule {
-  match namespace="awww-daemon"
-  place-within-backdrop true
-}
 
-layer-rule {
-  match namespace="swaync"
-  opacity 1.0
-  background-effect {
-    blur false
-    xray false
-  }
-}
-
-layer-rule {
-  match namespace="waybar"
-  opacity 0.9
-  background-effect {
-    blur false
-  }
-}
 
 layer-rule {
   match namespace="ashell-menu-layer"
@@ -86,14 +66,6 @@ window-rule {
   }
 }
 
-window-rule {
-  match app-id="vicinae"
-  draw-border-with-background false
-  background-effect {
-    blur true
-    xray false
-  }
-}
 
 window-rule {
   match app-id="positron"
