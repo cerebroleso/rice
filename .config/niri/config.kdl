@@ -274,7 +274,7 @@ window-rule {
 window-rule {
     geometry-corner-radius 10
     clip-to-geometry true
-    opacity 0.80
+    opacity 0.85
     draw-border-with-background false
     background-effect {
         xray true
