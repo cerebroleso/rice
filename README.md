@@ -144,6 +144,13 @@ for folder in niri noctalia gtk-3.0 gtk-4.0 qt5ct qt6ct; do
     fi
     ln -sf ~/dotfiles/.config/"$folder" ~/.config/"$folder"
 done
+
+# Set GTK icon theme to breeze-noctalia (so Nautilus uses our dynamic folders)
+gsettings set org.gnome.desktop.interface icon-theme 'breeze-noctalia'
+
+# Make hook script executable and initialize the dynamic folder icons theme
+chmod +x ~/dotfiles/.config/noctalia/colors_changed.sh
+~/dotfiles/.config/noctalia/colors_changed.sh
 ```
 
 ---
