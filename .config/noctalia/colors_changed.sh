@@ -6,8 +6,15 @@ import os
 import re
 import sys
 import time
+import shutil
 from pathlib import Path
 from subprocess import run
+
+def adjust_brightness(hex_color, factor):
+    hex_color = hex_color.lstrip('#')
+    rgb = [int(hex_color[i:i+2], 16) for i in (0, 2, 4)]
+    new_rgb = [max(0, min(255, int(c * factor))) for c in rgb]
+    return '#{:02x}{:02x}{:02x}'.format(*new_rgb)
 
 def update_icon_theme(accent_rgb_str):
     try:
@@ -18,17 +25,19 @@ def update_icon_theme(accent_rgb_str):
         print(f"Error parsing accent RGB string '{accent_rgb_str}': {e}", file=sys.stderr)
         return
 
-    src_base = Path('/usr/share/icons/breeze')
+    src_base = Path('~/.local/share/icons/WhiteSur').expanduser()
     dst_base = Path('~/.local/share/icons/breeze-noctalia').expanduser()
 
     # 1. Create index.theme
     dst_base.mkdir(parents=True, exist_ok=True)
     index_path = dst_base / 'index.theme'
+    
+    # We list both mimes and mimetypes in directories to ensure maximum compatibility
     index_content = """[Icon Theme]
 Name=Breeze Noctalia
-Comment=Dynamic Breeze folders for Noctalia
+Comment=Dynamic macOS folders & extensions for Noctalia with Breeze fallbacks
 Inherits=breeze,breeze-dark,hicolor
-Directories=places/16,places/22,places/32,places/48,places/64,places/128,places/scalable
+Directories=places/16,places/22,places/24,places/scalable,places/symbolic,mimes/16,mimes/22,mimes/scalable,mimes/symbolic,mimetypes/16,mimetypes/22,mimetypes/scalable,mimetypes/symbolic
 
 [places/16]
 Size=16
@@ -40,23 +49,8 @@ Size=22
 Context=Places
 Type=Fixed
 
-[places/32]
-Size=32
-Context=Places
-Type=Fixed
-
-[places/48]
-Size=48
-Context=Places
-Type=Fixed
-
-[places/64]
-Size=64
-Context=Places
-Type=Fixed
-
-[places/128]
-Size=128
+[places/24]
+Size=24
 Context=Places
 Type=Fixed
 
@@ -66,50 +60,146 @@ MinSize=16
 MaxSize=512
 Context=Places
 Type=Scalable
+
+[places/symbolic]
+Size=16
+Context=Places
+MinSize=16
+MaxSize=512
+Type=Scalable
+
+[mimes/16]
+Size=16
+Context=Mimetypes
+Type=Fixed
+
+[mimes/22]
+Size=22
+Context=Mimetypes
+Type=Fixed
+
+[mimes/scalable]
+Size=256
+MinSize=16
+MaxSize=512
+Context=Mimetypes
+Type=Scalable
+
+[mimes/symbolic]
+Size=16
+Context=Mimetypes
+MinSize=16
+MaxSize=512
+Type=Scalable
+
+[mimetypes/16]
+Size=16
+Context=Mimetypes
+Type=Fixed
+
+[mimetypes/22]
+Size=22
+Context=Mimetypes
+Type=Fixed
+
+[mimetypes/scalable]
+Size=256
+MinSize=16
+MaxSize=512
+Context=Mimetypes
+Type=Scalable
+
+[mimetypes/symbolic]
+Size=16
+Context=Mimetypes
+MinSize=16
+MaxSize=512
+Type=Scalable
 """
     with open(index_path, 'w') as f:
         f.write(index_content)
 
+    # 2. Copy and recolor places folders
     places_src = src_base / 'places'
     places_dst = dst_base / 'places'
+
+    # Clear existing places directory to prevent stale links
+    if places_dst.exists():
+        shutil.rmtree(places_dst)
 
     if not places_src.exists():
         print(f"Warning: {places_src} does not exist. Cannot recolor folders.", file=sys.stderr)
         return
 
-    # Regex to find/replace .ColorScheme-Accent { color: #xxxxxx; }
-    accent_regex = re.compile(r'ColorScheme-Accent\s*\{\s*color:\s*#[0-9a-fA-F]{6};?\s*\}')
-    new_style_block = f'ColorScheme-Accent {{\n        color:{accent_hex};\n      }}'
+    # Dynamic variations of the accent color for macOS styled folder gradients
+    c_base = accent_hex
+    c_grad_start = adjust_brightness(accent_hex, 1.1)
+    c_grad_end = adjust_brightness(accent_hex, 1.25)
+    c_shadow = adjust_brightness(accent_hex, 0.6)
 
-    count = 0
+    # Compile replacement regexes
+    replacements = {
+        r'#46a2d7': c_base,
+        r'#60c0f0': c_grad_start,
+        r'#83d4fb': c_grad_end,
+        r'#008ea2': c_shadow
+    }
+
+    def replace_colors(text):
+        for orig, new in replacements.items():
+            text = re.sub(orig, new, text, flags=re.IGNORECASE)
+        return text
+
+    places_count = 0
     for root, dirs, files in os.walk(places_src):
         rel_path = Path(root).relative_to(places_src)
         for file in files:
-            if not file.startswith('folder') or not file.endswith('.svg'):
-                continue
-
             src_file = Path(root) / file
             dst_dir = places_dst / rel_path
             dst_dir.mkdir(parents=True, exist_ok=True)
             dst_file = dst_dir / file
 
+            # If it's a symlink
             if src_file.is_symlink():
                 target = os.readlink(src_file)
                 if dst_file.exists() or dst_file.is_symlink():
                     dst_file.unlink()
                 os.symlink(target, dst_file)
             else:
-                with open(src_file, 'r', encoding='utf-8', errors='ignore') as f:
-                    content = f.read()
+                if file.endswith('.svg') and file.startswith('folder'):
+                    with open(src_file, 'r', encoding='utf-8', errors='ignore') as f:
+                        content = f.read()
+                    modified = replace_colors(content)
+                    if dst_file.exists() or dst_file.is_symlink():
+                        dst_file.unlink()
+                    with open(dst_file, 'w', encoding='utf-8') as f:
+                        f.write(modified)
+                else:
+                    if dst_file.exists() or dst_file.is_symlink():
+                        dst_file.unlink()
+                    shutil.copy2(src_file, dst_file)
+                places_count += 1
 
-                modified = accent_regex.sub(new_style_block, content)
-                with open(dst_file, 'w', encoding='utf-8') as f:
-                    f.write(modified)
-                count += 1
+    # 3. Copy mimes (mimetypes) to both mimes and mimetypes directories
+    mimes_src = src_base / 'mimes'
+    mimes_dst = dst_base / 'mimes'
+    mimetypes_dst = dst_base / 'mimetypes'
 
-    # Update GTK icon cache
+    if mimes_src.exists():
+        # Clear existing mimes/mimetypes directories to avoid stale icons
+        if mimes_dst.exists():
+            shutil.rmtree(mimes_dst)
+        if mimetypes_dst.exists():
+            shutil.rmtree(mimetypes_dst)
+
+        # Copy directory tree
+        shutil.copytree(mimes_src, mimes_dst, symlinks=True)
+        # Duplicate to mimetypes to ensure compatibility with GTK's fallback lookups
+        shutil.copytree(mimes_src, mimetypes_dst, symlinks=True)
+
+    # 4. Update GTK icon cache
     run(['gtk-update-icon-cache', '-q', '-f', str(dst_base)], capture_output=True)
-    print(f"Successfully generated {count} custom folder icons at {dst_base} with accent {accent_hex}")
+    print(f"Successfully generated {places_count} macOS folder icons with accent {accent_hex}")
 
 def main():
     # Sleep to ensure Noctalia has finished writing templates to disk
@@ -118,8 +208,8 @@ def main():
     kglobals_path = Path('~/.config/kdeglobals').expanduser()
 
     if not scheme_path.exists():
-        print(f"Error: {scheme_path} does not exist", file=sys.stderr)
-        sys.exit(1)
+        print("Noctalia color scheme not generated yet. Dynamic folders will be initialized on first startup.")
+        sys.exit(0)
 
     # Read the generated color scheme
     scheme = configparser.RawConfigParser()

@@ -145,7 +145,15 @@ for folder in niri noctalia gtk-3.0 gtk-4.0 qt5ct qt6ct; do
     ln -sf ~/dotfiles/.config/"$folder" ~/.config/"$folder"
 done
 
-# Set GTK icon theme to breeze-noctalia (so Nautilus uses our dynamic folders)
+# Install WhiteSur icon theme locally if not already present (needed for macOS folders & extensions)
+if [ ! -d ~/.local/share/icons/WhiteSur ]; then
+    echo "Installing WhiteSur icon theme..."
+    git clone --depth 1 https://github.com/vinceliuice/WhiteSur-icon-theme.git /tmp/WhiteSur-icon-theme
+    /tmp/WhiteSur-icon-theme/install.sh
+    rm -rf /tmp/WhiteSur-icon-theme
+fi
+
+# Set GTK icon theme to breeze-noctalia (so Nautilus uses our dynamic folders & extensions)
 gsettings set org.gnome.desktop.interface icon-theme 'breeze-noctalia'
 
 # Make hook script executable and initialize the dynamic folder icons theme
