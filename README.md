@@ -6,7 +6,6 @@
 
 *   **niri**: Core Wayland compositor.
 *   **xwayland-satellite**: Rootless X11 compatibility bridge.
-*   **hyprpolkitagent**: PolicyKit authentication agent.
 *   **wl-clipboard**: Native Wayland clipboard protocol interface.
 *   **cliphist**: Background daemon for clipboard history persistence.
 *   **xdg-desktop-portal**: Core IPC router for sandbox bridging.
@@ -81,7 +80,7 @@ paru -S niri xwayland-satellite wl-clipboard cliphist xdg-desktop-portal \
   unrar yazi kitty zed helium-browser-bin google-chrome discord pwvucontrol \
   network-manager-applet blueman grim slurp satty hyprutils-git hyprlang-git \
   hyprwayland-scanner-git aquamarine-git hyprgraphics-git hyprtoolkit-git \
-  hyprland-qt-support-git hyprpolkitagent-git nirimod-git playerctl noctalia-git ly
+  nirimod-git playerctl noctalia-git ly
 
 # Enable the Ly TUI display manager for system startup login
 sudo systemctl enable ly.service
@@ -159,7 +158,7 @@ Below are the configurations matching the active system settings.
 // Startup applications (User's configuration)
 // ==================================================
 spawn-at-startup "xwayland-satellite"
-spawn-at-startup "hyprpolkitagent"
+// spawn-at-startup "hyprpolkitagent"
 spawn-at-startup "nm-applet"
 spawn-at-startup "blueman-applet"
 spawn-at-startup "noctalia" "--daemon"

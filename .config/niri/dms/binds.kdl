@@ -1,5 +1,56 @@
 binds {
-    Mod+T { spawn "kitty"; }
+    
+    
+    
+    
+    
+    
+
+    // Noctalia UI Trigger
+    
+
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+
+    
+    
+
+    
+
+    
+    
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    Mod+Shift+T { spawn "kitty"; }
     Mod+B { spawn "helium-browser"; }
     Mod+D { spawn "zed"; }
     Mod+E { spawn-sh "kitty yazi"; }

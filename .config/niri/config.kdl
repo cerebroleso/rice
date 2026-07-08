@@ -2,7 +2,7 @@
 // Startup applications (User's configuration)
 // ==================================================
 spawn-at-startup "xwayland-satellite"
-spawn-at-startup "hyprpolkitagent"
+// spawn-at-startup "hyprpolkitagent"
 spawn-at-startup "nm-applet"
 spawn-at-startup "blueman-applet"
 spawn-at-startup "noctalia" "--daemon"
@@ -272,13 +272,13 @@ window-rule {
 }
 
 window-rule {
-    geometry-corner-radius 10
+    geometry-corner-radius 18
     clip-to-geometry true
-    opacity 0.85
     draw-border-with-background false
+    opacity 0.85
     background-effect {
-        xray true
         blur true
+        xray true
     }
     popups {
         opacity 1.0
