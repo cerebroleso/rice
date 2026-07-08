@@ -135,7 +135,7 @@ Run this block to link the non-legacy configurations from your repository to you
 mkdir -p ~/.config
 
 # Symlink active configuration folders from the repository (excluding legacy fuzzel, waybar, vicinae)
-for folder in niri noctalia gtk-3.0 gtk-4.0; do
+for folder in niri noctalia gtk-3.0 gtk-4.0 qt5ct qt6ct; do
     if [ -e ~/.config/"$folder" ] && [ ! -L ~/.config/"$folder" ]; then
         echo "Backing up existing ~/.config/$folder to ~/.config/${folder}.bak"
         mv ~/.config/"$folder" ~/.config/"$folder".bak

@@ -1,4 +1,5 @@
 @import 'colors.css';
+@import url("noctalia.css");
 
 /* Make headerbar/titlebar/navigation-bar transparent/frosted */
 headerbar,
@@ -8,5 +9,3 @@ headerbar,
     background-image: none !important;
     box-shadow: none !important;
 }
-
-@import url("noctalia.css");
