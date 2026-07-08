@@ -213,7 +213,7 @@ layout {
     gaps 12
     center-focused-column "on-overflow"
     background-color "transparent"
-    always-center-single-column
+    // always-center-single-column
     default-column-width { proportion 0.5; }
 
     preset-column-widths {
@@ -525,8 +525,10 @@ binds {
 
     Alt+Tab { focus-window-previous; }
 
-    Mod+Left { focus-column-left; }
-    Mod+Right { focus-column-right; }
+    Mod+Left { spawn-sh "niri msg action move-column-left; niri msg action set-column-width 50%"; }
+    Mod+Right { spawn-sh "niri msg action move-column-right; niri msg action set-column-width 50%"; }
+    Mod+Up { spawn-sh "niri msg action move-window-up; niri msg action set-window-height 50%"; }
+    Mod+Down { spawn-sh "niri msg action move-window-down; niri msg action set-window-height 50%"; }
     Mod+Ctrl+Left { focus-column-left; }
     Mod+Ctrl+Right { focus-column-right; }
 

@@ -556,7 +556,7 @@ source = "wallpaper"
 wallpaper_scheme = "m3-content"
 
     [theme.templates]
-    builtin_ids = [ "alacritty", "gtk3", "gtk4", "kcolorscheme", "niri", "qt" ]
+    builtin_ids = [ "alacritty", "gtk3", "gtk4", "kcolorscheme", "niri", "qt", "kitty" ]
     community_ids = [ "vscode", "zed", "discord", "steam", "yazi", "zathura" ]
     enable_builtin_templates = true
     enable_community_templates = true

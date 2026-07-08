@@ -58,7 +58,7 @@ layout {
     gaps 12
     center-focused-column "on-overflow"
     background-color "transparent"
-    always-center-single-column
+    // always-center-single-column
     default-column-width { proportion 0.5; }
 
     preset-column-widths {
