@@ -1,5 +1,7 @@
 # Niri Desktop Environment Configuration with Noctalia
 
+![Desktop Preview](desktop.png)
+
 ## 1. Underlying Utilities & Background Services
 
 *   **niri**: Core Wayland compositor.

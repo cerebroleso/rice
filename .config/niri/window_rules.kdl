@@ -6,7 +6,7 @@ layer-rule {
   background-effect {
     blur true
     xray false
-  }
+    }
 }
 
 // Window rules
@@ -16,20 +16,20 @@ window-rule {
   opacity 0.9
   background-effect {
     blur true
-  }
+    }
 }
 
 window-rule {
   match app-id="signal beta"
-  default-column-width { proportion 0.25;}
-  default-window-height { proportion 0.65;}
+  default-column-width { proportion 0.25; }
+  default-window-height { proportion 0.65; }
   open-floating true
   default-floating-position x=550 y=250 relative-to="top-left"
   opacity 0.9
   background-effect {
     blur true
     xray false
-  }
+    }
 }
 
 window-rule {
@@ -41,7 +41,7 @@ window-rule {
   opacity 0.9
   background-effect {
     blur true
-  }
+    }
 }
 
 window-rule {
@@ -63,7 +63,7 @@ window-rule {
   opacity 0.9
   background-effect {
     blur true
-  }
+    }
 }
 
 
@@ -74,5 +74,5 @@ window-rule {
   opacity 0.9
   background-effect {
     blur true
-  }
+    }
 }

@@ -127,7 +127,7 @@ screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
 
 animations {
     workspace-switch {
-        spring damping-ratio=0.80 stiffness=523 epsilon=0.0001
+        spring damping-ratio=0.8 stiffness=523 epsilon=0.0001
     }
 
     window-open {
@@ -337,3 +337,9 @@ include "dms/outputs.kdl"
 include "window_rules.kdl"
 
 include "noctalia.kdl"
+
+gestures {
+    hot-corners {
+        off
+    }
+}

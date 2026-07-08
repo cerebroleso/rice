@@ -23,7 +23,7 @@ binds {
     XF86MonBrightnessUp allow-when-locked=true { spawn "noctalia" "msg" "brightness-up"; }
     XF86MonBrightnessDown allow-when-locked=true { spawn "noctalia" "msg" "brightness-down"; }
 
-    Mod+P { spawn "bash" "-c" "grim -g \"$(slurp -c '#00000040')\" -t ppm - | satty --filename - --fullscreen --output-filename ~/Pictures/satty-$(date '+%Y%m%d-%H%M%S').png"; }
+    Mod+P { spawn "bash" "-c" "grim" "-g" "$(slurp -c '#00000040')" "-t" "ppm" "-" "|" "satty" "--filename" "-" "--fullscreen" "--output-filename" "~/Pictures/satty-$(date" "+%Y%m%d-%H%M%S).png"; }
     Mod+Ctrl+P { spawn "bash" "-c" "grim -g \"$(slurp -c '#00000040')\" -t ppm - | satty --filename - --fullscreen --output-filename ~/Pictures/satty-$(date '+%Y%m%d-%H%M%S').png"; }
 
     Mod+N { spawn "noctalia" "msg" "notifications" "toggleHistory"; }
@@ -49,4 +49,5 @@ binds {
     Mod+Ctrl+Down { focus-workspace-down; }
     Mod+Shift+Up { move-window-to-workspace-up; }
     Mod+Shift+Down { move-window-to-workspace-down; }
+    Mod+Shift+S { spawn "bash" "-c" "grim" "-g" "$(slurp -c '#00000040')" "-t" "ppm" "-" "|" "satty" "--filename" "-" "--fullscreen" "--output-filename" "~/Pictures/satty-$(date" "+%Y%m%d-%H%M%S).png"; }
 }
