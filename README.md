@@ -34,6 +34,7 @@
 
 *   **nautilus**: Graphical file manager.
 *   **dolphin**: Qt-based graphical file manager.
+*   **pcmanfm-qt**: Qt-based lightweight file manager (handling desktop icons and files).
 *   **file-roller**: Graphical archive manager.
 *   **zip, unzip, p7zip, unrar**: Compression algorithms.
 *   **yazi**: Asynchronous terminal file manager.
@@ -76,7 +77,7 @@ git clone https://github.com/cerebroleso/rice.git ~/dotfiles
 paru -S niri xwayland-satellite wl-clipboard cliphist xdg-desktop-portal \
   xdg-desktop-portal-gnome xdg-desktop-portal-gtk hypridle hyprlock pipewire \
   wireplumber brightnessctl networkmanager bluez bluez-utils nwg-look qt5ct qt6ct \
-  ttf-jetbrains-mono-nerd noto-fonts nautilus dolphin file-roller zip unzip p7zip \
+  ttf-jetbrains-mono-nerd noto-fonts nautilus dolphin pcmanfm-qt file-roller zip unzip p7zip \
   unrar yazi kitty zed helium-browser-bin google-chrome discord pwvucontrol \
   network-manager-applet blueman grim slurp satty hyprutils-git hyprlang-git \
   hyprwayland-scanner-git aquamarine-git hyprgraphics-git hyprtoolkit-git \
@@ -135,7 +136,7 @@ Run this block to link the non-legacy configurations from your repository to you
 mkdir -p ~/.config
 
 # Symlink active configuration folders from the repository (excluding legacy fuzzel, waybar, vicinae)
-for folder in niri noctalia gtk-3.0 gtk-4.0 qt5ct qt6ct; do
+for folder in niri noctalia gtk-3.0 gtk-4.0 qt5ct qt6ct pcmanfm-qt; do
     if [ -e ~/.config/"$folder" ] && [ ! -L ~/.config/"$folder" ]; then
         echo "Backing up existing ~/.config/$folder to ~/.config/${folder}.bak"
         mv ~/.config/"$folder" ~/.config/"$folder".bak
@@ -231,3 +232,69 @@ To toggle back and forth between standard and glass modes, run:
 ```
 
 This will copy the files from the selected mode into your active `~/.config/niri` folder and trigger an automatic configuration reload.
+
+---
+
+## Keyboard Shortcuts (Keybinds)
+
+The following tables document the keyboard shortcuts configured in [binds.kdl](file:///home/chri/dotfiles/stock_niri/dms/binds.kdl).
+
+### Core Applications
+| Keybind | Command / Action | Description |
+| :--- | :--- | :--- |
+| `Ctrl+Alt+T` | `spawn "kitty"` | Launch Kitty terminal |
+| `Mod+T` | `spawn "kitty"` | Launch Kitty terminal |
+| `Mod+B` | `spawn "helium-browser"` | Launch Helium browser |
+| `Mod+D` | `spawn "zed"` | Launch Zed code editor |
+| `Mod+E` | `spawn "nautilus"` | Launch Nautilus file manager |
+| `Mod+Shift+E` | `spawn-sh "kitty yazi"` | Launch Yazi terminal file manager in Kitty |
+
+### Window Management
+| Keybind | Command / Action | Description |
+| :--- | :--- | :--- |
+| `Mod+Q` | `close-window` | Close the focused window |
+| `Mod+Shift+Q` | `quit skip-confirmation=true` | Exit Niri session |
+| `Mod+S` | `switch-preset-column-width` | Cycle column width presets |
+| `Mod+M` | `maximize-column` | Toggle maximization of current column |
+| `Mod+F` | `fullscreen-window` | Toggle fullscreen on current window |
+| `Alt+Tab` | `focus-window-previous` | Focus previous window |
+| `Mod+Left` | `move-column-left; set-column-width 50%` | Move column left and set width to 50% |
+| `Mod+Right` | `move-column-right; set-column-width 50%` | Move column right and set width to 50% |
+| `Mod+Up` | `move-window-up; set-window-height 50%` | Move window up and set height to 50% |
+| `Mod+Down` | `move-window-down; set-window-height 50%` | Move window down and set height to 50% |
+| `Mod+Ctrl+Left` | `focus-column-left` | Focus column to the left |
+| `Mod+Ctrl+Right` | `focus-column-right` | Focus column to the right |
+| `Mod+Shift+Left` | `move-column-left` | Move column left |
+| `Mod+Shift+Right` | `move-column-right` | Move column right |
+
+### Workspace Navigation
+| Keybind | Command / Action | Description |
+| :--- | :--- | :--- |
+| `Mod+Ctrl+Up` | `focus-workspace-up` | Focus adjacent workspace up |
+| `Mod+Ctrl+Down` | `focus-workspace-down` | Focus adjacent workspace down |
+| `Mod+Shift+Up` | `move-window-to-workspace-up` | Move window to workspace up |
+| `Mod+Shift+Down` | `move-window-to-workspace-down` | Move window to workspace down |
+
+### Desktop Shell & System Utilities
+| Keybind | Command / Action | Description |
+| :--- | :--- | :--- |
+| `Mod+Space` | `noctalia msg panel-toggle launcher` | Toggle Noctalia Application Launcher |
+| `Mod+V` | `noctalia msg panel-toggle clipboard` | Toggle Noctalia Clipboard History |
+| `Mod+N` | `noctalia msg notifications toggleHistory` | Toggle Notification History panel |
+| `Mod+Shift+R` | Niri config reload | Reload Niri configuration and notify |
+| `Mod+Shift+G` | `toggle-glass.sh` | Toggle Niri Liquid Glass/Refraction mode |
+| `Mod+Shift+D` | `toggle-pcmanfm.sh` | Toggle desktop files/icons visibility |
+| `Mod+P` / `Mod+Shift+S` / `Mod+Ctrl+P` | Take Screenshot | Capture area/screen and edit in Satty |
+
+### Media & Hardware Controls
+| Keybind | Command / Action | Description |
+| :--- | :--- | :--- |
+| `XF86AudioPlay` / `Pause` | `playerctl play-pause` | Play/Pause media |
+| `XF86AudioNext` | `playerctl next` | Next media track |
+| `XF86AudioPrev` | `playerctl previous` | Previous media track |
+| `XF86AudioRaiseVolume` | `noctalia msg volume-up` | Raise audio volume |
+| `XF86AudioLowerVolume` | `noctalia msg volume-down` | Lower audio volume |
+| `XF86AudioMute` | `noctalia msg volume-mute` | Mute/unmute audio |
+| `XF86AudioMicMute` | `noctalia msg mic-mute` | Mute/unmute microphone |
+| `XF86MonBrightnessUp` | `noctalia msg brightness-up` | Increase screen brightness |
+| `XF86MonBrightnessDown` | `noctalia msg brightness-down` | Decrease screen brightness |
