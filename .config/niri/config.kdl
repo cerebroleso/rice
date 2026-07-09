@@ -176,7 +176,18 @@ window-rule {
     background-effect {
         xray true
         blur true
+    liquid-glass {
+    refraction-strength 3.0
+    power-factor 10
+    refraction-power 1.0
+    glow-weight 0.0001
+    edge-lighting 0.2
+    saturation 0.9
+    vibrancy 0.2
+    adaptive-dim 0.2
+    adaptive-boost 0.2
     }
+}
     popups {
         opacity 0.9
     }
@@ -196,7 +207,18 @@ window-rule {
     background-effect {
         xray true
         blur true
+    liquid-glass {
+    refraction-strength 3.0
+    power-factor 10
+    refraction-power 1.0
+    glow-weight 0.0001
+    edge-lighting 0.2
+    saturation 0.9
+    vibrancy 0.2
+    adaptive-dim 0.2
+    adaptive-boost 0.2
     }
+}
     popups {
         opacity 1.0
     }
@@ -210,7 +232,18 @@ window-rule {
     background-effect {
         xray true
         blur true
+    liquid-glass {
+    refraction-strength 3.0
+    power-factor 10
+    refraction-power 1.0
+    glow-weight 0.0001
+    edge-lighting 0.2
+    saturation 0.9
+    vibrancy 0.2
+    adaptive-dim 0.2
+    adaptive-boost 0.2
     }
+}
     popups {
         opacity 1.0
     }
@@ -224,7 +257,18 @@ window-rule {
     background-effect {
         xray true
         blur true
+    liquid-glass {
+    refraction-strength 3.0
+    power-factor 10
+    refraction-power 1.0
+    glow-weight 0.0001
+    edge-lighting 0.2
+    saturation 0.9
+    vibrancy 0.2
+    adaptive-dim 0.2
+    adaptive-boost 0.2
     }
+}
     popups {
         opacity 1.0
     }
@@ -237,7 +281,18 @@ window-rule {
     background-effect {
         xray true
         blur true
+    liquid-glass {
+    refraction-strength 3.0
+    power-factor 10
+    refraction-power 1.0
+    glow-weight 0.0001
+    edge-lighting 0.2
+    saturation 0.9
+    vibrancy 0.2
+    adaptive-dim 0.2
+    adaptive-boost 0.2
     }
+}
     popups {
         opacity 1.0
     }
@@ -251,7 +306,18 @@ window-rule {
     background-effect {
         xray true
         blur true
+    liquid-glass {
+    refraction-strength 3.0
+    power-factor 10
+    refraction-power 1.0
+    glow-weight 0.0001
+    edge-lighting 0.2
+    saturation 0.9
+    vibrancy 0.2
+    adaptive-dim 0.2
+    adaptive-boost 0.2
     }
+}
     popups {
         opacity 1.0
     }
@@ -265,7 +331,18 @@ window-rule {
     background-effect {
         xray true
         blur true
+    liquid-glass {
+    refraction-strength 3.0
+    power-factor 10
+    refraction-power 1.0
+    glow-weight 0.0001
+    edge-lighting 0.2
+    saturation 0.9
+    vibrancy 0.2
+    adaptive-dim 0.2
+    adaptive-boost 0.2
     }
+}
     popups {
         opacity 1.0
     }
@@ -279,7 +356,18 @@ window-rule {
     background-effect {
         blur true
         xray true
+    liquid-glass {
+    refraction-strength 3.0
+    power-factor 10
+    refraction-power 1.0
+    glow-weight 0.0001
+    edge-lighting 0.2
+    saturation 0.9
+    vibrancy 0.2
+    adaptive-dim 0.2
+    adaptive-boost 0.2
     }
+}
     popups {
         opacity 1.0
     }
@@ -291,7 +379,18 @@ layer-rule {
     background-effect {
         xray false
         blur true
+    liquid-glass {
+    refraction-strength 3.0
+    power-factor 10
+    refraction-power 1.0
+    glow-weight 0.0001
+    edge-lighting 0.2
+    saturation 0.9
+    vibrancy 0.2
+    adaptive-dim 0.2
+    adaptive-boost 0.2
     }
+}
 }
 
 
