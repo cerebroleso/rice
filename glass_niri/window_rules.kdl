@@ -16,7 +16,7 @@ layer-rule {
     vibrancy 0.2
     adaptive-dim 0.2
     adaptive-boost 0.2
-    fringing 2.0
+    fringing 3.0
     }
 }
 }
