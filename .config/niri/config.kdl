@@ -185,7 +185,7 @@ window-rule {
     geometry-corner-radius 18
     clip-to-geometry true
     draw-border-with-background false
-    opacity 0.85
+    opacity 0.90
     background-effect {
         blur true
         xray true
@@ -226,12 +226,81 @@ layer-rule {
 }
 }
 
+layer-rule {
+    match namespace="^noctalia-bar-.*$"
+    geometry-corner-radius 12
+    background-effect {
+        xray false
+    liquid-glass {
+    refraction-strength 3.0
+    power-factor 10
+    refraction-power 1.0
+    glow-weight 0.0001
+    edge-lighting 0.2
+    saturation 0.9
+    vibrancy 0.2
+    adaptive-dim 0.2
+    adaptive-boost 0.2
+    }
+}
+}
 
+layer-rule {
+    match namespace="^noctalia-dock$"
+    geometry-corner-radius 16
+    background-effect {
+        xray false
+    liquid-glass {
+    refraction-strength 3.0
+    power-factor 10
+    refraction-power 1.0
+    glow-weight 0.0001
+    edge-lighting 0.2
+    saturation 0.9
+    vibrancy 0.2
+    adaptive-dim 0.2
+    adaptive-boost 0.2
+    }
+}
+}
 
+layer-rule {
+    match namespace="^noctalia-notification$"
+    geometry-corner-radius 12
+    background-effect {
+        xray false
+    liquid-glass {
+    refraction-strength 3.0
+    power-factor 10
+    refraction-power 1.0
+    glow-weight 0.0001
+    edge-lighting 0.2
+    saturation 0.9
+    vibrancy 0.2
+    adaptive-dim 0.2
+    adaptive-boost 0.2
+    }
+}
+}
 
-
-
-
+layer-rule {
+    match namespace="^noctalia-osd$"
+    geometry-corner-radius 12
+    background-effect {
+        xray false
+    liquid-glass {
+    refraction-strength 3.0
+    power-factor 10
+    refraction-power 1.0
+    glow-weight 0.0001
+    edge-lighting 0.2
+    saturation 0.9
+    vibrancy 0.2
+    adaptive-dim 0.2
+    adaptive-boost 0.2
+    }
+}
+}
 
 // ==================================================
 // Recent Windows
