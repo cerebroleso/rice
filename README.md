@@ -145,6 +145,18 @@ for folder in niri noctalia gtk-3.0 gtk-4.0 qt5ct qt6ct; do
     ln -sf ~/dotfiles/.config/"$folder" ~/.config/"$folder"
 done
 
+# Ensure local state directory for Noctalia overrides exists
+mkdir -p ~/.local/state/noctalia
+
+# Symlink Noctalia GUI override settings to keep them synced in the repo
+if [ -e ~/.local/state/noctalia/settings.toml ] && [ ! -L ~/.local/state/noctalia/settings.toml ]; then
+    echo "Backing up existing ~/.local/state/noctalia/settings.toml to ~/.local/state/noctalia/settings.toml.bak"
+    mv ~/.local/state/noctalia/settings.toml ~/.local/state/noctalia/settings.toml.bak
+elif [ -L ~/.local/state/noctalia/settings.toml ]; then
+    rm -f ~/.local/state/noctalia/settings.toml
+fi
+ln -sf ~/dotfiles/.config/noctalia/settings.toml ~/.local/state/noctalia/settings.toml
+
 # Install WhiteSur icon theme locally if not already present (needed for macOS folders & extensions)
 if [ ! -d ~/.local/share/icons/WhiteSur ]; then
     echo "Installing WhiteSur icon theme..."

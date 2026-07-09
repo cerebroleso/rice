@@ -1,0 +1,136 @@
+[audio]
+enable_overdrive = true
+
+[backdrop]
+blur_intensity = 0.04999999888241291
+
+[bar.default]
+border_width = 0.5
+capsule = true
+capsule_opacity = 0.74999998323619366
+color = "primary"
+contact_shadow = true
+end = [
+    "spacer_7",
+    "clipboard",
+    "battery",
+    "cpu",
+    "network",
+    "bluetooth",
+    "volume",
+    "brightness",
+    "spacer_3",
+    "tray",
+    "spacer_4",
+    "keyboard_layout",
+    "notifications"
+]
+font_weight = 300
+margin_edge = 4
+margin_ends = 12
+padding = 8
+thickness = 20
+widget_spacing = 4
+
+[desktop_widgets]
+schema_version = 2
+widget_order = []
+
+    [desktop_widgets.grid]
+    cell_size = 16
+    major_interval = 4
+    visible = true
+
+    [desktop_widgets.widget]
+
+[dock]
+launcher_position = "none"
+
+[location]
+auto_locate = false
+
+[lockscreen_widgets]
+enabled = false
+schema_version = 2
+widget_order = [ "lockscreen-login-box@eDP-1" ]
+
+    [lockscreen_widgets.grid]
+    cell_size = 16
+    major_interval = 4
+    visible = true
+
+    [lockscreen_widgets.widget."lockscreen-login-box@eDP-1"]
+    box_height = 70.0
+    box_width = 400.0
+    cx = 960.0
+    cy = 961.0
+    output = "eDP-1"
+    rotation = 0.0
+    type = "login_box"
+
+        [lockscreen_widgets.widget."lockscreen-login-box@eDP-1".settings]
+        background_color = "surface_variant"
+        background_opacity = 0.88
+        background_radius = 12.0
+        input_opacity = 1.0
+        input_radius = 6.0
+        show_caps_lock = true
+        show_keyboard_layout = true
+        show_login_button = true
+        show_password_hint = true
+
+[nightlight]
+enabled = false
+
+[notification]
+offset_x = 24
+offset_y = 24
+
+[osd]
+offset_y = 64
+position = "bottom_center"
+
+[shell]
+app_icon_color = "primary"
+app_icon_colorize = true
+corner_radius_scale = 2.0
+lang = "en"
+polkit_agent = true
+
+    [shell.panel]
+    open_near_click_clipboard = false
+    open_near_click_control_center = true
+    open_near_click_wallpaper = true
+    polkit_placement = "attached"
+    transparency_mode = "glass"
+
+    [shell.screen_corners]
+    enabled = true
+    size = 16
+
+[theme]
+community_palette = "Espresso Cream"
+mode = "dark"
+source = "wallpaper"
+wallpaper_scheme = "m3-content"
+
+    [theme.templates]
+    community_ids = [ "vscode", "zed", "discord", "steam", "yazi", "zathura" ]
+
+[wallpaper]
+directory = "/home/chri/Pictures"
+
+    [wallpaper.default]
+    path = "/home/chri/Pictures/wp12654734-catalina-4k-wallpapers.jpg"
+
+    [wallpaper.last]
+    path = "/home/chri/Pictures/wp12654734-catalina-4k-wallpapers.jpg"
+
+    [wallpaper.monitors.eDP-1]
+    path = "/home/chri/Pictures/wp12654734-catalina-4k-wallpapers.jpg"
+
+[weather]
+enabled = false
+
+[widget.media]
+max_length = 300
