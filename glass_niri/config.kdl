@@ -17,6 +17,11 @@ config-notification {
 
 prefer-no-csd
 
+blur {
+    passes 2
+    offset 1.5
+}
+
 // ==================================================
 // Input (User's keyboard/touchpad settings)
 // ==================================================
@@ -170,30 +175,6 @@ animations {
 // Window Rules (Aesthetic customization)
 // ==================================================
 window-rule {
-    match app-id="org.gnome.Nautilus"
-    opacity 0.75
-    draw-border-with-background false
-    background-effect {
-        xray true
-        blur true
-    liquid-glass {
-    refraction-strength 3.0
-    power-factor 10
-    refraction-power 1.0
-    glow-weight 0.0001
-    edge-lighting 0.2
-    saturation 0.9
-    vibrancy 0.2
-    adaptive-dim 0.2
-    adaptive-boost 0.2
-    }
-}
-    popups {
-        opacity 0.9
-    }
-}
-
-window-rule {
     match app-id="btrfs-assistant"
     open-floating true
     default-column-width { proportion 0.35; }
@@ -201,158 +182,10 @@ window-rule {
 }
 
 window-rule {
-    match app-id="org.quickshell"
-    opacity 0.75
-    draw-border-with-background false
-    background-effect {
-        xray true
-        blur true
-    liquid-glass {
-    refraction-strength 3.0
-    power-factor 10
-    refraction-power 1.0
-    glow-weight 0.0001
-    edge-lighting 0.2
-    saturation 0.9
-    vibrancy 0.2
-    adaptive-dim 0.2
-    adaptive-boost 0.2
-    }
-}
-    popups {
-        opacity 1.0
-    }
-}
-
-window-rule {
-    match app-id="brave-browser"
-    default-column-width { proportion 0.7; }
-    opacity 0.75
-    draw-border-with-background false
-    background-effect {
-        xray true
-        blur true
-    liquid-glass {
-    refraction-strength 3.0
-    power-factor 10
-    refraction-power 1.0
-    glow-weight 0.0001
-    edge-lighting 0.2
-    saturation 0.9
-    vibrancy 0.2
-    adaptive-dim 0.2
-    adaptive-boost 0.2
-    }
-}
-    popups {
-        opacity 1.0
-    }
-}
-
-window-rule {
-    match app-id="firefox"
-    default-column-width { proportion 0.7; }
-    opacity 0.75
-    draw-border-with-background false
-    background-effect {
-        xray true
-        blur true
-    liquid-glass {
-    refraction-strength 3.0
-    power-factor 10
-    refraction-power 1.0
-    glow-weight 0.0001
-    edge-lighting 0.2
-    saturation 0.9
-    vibrancy 0.2
-    adaptive-dim 0.2
-    adaptive-boost 0.2
-    }
-}
-    popups {
-        opacity 1.0
-    }
-}
-
-window-rule {
-    match app-id="kitty"
-    opacity 0.75
-    draw-border-with-background false
-    background-effect {
-        xray true
-        blur true
-    liquid-glass {
-    refraction-strength 3.0
-    power-factor 10
-    refraction-power 1.0
-    glow-weight 0.0001
-    edge-lighting 0.2
-    saturation 0.9
-    vibrancy 0.2
-    adaptive-dim 0.2
-    adaptive-boost 0.2
-    }
-}
-    popups {
-        opacity 1.0
-    }
-}
-
-window-rule {
-    match app-id="zed"
-    default-column-width { proportion 0.7; }
-    opacity 0.75
-    draw-border-with-background false
-    background-effect {
-        xray true
-        blur true
-    liquid-glass {
-    refraction-strength 3.0
-    power-factor 10
-    refraction-power 1.0
-    glow-weight 0.0001
-    edge-lighting 0.2
-    saturation 0.9
-    vibrancy 0.2
-    adaptive-dim 0.2
-    adaptive-boost 0.2
-    }
-}
-    popups {
-        opacity 1.0
-    }
-}
-
-window-rule {
-    match app-id="spotify"
-    default-column-width { proportion 0.7; }
-    opacity 0.75
-    draw-border-with-background false
-    background-effect {
-        xray true
-        blur true
-    liquid-glass {
-    refraction-strength 3.0
-    power-factor 10
-    refraction-power 1.0
-    glow-weight 0.0001
-    edge-lighting 0.2
-    saturation 0.9
-    vibrancy 0.2
-    adaptive-dim 0.2
-    adaptive-boost 0.2
-    }
-}
-    popups {
-        opacity 1.0
-    }
-}
-
-window-rule {
     geometry-corner-radius 18
     clip-to-geometry true
     draw-border-with-background false
-    opacity 0.85
+    opacity 0.90
     background-effect {
         blur true
         xray true
