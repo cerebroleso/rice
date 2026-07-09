@@ -32,6 +32,6 @@ else
     fi
 
     echo "Showing desktop files..."
-    nohup "$FM_BIN" --desktop >/dev/null 2>&1 &
+    nohup "$FM_BIN" --desktop < /dev/null >/dev/null 2>&1 &
     notify-send -e -a 'Niri' -i 'user-desktop' 'Desktop Files' 'Shown'
 fi
