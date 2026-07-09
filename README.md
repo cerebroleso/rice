@@ -47,6 +47,7 @@
 *   **network-manager-applet**: System tray interface for Wi-Fi.
 *   **blueman**: System tray interface for Bluetooth.
 *   **nirimod-git**: GTK4 graphical settings application for Niri.
+*   **niri-display-manager**: PySide6/QML graphical monitor layout and settings manager.
 *   **grim**: Frame grabber for the Wayland buffer.
 *   **slurp**: Coordinate mapping utility for screen captures.
 *   **satty**: Wayland screenshot annotation GUI.
@@ -81,7 +82,7 @@ paru -S niri xwayland-satellite wl-clipboard cliphist xdg-desktop-portal \
   unrar yazi kitty zed helium-browser-bin google-chrome discord pwvucontrol \
   network-manager-applet blueman grim slurp satty hyprutils-git hyprlang-git \
   hyprwayland-scanner-git aquamarine-git hyprgraphics-git hyprtoolkit-git \
-  nirimod-git playerctl noctalia-git ly
+  nirimod-git niri-display-manager playerctl noctalia-git ly
 
 # Enable the Ly TUI display manager for system startup login
 sudo systemctl enable ly.service
@@ -301,15 +302,15 @@ The following tables document the keyboard shortcuts configured in [binds.kdl](f
 
 ---
 
-## Memory Footprint Comparison Report
+## Memory Footprint & Performance
 
-This report analyzes the memory footprint of your desktop suite under two configurations: the **Full Glass Suite** (Niri Glass + Noctalia + PCManFM-Qt) and the **Minimal Stock Suite** (Niri Stock + Noctalia, without PCManFM-Qt), and compares them to other Wayland environments.
+Below is an analysis of the desktop suite's memory footprint under two setups: the **Full Glass Suite** (Niri Glass + Noctalia + PCManFM-Qt) and the **Minimal Stock Suite** (Niri Stock + Noctalia, without PCManFM-Qt), and how they measure up against other Wayland desktop setups.
 
 ### 1. Real-Time Resource Breakdown
 
-Based on live metrics from your system, here is the resident set size (RSS) memory consumption of the active components in both modes:
+These are live metrics showing the resident set size (RSS) memory footprint of the desktop components:
 
-#### Core Desktop Components
+#### Core Components
 
 | Process / Component | Role / Command | RSS Memory (Full Glass) | RSS Memory (Minimal / Stock) |
 | :--- | :--- | :--- | :--- |
@@ -319,9 +320,9 @@ Based on live metrics from your system, here is the resident set size (RSS) memo
 | **XWayland Satellite** | XWayland compatibility layer | **10.6 MB** (10,876 KB) | **10.6 MB** (10,876 KB) |
 | **Total Core Components** | **Active base workspace footprint** | **~488.3 MB** | **~342.4 MB** |
 
-### 2. The Butterfly Effect: Memory Cascade
+### 2. The Cascading Memory Profile (Butterfly Effect)
 
-Toggling off desktop features leads to a cascading reduction in memory usage. Here is the step-by-step impact:
+Toggling off features dynamically slashes memory consumption. Here is the step-by-step modular memory breakdown:
 
 ```
 [Full Suite: Niri Glass + Noctalia + PCManFM-Qt]  ---> 488.3 MB
@@ -341,28 +342,29 @@ Toggling off desktop features leads to a cascading reduction in memory usage. He
 [Minimal Suite: Niri Stock + Noctalia]           ---> 342.4 MB (Total Saved: 145.9 MB!)
 ```
 
-*   **PCManFM-Qt Suspension:** Disabling desktop icons immediately unloads the Qt6-based manager, recovering **118.1 MB** of RSS memory.
-*   **Compositor Shader Reduction:** Disabling Liquid Glass (switching to `stock_niri` configs) reduces Niri's memory usage by **23.7 MB** by freeing graphics pipeline allocations, refraction buffers, glow/fringing textures, and scaling calculations.
+*   **PCManFM-Qt Suspension:** Disabling the desktop icons immediately unloads the Qt6-based manager, recovering **118.1 MB** of RAM.
+*   **Compositor Shader Reduction:** Disabling the Liquid Glass refraction shader (switching to standard window borders) drops the compositor footprint by **23.7 MB** by cleaning up the active graphics pipeline, glow/fringing textures, and screen-behind buffers.
 
 ### 3. Comparison with Other Environments
 
-This table highlights how your configurations compare to other setups on a clean boot.
+Here is how these setups compare to other popular desktop choices on clean boot:
 
 | Environment | Compositor | Panels / Bars | Launcher & Services | Desktop Manager | Total Startup RSS |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Your Suite (Minimal / Stock)** | **Niri Stock** (~151MB) | **Noctalia** (~180MB) | Included in Noctalia | None (No icons) | **~342 MB** |
-| **Your Suite (Full Glass)** | **Niri Glass** (~175MB) | **Noctalia** (~180MB) | Included in Noctalia | **PCManFM-Qt** (~118MB) | **~488 MB** |
-| **Sway Minimal** | **Sway** (~60MB) | Waybar (~55MB) | Fuzzel + Mako (~35MB) | None (No icons) | **~150 MB** |
-| **Hyprland Modular** | **Hyprland** (~90MB) | Waybar (~60MB) | Rofi + Dunst + Swbg (~95MB) | None (No icons) | **~245 MB** |
+| **The Suite (Minimal / Stock)** | **Niri Stock** (~151MB) | **Noctalia** (~180MB) | Included in Noctalia | None (No icons) | **~342 MB** |
+| **The Suite (Full Glass)** | **Niri Glass** (~175MB) | **Noctalia** (~180MB) | Included in Noctalia | **PCManFM-Qt** (~118MB) | **~488 MB** |
+| **Sway Minimal** | Sway (~60MB) | Waybar (~55MB) | Fuzzel + Mako (~35MB) | None (No icons) | **~150 MB** |
+| **Hyprland Modular** | Hyprland (~90MB) | Waybar (~60MB) | Rofi + Dunst + Swbg (~95MB) | None (No icons) | **~245 MB** |
 | **KDE Plasma 6** | KWin (~120MB) | Plasmashell (~300MB) | KRunner + Daemons (~180MB) | Desktop Icons (~100MB) | **~700 MB** |
 | **GNOME 46** | Mutter (~150MB) | GNOME Shell (~400MB) | Included in Shell | Extensions (~80MB) | **~630 MB - 900 MB** |
 
-### 4. Efficiency Analysis
+### 4. Design & Performance Insights
 
-#### Why Noctalia is Highly Efficient
-In modular window managers, users run multiple independent daemons (e.g. Waybar + SwayNC + Fuzzel + SwayOSD + SWWW + Dock app). This duplicates systemd session resources and duplicate Qt/GTK shared library mappings in memory.
-By combining these functions into a single monolithic binary, **Noctalia** reduces process context-switching overhead and shares memory allocations, saving **80 MB to 150 MB** of overhead.
+#### Why Noctalia is Incredibly Efficient
+In a typical modular window manager configuration, multiple separate daemons are executed (e.g. Waybar + SwayNC + Fuzzel + SwayOSD + SWWW + Dock apps). This results in duplicated systemd tasks and repeated copying of Qt/GTK shared libraries in RAM.
+By rolling these tools into a single, cohesive binary, **Noctalia** minimizes context switching, shares a single memory pool, and maps standard libraries only once. This saves roughly **80 MB to 150 MB** of system overhead while providing a seamless, unified shell.
 
 #### The Cost of "Glass"
-Running **Liquid Glass** in Niri requires computing active background refraction, glow weight, borders, adaptive dimming, and fringing. These shaders force the compositor to retain additional window-behind texture buffers in GPU/CPU RAM, which accounts for the **23.7 MB** difference between Niri Glass and Niri Stock.
+Running **Liquid Glass** in Niri requires real-time computations for background refraction, adaptive dimming, borders, glows, and fringing. These shaders force the compositor to retain additional window-behind texture buffers in GPU/CPU RAM, which is why Niri Glass uses **23.7 MB** more than the stock configuration.
+
 
