@@ -2,6 +2,7 @@
 """Sync theme colors from noctalia.colors to kdeglobals and dynamically recolor GTK folder icons."""
 
 import configparser
+import json
 import os
 import re
 import sys
@@ -9,6 +10,56 @@ import time
 import shutil
 from pathlib import Path
 from subprocess import run
+
+def check_tccd_running():
+    try:
+        res = run(['busctl', 'status', 'com.tuxedocomputers.tccd'], capture_output=True)
+        return res.returncode == 0
+    except Exception:
+        return False
+
+def update_keyboard_backlight(accent_color_str):
+    if not check_tccd_running():
+        return False
+
+    try:
+        rgb = [int(x.strip()) for x in accent_color_str.split(',')]
+        if len(rgb) != 3:
+            return False
+
+        res = run([
+            'busctl', 'call',
+            'com.tuxedocomputers.tccd',
+            '/com/tuxedocomputers/tccd',
+            'com.tuxedocomputers.tccd',
+            'GetKeyboardBacklightStatesJSON'
+        ], capture_output=True, text=True)
+        if res.returncode != 0:
+            return False
+
+        content = res.stdout.strip().partition(' ')[2]
+        states = json.loads(json.loads(content))
+
+        for state in states:
+            state['red'] = rgb[0]
+            state['green'] = rgb[1]
+            state['blue'] = rgb[2]
+
+        new_states_str = json.dumps(states)
+
+        set_res = run([
+            'busctl', 'call',
+            'com.tuxedocomputers.tccd',
+            '/com/tuxedocomputers/tccd',
+            'com.tuxedocomputers.tccd',
+            'SetKeyboardBacklightStatesJSON',
+            's', new_states_str
+        ], capture_output=True, text=True)
+        
+        return set_res.returncode == 0
+    except Exception as e:
+        print(f"Warning: Failed to update keyboard backlight: {e}", file=sys.stderr)
+        return False
 
 def adjust_brightness(hex_color, factor):
     hex_color = hex_color.lstrip('#')
@@ -253,6 +304,9 @@ def main():
 
     # Generate custom icons theme for GTK / Nautilus
     update_icon_theme(accent_color)
+
+    # Sync keyboard backlight LED color
+    update_keyboard_backlight(accent_color)
 
     # Notify running applications if dbus is available
     try:
