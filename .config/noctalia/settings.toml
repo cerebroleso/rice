@@ -137,6 +137,7 @@ polkit_agent = true
     size = 16
 
 [theme]
+builtin = "Ayu"
 community_palette = "Espresso Cream"
 mode = "dark"
 source = "wallpaper"
@@ -149,13 +150,23 @@ wallpaper_scheme = "m3-content"
 directory = "/home/chri/Pictures"
 
     [wallpaper.default]
-    path = "/home/chri/Pictures/wp12654734-catalina-4k-wallpapers.jpg"
+    path = "/home/chri/Pictures/gtaIV/20260709_22h53m55s_grim.png"
 
     [wallpaper.last]
-    path = "/home/chri/Pictures/wp12654734-catalina-4k-wallpapers.jpg"
+    path = "/home/chri/Pictures/gtaIV/20260709_22h53m55s_grim.png"
 
     [wallpaper.monitors.eDP-1]
+    path = "/home/chri/Pictures/gtaIV/20260709_22h53m55s_grim.png"
+
+    [[wallpaper.favorite]]
+    palette_source = "wallpaper"
+    path = "/home/chri/Pictures/gtaIV/20260709_22h53m55s_grim.png"
+    theme_mode = "dark"
+    wallpaper_scheme = "m3-content"
+
+    [[wallpaper.favorite]]
     path = "/home/chri/Pictures/wp12654734-catalina-4k-wallpapers.jpg"
+    theme_mode = "auto"
 
 [weather]
 enabled = false
