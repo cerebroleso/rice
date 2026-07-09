@@ -201,6 +201,18 @@ Type=Scalable
     run(['gtk-update-icon-cache', '-q', '-f', str(dst_base)], capture_output=True)
     print(f"Successfully generated {places_count} macOS folder icons with accent {accent_hex}")
 
+    # 5. Force running GTK applications (like Nautilus) to reload the icon theme
+    try:
+        res = run(['gsettings', 'get', 'org.gnome.desktop.interface', 'icon-theme'], capture_output=True, text=True)
+        current_theme = res.stdout.strip().strip("'")
+        if current_theme:
+            temp_theme = 'Adwaita' if current_theme != 'Adwaita' else 'hicolor'
+            run(['gsettings', 'set', 'org.gnome.desktop.interface', 'icon-theme', temp_theme], capture_output=True)
+            time.sleep(0.1)
+            run(['gsettings', 'set', 'org.gnome.desktop.interface', 'icon-theme', current_theme], capture_output=True)
+    except Exception as e:
+        print(f"Warning: Failed to toggle icon-theme to reload cache: {e}", file=sys.stderr)
+
 def main():
     # Sleep to ensure Noctalia has finished writing templates to disk
     time.sleep(1.0)

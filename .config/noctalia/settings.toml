@@ -8,6 +8,7 @@ blur_intensity = 0.04999999888241291
 border_width = 0.5
 capsule = true
 capsule_opacity = 0.74999998323619366
+center = [ "clock" ]
 color = "primary"
 contact_shadow = true
 end = [
@@ -32,6 +33,9 @@ padding = 8
 thickness = 20
 widget_spacing = 4
 
+[control_center]
+hidden_tabs = [ "media" ]
+
 [desktop_widgets]
 schema_version = 2
 widget_order = []
@@ -45,6 +49,7 @@ widget_order = []
 
 [dock]
 launcher_position = "none"
+pinned = []
 
 [location]
 auto_locate = false
@@ -89,6 +94,9 @@ offset_y = 24
 [osd]
 offset_y = 64
 position = "bottom_center"
+
+    [osd.kinds]
+    media = true
 
 [shell]
 app_icon_color = "primary"
