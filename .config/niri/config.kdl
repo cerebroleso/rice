@@ -185,7 +185,7 @@ window-rule {
     geometry-corner-radius 18
     clip-to-geometry true
     draw-border-with-background false
-    opacity 0.90
+    opacity 0.9
     background-effect {
         blur true
         xray true
@@ -200,8 +200,8 @@ window-rule {
     adaptive-dim 0.2
     adaptive-boost 0.2
     fringing 2.0
+        }
     }
-}
     popups {
         opacity 1.0
     }
@@ -224,8 +224,8 @@ layer-rule {
     adaptive-dim 0.2
     adaptive-boost 0.2
     fringing 2.0
+        }
     }
-}
 }
 
 layer-rule {
@@ -244,8 +244,8 @@ layer-rule {
     adaptive-dim 0.2
     adaptive-boost 0.2
     fringing 2.0
+        }
     }
-}
 }
 
 layer-rule {
@@ -264,8 +264,8 @@ layer-rule {
     adaptive-dim 0.2
     adaptive-boost 0.2
     fringing 2.0
+        }
     }
-}
 }
 
 layer-rule {
@@ -284,8 +284,8 @@ layer-rule {
     adaptive-dim 0.2
     adaptive-boost 0.2
     fringing 2.0
+        }
     }
-}
 }
 
 layer-rule {
@@ -304,8 +304,8 @@ layer-rule {
     adaptive-dim 0.2
     adaptive-boost 0.2
     fringing 2.0
+        }
     }
-}
 }
 
 // ==================================================
