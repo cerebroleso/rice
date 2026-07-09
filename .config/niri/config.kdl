@@ -2,12 +2,11 @@
 // Startup applications (User's configuration)
 // ==================================================
 spawn-at-startup "xwayland-satellite"
-// spawn-at-startup "hyprpolkitagent"
 spawn-at-startup "nm-applet"
 spawn-at-startup "blueman-applet"
 spawn-at-startup "noctalia" "--daemon"
 spawn-at-startup "wl-paste" "--watch" "cliphist" "store"
-spawn-at-startup "pcmanfm-qt" "--desktop"
+// spawn-at-startup "pcmanfm-qt" "--desktop"
 
 // ==================================================
 // General (Aesthetic customization)
@@ -295,6 +294,13 @@ layer-rule {
     }
 }
 
+layer-rule {
+    match namespace="^noctalia-notification$"
+    geometry-corner-radius 12
+    background-effect {
+        xray false
+}
+}
 
 
 

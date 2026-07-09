@@ -29,4 +29,4 @@ if [ -f "$CONFIG_DIR/noctalia.kdl.tmp" ]; then
 fi
 
 niri msg action load-config-file 2>/dev/null
-notify-send -e -a 'Niri' -i 'preferences-desktop' 'Niri Config' "$notify_msg"
+notify-send -e -a 'Niri' -i 'folder-code' 'Niri Config' "$notify_msg"
