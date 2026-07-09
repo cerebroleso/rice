@@ -228,7 +228,7 @@ index 77f07967..a423141e 100644
                      },
                  },
 diff --git a/src/render_helpers/background_effect.rs b/src/render_helpers/background_effect.rs
-index d148b6c1..4acfa18f 100644
+index d148b6c1..0345db9a 100644
 --- a/src/render_helpers/background_effect.rs
 +++ b/src/render_helpers/background_effect.rs
 @@ -11,6 +11,7 @@ use crate::niri_render_elements;
@@ -266,11 +266,15 @@ index d148b6c1..4acfa18f 100644
      /// Effect subregion, will be clipped to `geometry`.
      ///
      /// `subregion.iter()` should return `geometry`-relative rectangles.
-@@ -121,11 +126,18 @@ impl BackgroundEffect {
+@@ -121,11 +126,22 @@ impl BackgroundEffect {
              effect.blur == Some(true)
          };
  
-+        let liquid_glass = effect.liquid_glass.map(LiquidGlassOptions::from);
++        let mut liquid_glass = effect.liquid_glass.map(LiquidGlassOptions::from);
++
++        if !blur {
++            liquid_glass = None;
++        }
 +
 +        if liquid_glass.is_some() {
 +            warn!("LIQUID GLASS: update_render_elements liquid_glass={:?}", liquid_glass);
@@ -285,7 +289,7 @@ index d148b6c1..4acfa18f 100644
          };
  
          // If we have some background effect but xray wasn't explicitly set, default it to true
-@@ -154,6 +166,7 @@ impl BackgroundEffect {
+@@ -154,6 +170,7 @@ impl BackgroundEffect {
          ns: Option<usize>,
          mut params: RenderParams,
          xray_pos: XrayPos,
@@ -293,7 +297,7 @@ index d148b6c1..4acfa18f 100644
          push: &mut dyn FnMut(BackgroundEffectElement),
      ) {
          if !self.is_visible() {
-@@ -167,8 +180,6 @@ impl BackgroundEffect {
+@@ -167,8 +184,6 @@ impl BackgroundEffect {
  
          let damage = self.damage.render(params.geometry);
  
@@ -302,7 +306,7 @@ index d148b6c1..4acfa18f 100644
          let blur = self.options.blur && !self.blur_config.off;
          let blur_options = blur.then_some(BlurOptions::from(self.blur_config));
          let noise = if blur { self.blur_config.noise } else { 0. };
-@@ -185,21 +196,30 @@ impl BackgroundEffect {
+@@ -185,21 +200,30 @@ impl BackgroundEffect {
                  return;
              };
  
@@ -336,7 +340,7 @@ index d148b6c1..4acfa18f 100644
              push(elem.into());
          }
      }
-@@ -213,11 +233,21 @@ fn render_params_for_tile(
+@@ -213,11 +237,21 @@ fn render_params_for_tile(
      blur_region: Option<Arc<Vec<Rectangle<i32, Logical>>>>,
      surface_geo: Rectangle<f64, Logical>,
      surface_anim_scale: Scale<f64>,
@@ -358,7 +362,7 @@ index d148b6c1..4acfa18f 100644
      let mut subregion = None;
      if let Some(rects) = blur_region {
          if rects.is_empty() {
-@@ -255,6 +285,7 @@ fn render_params_for_tile(
+@@ -255,6 +289,7 @@ fn render_params_for_tile(
  
      Some(RenderParams {
          geometry: effect_geometry,
@@ -366,7 +370,7 @@ index d148b6c1..4acfa18f 100644
          subregion,
          clip,
          scale,
-@@ -314,6 +345,14 @@ pub fn render_for_tile(
+@@ -314,6 +349,14 @@ pub fn render_for_tile(
          let mut surface_geo = surface_geo(states).unwrap_or_default().to_f64();
          surface_geo.loc += surface_off;
  
@@ -381,7 +385,7 @@ index d148b6c1..4acfa18f 100644
          let Some(params) = render_params_for_tile(
              geometry,
              scale,
-@@ -322,11 +361,12 @@ pub fn render_for_tile(
+@@ -322,11 +365,12 @@ pub fn render_for_tile(
              blur_region,
              surface_geo,
              surface_anim_scale,
