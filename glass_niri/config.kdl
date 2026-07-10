@@ -19,7 +19,7 @@ config-notification {
 prefer-no-csd
 
 blur {
-    passes 2
+    passes 1
     offset 1.5
 }
 
@@ -255,16 +255,17 @@ layer-rule {
     background-effect {
         xray false
     liquid-glass {
-    refraction-strength 3.0
+    edge-padding 0.10
+    refraction-strength 10.0
     power-factor 10
-    refraction-power 1.0
+    refraction-power 100.0
     glow-weight 0.0001
     edge-lighting 0.2
     saturation 0.9
     vibrancy 0.2
     adaptive-dim 0.2
     adaptive-boost 0.2
-    fringing 3.0
+    fringing 1.0
     }
 }
 }
@@ -284,7 +285,7 @@ layer-rule {
     vibrancy 0.2
     adaptive-dim 0.2
     adaptive-boost 0.2
-    fringing 3.0
+    fringing 0.1
     }
 }
 }

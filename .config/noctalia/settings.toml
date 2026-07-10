@@ -48,8 +48,21 @@ widget_order = []
     [desktop_widgets.widget]
 
 [dock]
+auto_hide = false
+background_opacity = 0.099999997764825821
+cross_axis_padding = 8
+icon_size = 64
+item_spacing = 12
 launcher_position = "none"
-pinned = []
+main_axis_padding = 32
+margin_edge = 4
+margin_ends = 0
+pinned = [ "org.gnome.Nautilus", "helium" ]
+radius = 0
+radius_bottom_left = 80
+radius_bottom_right = 80
+radius_top_left = 80
+radius_top_right = 80
 
 [location]
 auto_locate = false
