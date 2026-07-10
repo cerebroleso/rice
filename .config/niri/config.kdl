@@ -183,6 +183,14 @@ window-rule {
 }
 
 window-rule {
+    match app-id="kitty"
+    opacity 0.85
+    background-effect {
+        blur false
+}
+}
+
+window-rule {
     geometry-corner-radius 18
     clip-to-geometry true
     draw-border-with-background false
