@@ -199,8 +199,10 @@ binds {
     Mod+Ctrl+Left { focus-column-left; }
     Mod+Ctrl+Right { focus-column-right; }
 
-    Mod+Shift+Left { move-column-left; }
-    Mod+Shift+Right { move-column-right; }
+    Mod+Shift+Left { move-window-to-monitor-left; }
+    Mod+Shift+Right { move-window-to-monitor-right; }
+    Mod+TouchpadScrollLeft { move-window-to-monitor-left; }
+    Mod+TouchpadScrollRight { move-window-to-monitor-right; }
 
     Mod+Ctrl+Up { focus-workspace-up; }
     Mod+Ctrl+Down { focus-workspace-down; }
