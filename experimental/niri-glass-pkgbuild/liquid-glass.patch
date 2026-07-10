@@ -1,8 +1,8 @@
 diff --git a/niri-config/src/appearance.rs b/niri-config/src/appearance.rs
-index a1c83271..abf80747 100644
+index a1c83271..08a2e920 100644
 --- a/niri-config/src/appearance.rs
 +++ b/niri-config/src/appearance.rs
-@@ -1055,6 +1055,159 @@ impl MergeWith<BlurPart> for Blur {
+@@ -1055,16 +1055,201 @@ impl MergeWith<BlurPart> for Blur {
      }
  }
  
@@ -34,6 +34,10 @@ index a1c83271..abf80747 100644
 +    pub adaptive_boost: f64,
 +    pub edge_thickness: f64,
 +    pub edge_padding: f64,
++    pub geometry_offset_x: f64,
++    pub geometry_offset_y: f64,
++    pub geometry_scale_x: f64,
++    pub geometry_scale_y: f64,
 +}
 +
 +impl Default for LiquidGlass {
@@ -65,6 +69,10 @@ index a1c83271..abf80747 100644
 +            adaptive_boost: 0.0,
 +            edge_thickness: 0.15,
 +            edge_padding: 0.0,
++            geometry_offset_x: 0.0,
++            geometry_offset_y: 0.0,
++            geometry_scale_x: 1.0,
++            geometry_scale_y: 1.0,
 +        }
 +    }
 +}
@@ -123,6 +131,14 @@ index a1c83271..abf80747 100644
 +    pub edge_thickness: Option<FloatOrInt<0, 100>>,
 +    #[knuffel(child, unwrap(argument))]
 +    pub edge_padding: Option<FloatOrInt<0, 100>>,
++    #[knuffel(child, unwrap(argument))]
++    pub geometry_offset_x: Option<FloatOrInt<-1000, 1000>>,
++    #[knuffel(child, unwrap(argument))]
++    pub geometry_offset_y: Option<FloatOrInt<-1000, 1000>>,
++    #[knuffel(child, unwrap(argument))]
++    pub geometry_scale_x: Option<FloatOrInt<0, 1000>>,
++    #[knuffel(child, unwrap(argument))]
++    pub geometry_scale_y: Option<FloatOrInt<0, 1000>>,
 +}
 +
 +impl MergeWith<LiquidGlassPart> for LiquidGlass {
@@ -155,14 +171,33 @@ index a1c83271..abf80747 100644
 +            adaptive_boost,
 +            edge_thickness,
 +            edge_padding,
++            geometry_offset_x,
++            geometry_offset_y,
++            geometry_scale_x,
++            geometry_scale_y,
 +        );
 +    }
++}
++
++#[derive(knuffel::Decode, Debug, Default, Clone, Copy, PartialEq)]
++pub struct LocalBlurPart {
++    #[knuffel(argument)]
++    pub enabled: Option<bool>,
++    #[knuffel(child, unwrap(argument))]
++    pub passes: Option<u8>,
++    #[knuffel(child, unwrap(argument))]
++    pub offset: Option<FloatOrInt<0, 100>>,
 +}
 +
  #[derive(knuffel::Decode, Debug, Default, Clone, Copy, PartialEq)]
  pub struct BackgroundEffectRule {
      #[knuffel(child, unwrap(argument))]
-@@ -1065,6 +1218,8 @@ pub struct BackgroundEffectRule {
+     pub xray: Option<bool>,
+-    #[knuffel(child, unwrap(argument))]
+-    pub blur: Option<bool>,
++    #[knuffel(child)]
++    pub blur: Option<LocalBlurPart>,
+     #[knuffel(child, unwrap(argument))]
      pub noise: Option<FloatOrInt<0, 1000>>,
      #[knuffel(child, unwrap(argument))]
      pub saturation: Option<FloatOrInt<0, 1000>>,
@@ -171,15 +206,40 @@ index a1c83271..abf80747 100644
  }
  
  /// Resolved background effect rule.
-@@ -1087,6 +1242,7 @@ pub struct BackgroundEffect {
+@@ -1085,13 +1270,31 @@ pub struct BackgroundEffect {
+     /// - `Some(true)`: always blur
+     pub blur: Option<bool>,
  
++    pub passes: Option<u8>,
++    pub offset: Option<f64>,
++
      pub noise: Option<f64>,
      pub saturation: Option<f64>,
 +    pub liquid_glass: Option<LiquidGlass>,
  }
  
  impl MergeWith<BackgroundEffectRule> for BackgroundEffect {
-@@ -1100,6 +1256,11 @@ impl MergeWith<BackgroundEffectRule> for BackgroundEffect {
+     fn merge_with(&mut self, part: &BackgroundEffectRule) {
+-        merge_clone_opt!((self, part), xray, blur);
++        merge_clone_opt!((self, part), xray);
++
++        if let Some(blur_part) = &part.blur {
++            if let Some(enabled) = blur_part.enabled {
++                self.blur = Some(enabled);
++            } else {
++                self.blur = Some(true);
++            }
++            if let Some(passes) = blur_part.passes {
++                self.passes = Some(passes);
++            }
++            if let Some(offset) = blur_part.offset {
++                self.offset = Some(offset.0);
++            }
++        }
+ 
+         if let Some(x) = part.noise {
+             self.noise = Some(x.0);
+@@ -1100,6 +1303,11 @@ impl MergeWith<BackgroundEffectRule> for BackgroundEffect {
          if let Some(x) = part.saturation {
              self.saturation = Some(x.0);
          }
@@ -228,7 +288,7 @@ index 77f07967..a423141e 100644
                      },
                  },
 diff --git a/src/render_helpers/background_effect.rs b/src/render_helpers/background_effect.rs
-index d148b6c1..0345db9a 100644
+index d148b6c1..d5d6e1ee 100644
 --- a/src/render_helpers/background_effect.rs
 +++ b/src/render_helpers/background_effect.rs
 @@ -11,6 +11,7 @@ use crate::niri_render_elements;
@@ -239,15 +299,19 @@ index d148b6c1..0345db9a 100644
  use crate::render_helpers::xray::{XrayElement, XrayPos};
  use crate::render_helpers::RenderCtx;
  use crate::utils::region::TransformedRegion;
-@@ -36,6 +37,7 @@ pub struct Options {
+@@ -34,8 +35,11 @@ pub struct BackgroundEffect {
+ pub struct Options {
+     pub blur: bool,
      pub xray: bool,
++    pub passes: Option<u8>,
++    pub offset: Option<f64>,
      pub noise: Option<f64>,
      pub saturation: Option<f64>,
 +    pub liquid_glass: Option<LiquidGlassOptions>,
  }
  
  impl Options {
-@@ -44,14 +46,17 @@ impl Options {
+@@ -44,14 +48,17 @@ impl Options {
              || self.blur
              || self.noise.is_some_and(|x| x > 0.)
              || self.saturation.is_some_and(|x| x != 1.)
@@ -266,30 +330,24 @@ index d148b6c1..0345db9a 100644
      /// Effect subregion, will be clipped to `geometry`.
      ///
      /// `subregion.iter()` should return `geometry`-relative rectangles.
-@@ -121,11 +126,22 @@ impl BackgroundEffect {
+@@ -121,11 +128,16 @@ impl BackgroundEffect {
              effect.blur == Some(true)
          };
  
-+        let mut liquid_glass = effect.liquid_glass.map(LiquidGlassOptions::from);
-+
-+        if !blur {
-+            liquid_glass = None;
-+        }
-+
-+        if liquid_glass.is_some() {
-+            warn!("LIQUID GLASS: update_render_elements liquid_glass={:?}", liquid_glass);
-+        }
++        let liquid_glass = effect.liquid_glass.map(LiquidGlassOptions::from);
 +
          let mut options = Options {
              blur,
              xray: effect.xray == Some(true),
++            passes: effect.passes,
++            offset: effect.offset,
              noise: effect.noise,
              saturation: effect.saturation,
 +            liquid_glass,
          };
  
          // If we have some background effect but xray wasn't explicitly set, default it to true
-@@ -154,6 +170,7 @@ impl BackgroundEffect {
+@@ -154,6 +166,7 @@ impl BackgroundEffect {
          ns: Option<usize>,
          mut params: RenderParams,
          xray_pos: XrayPos,
@@ -297,16 +355,32 @@ index d148b6c1..0345db9a 100644
          push: &mut dyn FnMut(BackgroundEffectElement),
      ) {
          if !self.is_visible() {
-@@ -167,8 +184,6 @@ impl BackgroundEffect {
+@@ -167,14 +180,19 @@ impl BackgroundEffect {
  
          let damage = self.damage.render(params.geometry);
  
 -        // Use noise/saturation from options, falling back to blur defaults if blurred, and
 -        // to no effect if not blurred.
          let blur = self.options.blur && !self.blur_config.off;
-         let blur_options = blur.then_some(BlurOptions::from(self.blur_config));
-         let noise = if blur { self.blur_config.noise } else { 0. };
-@@ -185,21 +200,30 @@ impl BackgroundEffect {
+-        let blur_options = blur.then_some(BlurOptions::from(self.blur_config));
+-        let noise = if blur { self.blur_config.noise } else { 0. };
++        let mut blur_config = self.blur_config;
++        if let Some(p) = self.options.passes {
++            blur_config.passes = p;
++        }
++        if let Some(o) = self.options.offset {
++            blur_config.offset = o;
++        }
++        let blur_options = blur.then_some(BlurOptions::from(blur_config));
++        let noise = if blur { blur_config.noise } else { 0. };
+         let noise = self.options.noise.unwrap_or(noise) as f32;
+         let saturation = if blur {
+-            self.blur_config.saturation
++            blur_config.saturation
+         } else {
+             1.
+         };
+@@ -185,21 +203,29 @@ impl BackgroundEffect {
                  return;
              };
  
@@ -332,7 +406,6 @@ index d148b6c1..0345db9a 100644
              );
          } else {
 -            // Render non-xray effect.
-+            warn!("LIQUID GLASS: non-xray path, padding_pixels={}, liquid_glass={:?}", padding_pixels, self.options.liquid_glass);
              let elem = self
                  .nonxray
 -                .render(ns, params, blur_options, noise, saturation);
@@ -340,7 +413,7 @@ index d148b6c1..0345db9a 100644
              push(elem.into());
          }
      }
-@@ -213,11 +237,21 @@ fn render_params_for_tile(
+@@ -213,11 +239,21 @@ fn render_params_for_tile(
      blur_region: Option<Arc<Vec<Rectangle<i32, Logical>>>>,
      surface_geo: Rectangle<f64, Logical>,
      surface_anim_scale: Scale<f64>,
@@ -362,7 +435,7 @@ index d148b6c1..0345db9a 100644
      let mut subregion = None;
      if let Some(rects) = blur_region {
          if rects.is_empty() {
-@@ -255,6 +289,7 @@ fn render_params_for_tile(
+@@ -255,6 +291,7 @@ fn render_params_for_tile(
  
      Some(RenderParams {
          geometry: effect_geometry,
@@ -370,7 +443,7 @@ index d148b6c1..0345db9a 100644
          subregion,
          clip,
          scale,
-@@ -314,6 +349,14 @@ pub fn render_for_tile(
+@@ -314,6 +351,14 @@ pub fn render_for_tile(
          let mut surface_geo = surface_geo(states).unwrap_or_default().to_f64();
          surface_geo.loc += surface_off;
  
@@ -385,7 +458,7 @@ index d148b6c1..0345db9a 100644
          let Some(params) = render_params_for_tile(
              geometry,
              scale,
-@@ -322,11 +365,12 @@ pub fn render_for_tile(
+@@ -322,11 +367,12 @@ pub fn render_for_tile(
              blur_region,
              surface_geo,
              surface_anim_scale,
@@ -400,7 +473,7 @@ index d148b6c1..0345db9a 100644
      });
  }
 diff --git a/src/render_helpers/framebuffer_effect.rs b/src/render_helpers/framebuffer_effect.rs
-index 4dc529db..ecb8d62c 100644
+index 4dc529db..8b7b5b16 100644
 --- a/src/render_helpers/framebuffer_effect.rs
 +++ b/src/render_helpers/framebuffer_effect.rs
 @@ -16,6 +16,7 @@ use smithay::utils::{Buffer, Logical, Physical, Rectangle, Scale, Transform};
@@ -456,7 +529,7 @@ index 4dc529db..ecb8d62c 100644
              Uniform::new("niri_scale", self.scale),
              Uniform::new("geo_size", clip_geo_size),
              Uniform::new("corner_radius", <[f32; 4]>::from(self.corner_radius)),
-@@ -124,7 +131,68 @@ impl FramebufferEffectElement {
+@@ -124,7 +131,72 @@ impl FramebufferEffectElement {
              Uniform::new("noise", self.noise),
              Uniform::new("saturation", self.saturation),
              Uniform::new("bg_color", [0f32, 0., 0., 0.]),
@@ -491,6 +564,8 @@ index 4dc529db..ecb8d62c 100644
 +                Uniform::new("lg_adaptive_dim", lg.adaptive_dim as f32),
 +                Uniform::new("lg_adaptive_boost", lg.adaptive_boost as f32),
 +                Uniform::new("lg_edge_thickness", lg.edge_thickness as f32),
++                Uniform::new("lg_geometry_offset", [lg.geometry_offset_x as f32, lg.geometry_offset_y as f32]),
++                Uniform::new("lg_geometry_scale", [lg.geometry_scale_x as f32, lg.geometry_scale_y as f32]),
 +            ]);
 +        } else {
 +            uniforms.extend([
@@ -519,6 +594,8 @@ index 4dc529db..ecb8d62c 100644
 +                Uniform::new("lg_adaptive_dim", 0.0f32),
 +                Uniform::new("lg_adaptive_boost", 0.0f32),
 +                Uniform::new("lg_edge_thickness", 0.15f32),
++                Uniform::new("lg_geometry_offset", [0.0f32, 0.0f32]),
++                Uniform::new("lg_geometry_scale", [1.0f32, 1.0f32]),
 +            ]);
 +        }
 +
@@ -528,10 +605,10 @@ index 4dc529db..ecb8d62c 100644
  
 diff --git a/src/render_helpers/liquid_glass.rs b/src/render_helpers/liquid_glass.rs
 new file mode 100644
-index 00000000..5b76a473
+index 00000000..599e7e8a
 --- /dev/null
 +++ b/src/render_helpers/liquid_glass.rs
-@@ -0,0 +1,62 @@
+@@ -0,0 +1,70 @@
 +#[derive(Debug, Default, Clone, Copy, PartialEq)]
 +pub struct LiquidGlassOptions {
 +    pub refraction_strength: f64,
@@ -560,6 +637,10 @@ index 00000000..5b76a473
 +    pub adaptive_boost: f64,
 +    pub edge_thickness: f64,
 +    pub edge_padding: f64,
++    pub geometry_offset_x: f64,
++    pub geometry_offset_y: f64,
++    pub geometry_scale_x: f64,
++    pub geometry_scale_y: f64,
 +}
 +
 +impl From<niri_config::LiquidGlass> for LiquidGlassOptions {
@@ -591,6 +672,10 @@ index 00000000..5b76a473
 +            adaptive_boost: config.adaptive_boost,
 +            edge_thickness: config.edge_thickness,
 +            edge_padding: config.edge_padding,
++            geometry_offset_x: config.geometry_offset_x,
++            geometry_offset_y: config.geometry_offset_y,
++            geometry_scale_x: config.geometry_scale_x,
++            geometry_scale_y: config.geometry_scale_y,
 +        }
 +    }
 +}
@@ -607,10 +692,10 @@ index 474437af..eb9c592b 100644
  pub mod damage;
  pub mod debug;
 diff --git a/src/render_helpers/shaders/clipped_surface.frag b/src/render_helpers/shaders/clipped_surface.frag
-index e97f18c0..688a8f1e 100644
+index e97f18c0..a2718bb9 100644
 --- a/src/render_helpers/shaders/clipped_surface.frag
 +++ b/src/render_helpers/shaders/clipped_surface.frag
-@@ -26,29 +26,171 @@ uniform vec2 geo_size;
+@@ -26,29 +26,189 @@ uniform vec2 geo_size;
  uniform vec4 corner_radius;
  uniform mat3 input_to_geo;
  
@@ -645,6 +730,8 @@ index e97f18c0..688a8f1e 100644
 +uniform float lg_adaptive_boost;
 +uniform float lg_edge_thickness;
 +uniform float lg_padding_pixels;
++uniform vec2 lg_geometry_offset;
++uniform vec2 lg_geometry_scale;
 +
  float niri_rounding_alpha(vec2 coords, vec2 size, vec4 corner_radius);
  vec4 postprocess(vec4 color);
@@ -679,22 +766,31 @@ index e97f18c0..688a8f1e 100644
 +    // Position in pixel coords relative to center
 +    vec2 position = windowUV * blurSize - halfBlurSize;
 +    position.y = -position.y; // Invert Y for convention
++
++    // Adjust position, blur size, and corner radius according to scale and offset uniforms
++    vec2 offsetPx = lg_geometry_offset * niri_scale;
++    offsetPx.y = -offsetPx.y; // Invert Y for coordinate system
 +    
-+    float size = max(min(blurSize.x, blurSize.y), 1.0);
-+    float sdfScale = max(max(blurSize.x, blurSize.y), 1.0);
++    vec2 adjustedPosition = position - offsetPx;
++    vec2 adjustedHalfBlurSize = halfBlurSize * lg_geometry_scale;
++    vec4 adjustedCornerRadius = cornerRadius * lg_geometry_scale.x;
++    
++    vec2 adjustedBlurSize = blurSize * lg_geometry_scale;
++    float size = max(min(adjustedBlurSize.x, adjustedBlurSize.y), 1.0);
++    float sdfScale = max(max(adjustedBlurSize.x, adjustedBlurSize.y), 1.0);
 +    
 +    // Calculate inversed SDF (distance inside the window)
 +    float inversedSDF = -roundedRectangleDist(
-+        position / sdfScale,
-+        halfBlurSize / sdfScale,
-+        cornerRadius / sdfScale
++        adjustedPosition / sdfScale,
++        adjustedHalfBlurSize / sdfScale,
++        adjustedCornerRadius / sdfScale
 +    ) * sdfScale / size;
 +    
 +    if (inversedSDF < 0.0) {
 +        return baseColor;
 +    }
 +    
-+    vec2 normalizedGlassCoord = safeNormalize(position);
++    vec2 normalizedGlassCoord = safeNormalize(adjustedPosition);
 +    
 +    // ShojiWM Dome Lens Distortion logic
 +    // lg_edge_thickness represents the depth of the bezel zone (distortion_depth).
@@ -706,7 +802,7 @@ index e97f18c0..688a8f1e 100644
 +    // Offset in pixel space. refractionStrength is passed as normStrength (0..1)
 +    // In ShojiWM: offset = distortion * normalizedGlassCoord * glassSize * 0.5 * distortion_strength;
 +    // Which is: distortion * normalizedGlassCoord * halfBlurSize * distortion_strength;
-+    vec2 offset = distortion * normalizedGlassCoord * halfBlurSize * refractionStrength;
++    vec2 offset = distortion * normalizedGlassCoord * adjustedHalfBlurSize * refractionStrength;
 +    
 +    // Convert pixel offset to UV offset
 +    vec2 uvScale = max(abs(vec2(input_to_geo[0][0], input_to_geo[1][1])), 0.0001);
@@ -731,6 +827,13 @@ index e97f18c0..688a8f1e 100644
 +    
 +    // Multiplicative tinting (map glass_tint to lg_brightness)
 +    glassColor *= clamp(lg_brightness, 0.0, 2.0);
++
++    // SAFE BORDER HIGHLIGHT:
++    // Draw a clean, anti-aliased 1.5-pixel border at the exact boundary of the SDF.
++    // Controlled dynamically by 'edge-lighting' in your config.
++    float borderWidth = 1.5 / size;
++    float borderAlpha = smoothstep(borderWidth, 0.0, inversedSDF) * lg_edge_lighting;
++    glassColor = mix(glassColor, vec3(1.0), borderAlpha);
 +    
 +    return vec4(glassColor, baseColor.a);
 +}
@@ -792,10 +895,10 @@ index e97f18c0..688a8f1e 100644
  
  #if defined(DEBUG_FLAGS)
 diff --git a/src/render_helpers/shaders/mod.rs b/src/render_helpers/shaders/mod.rs
-index 7be9b159..e79b9cba 100644
+index 7be9b159..a016c28e 100644
 --- a/src/render_helpers/shaders/mod.rs
 +++ b/src/render_helpers/shaders/mod.rs
-@@ -97,6 +97,32 @@ impl Shaders {
+@@ -97,6 +97,34 @@ impl Shaders {
                      UniformName::new("geo_size", UniformType::_2f),
                      UniformName::new("corner_radius", UniformType::_4f),
                      UniformName::new("input_to_geo", UniformType::Matrix3x3),
@@ -825,10 +928,12 @@ index 7be9b159..e79b9cba 100644
 +                    UniformName::new("lg_adaptive_boost", UniformType::_1f),
 +                    UniformName::new("lg_edge_thickness", UniformType::_1f),
 +                    UniformName::new("lg_padding_pixels", UniformType::_1f),
++                    UniformName::new("lg_geometry_offset", UniformType::_2f),
++                    UniformName::new("lg_geometry_scale", UniformType::_2f),
                  ],
              )
              .map_err(|err| {
-@@ -119,6 +145,32 @@ impl Shaders {
+@@ -119,6 +147,34 @@ impl Shaders {
                      UniformName::new("noise", UniformType::_1f),
                      UniformName::new("saturation", UniformType::_1f),
                      UniformName::new("bg_color", UniformType::_4f),
@@ -858,11 +963,13 @@ index 7be9b159..e79b9cba 100644
 +                    UniformName::new("lg_adaptive_boost", UniformType::_1f),
 +                    UniformName::new("lg_edge_thickness", UniformType::_1f),
 +                    UniformName::new("lg_padding_pixels", UniformType::_1f),
++                    UniformName::new("lg_geometry_offset", UniformType::_2f),
++                    UniformName::new("lg_geometry_scale", UniformType::_2f),
                  ],
              )
              .map_err(|err| {
 diff --git a/src/render_helpers/xray.rs b/src/render_helpers/xray.rs
-index f4b4f861..7fd0bc39 100644
+index f4b4f861..6f7d87ae 100644
 --- a/src/render_helpers/xray.rs
 +++ b/src/render_helpers/xray.rs
 @@ -16,6 +16,7 @@ use smithay::utils::{Buffer, Logical, Physical, Point, Rectangle, Scale, Size, T
@@ -928,7 +1035,7 @@ index f4b4f861..7fd0bc39 100644
              Uniform::new("niri_scale", self.scale),
              Uniform::new("geo_size", <[f32; 2]>::from(self.clip_geo_size)),
              Uniform::new("corner_radius", <[f32; 4]>::from(self.corner_radius)),
-@@ -268,7 +278,69 @@ impl XrayElement {
+@@ -268,7 +278,73 @@ impl XrayElement {
              Uniform::new("noise", self.noise),
              Uniform::new("saturation", self.saturation),
              Uniform::new("bg_color", self.bg_color.components()),
@@ -963,6 +1070,8 @@ index f4b4f861..7fd0bc39 100644
 +                Uniform::new("lg_adaptive_boost", lg.adaptive_boost as f32),
 +                Uniform::new("lg_edge_thickness", lg.edge_thickness as f32),
 +                Uniform::new("lg_padding_pixels", self.padding_pixels),
++                Uniform::new("lg_geometry_offset", [lg.geometry_offset_x as f32, lg.geometry_offset_y as f32]),
++                Uniform::new("lg_geometry_scale", [lg.geometry_scale_x as f32, lg.geometry_scale_y as f32]),
 +            ]);
 +        } else {
 +            uniforms.extend([
@@ -992,6 +1101,8 @@ index f4b4f861..7fd0bc39 100644
 +                Uniform::new("lg_adaptive_boost", 0.0f32),
 +                Uniform::new("lg_edge_thickness", 0.15f32),
 +                Uniform::new("lg_padding_pixels", self.padding_pixels),
++                Uniform::new("lg_geometry_offset", [0.0f32, 0.0f32]),
++                Uniform::new("lg_geometry_scale", [1.0f32, 1.0f32]),
 +            ]);
 +        }
 +
