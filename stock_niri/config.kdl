@@ -302,7 +302,13 @@ layer-rule {
 }
 }
 
-
+layer-rule {
+    match namespace="^noctalia-dock$"
+    geometry-corner-radius 16
+    background-effect {
+        xray false
+}
+}
 
 
 

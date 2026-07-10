@@ -163,13 +163,13 @@ wallpaper_scheme = "m3-content"
 directory = "/home/chri/Pictures"
 
     [wallpaper.default]
-    path = "/home/chri/Pictures/gtaIV/20260709_22h53m55s_grim.png"
+    path = "/home/chri/Pictures/wp12654734-catalina-4k-wallpapers.jpg"
 
     [wallpaper.last]
-    path = "/home/chri/Pictures/gtaIV/20260709_22h53m55s_grim.png"
+    path = "/home/chri/Pictures/wp12654734-catalina-4k-wallpapers.jpg"
 
     [wallpaper.monitors.eDP-1]
-    path = "/home/chri/Pictures/gtaIV/20260709_22h53m55s_grim.png"
+    path = "/home/chri/Pictures/wp12654734-catalina-4k-wallpapers.jpg"
 
     [[wallpaper.favorite]]
     palette_source = "wallpaper"
