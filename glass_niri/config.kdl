@@ -19,8 +19,8 @@ config-notification {
 prefer-no-csd
 
 blur {
-    passes 1
-    offset 1.5
+    passes 2
+    offset 8
 }
 
 // ==================================================
@@ -186,7 +186,7 @@ window-rule {
     geometry-corner-radius 18
     clip-to-geometry true
     draw-border-with-background false
-    opacity 0.90
+    opacity 0.85
     background-effect {
         blur true
         xray true
@@ -233,6 +233,10 @@ layer-rule {
     match namespace="^noctalia-bar-.*$"
     geometry-corner-radius 12
     background-effect {
+        blur {
+            passes 1
+            offset 1.5
+        }
         xray false
     liquid-glass {
     refraction-strength 3.0
@@ -253,27 +257,39 @@ layer-rule {
     match namespace="^noctalia-dock$"
     geometry-corner-radius 16
     background-effect {
+        blur {
+            passes 1
+            offset 1.5
+        }
         xray false
-    liquid-glass {
-    edge-padding 0.10
-    refraction-strength 10.0
-    power-factor 10
-    refraction-power 100.0
-    glow-weight 0.0001
-    edge-lighting 0.2
-    saturation 0.9
-    vibrancy 0.2
-    adaptive-dim 0.2
-    adaptive-boost 0.2
-    fringing 1.0
+        liquid-glass {
+            edge-padding 0.10
+            geometry-offset-x 0
+            geometry-scale-x 1.1
+            geometry-offset-y 15
+            geometry-scale-y 0.75
+            refraction-strength 5.0
+            power-factor 10
+            refraction-power 100.0
+            glow-weight 0.0001
+            edge-lighting 0.1
+            saturation 0.9
+            vibrancy 0.2
+            adaptive-dim 0.2
+            adaptive-boost 0.2
+            fringing 1.0
+        }
     }
-}
 }
 
 layer-rule {
     match namespace="^noctalia-notification$"
     geometry-corner-radius 12
     background-effect {
+        blur {
+            passes 1
+            offset 1.5
+        }
         xray false
     liquid-glass {
     refraction-strength 3.0
@@ -294,6 +310,10 @@ layer-rule {
     match namespace="^noctalia-osd$"
     geometry-corner-radius 12
     background-effect {
+        blur {
+            passes 1
+            offset 1.5
+        }
         xray false
     liquid-glass {
     refraction-strength 3.0
