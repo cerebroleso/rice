@@ -183,14 +183,6 @@ window-rule {
 }
 
 window-rule {
-    match app-id="kitty"
-    opacity 0.85
-    background-effect {
-        blur false
-}
-}
-
-window-rule {
     geometry-corner-radius 18
     clip-to-geometry true
     draw-border-with-background false
@@ -213,6 +205,15 @@ window-rule {
 }
     popups {
         opacity 1.0
+    }
+}
+
+window-rule {
+    match app-id="kitty"
+    opacity 0.85
+    background-effect {
+        blur false
+        xray false
     }
 }
 
@@ -263,29 +264,29 @@ layer-rule {
 
 layer-rule {
     match namespace="^noctalia-dock$"
-    geometry-corner-radius 16
+    geometry-corner-radius 54
     background-effect {
         blur {
-            passes 1
-            offset 1.5
+            passes 1 // 2
+            offset 2 // 2
         }
         xray false
         liquid-glass {
-            edge-padding 0.10
+            edge-padding 0.10 // 0.15
             geometry-offset-x 0
-            geometry-scale-x 1.1
-            geometry-offset-y 15
-            geometry-scale-y 0.75
-            refraction-strength 5.0
+            geometry-scale-x 0.995
+            geometry-offset-y 9.4 // 14.1
+            geometry-scale-y 0.865 // 0.74
+            refraction-strength 100.0
             power-factor 10
-            refraction-power 100.0
+            refraction-power 10.0
             glow-weight 0.0001
-            edge-lighting 0.1
+            edge-lighting 0.10 // 0.15
             saturation 0.9
             vibrancy 0.2
             adaptive-dim 0.2
             adaptive-boost 0.2
-            fringing 1.0
+            fringing 0
         }
     }
 }

@@ -48,12 +48,18 @@ widget_order = []
     [desktop_widgets.widget]
 
 [dock]
+active_opacity = 0.84999998100101948
+active_scale = 0.80000001192092896
 auto_hide = false
 background_opacity = 0.099999997764825821
-cross_axis_padding = 8
+cross_axis_padding = 16
 icon_size = 64
+inactive_opacity = 0.84999998100101948
+inactive_scale = 0.85000001266598701
 item_spacing = 12
+launcher_icon = "bread-filled"
 launcher_position = "none"
+magnification_scale = 1.2000000029802322
 main_axis_padding = 32
 margin_edge = 4
 margin_ends = 0
@@ -149,6 +155,9 @@ polkit_agent = true
     enabled = true
     size = 16
 
+    [shell.shadow]
+    alpha = 0.54999998770654202
+
 [theme]
 builtin = "Ayu"
 community_palette = "Espresso Cream"
@@ -178,8 +187,10 @@ directory = "/home/chri/Pictures"
     wallpaper_scheme = "m3-content"
 
     [[wallpaper.favorite]]
+    palette_source = "wallpaper"
     path = "/home/chri/Pictures/wp12654734-catalina-4k-wallpapers.jpg"
-    theme_mode = "auto"
+    theme_mode = "dark"
+    wallpaper_scheme = "m3-content"
 
 [weather]
 enabled = false

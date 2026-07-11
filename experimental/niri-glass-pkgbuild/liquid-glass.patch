@@ -287,8 +287,32 @@ index 77f07967..a423141e 100644
                          },
                      },
                  },
+diff --git a/src/layer/mapped.rs b/src/layer/mapped.rs
+index fbaa6fc6..e2dd0e03 100644
+--- a/src/layer/mapped.rs
++++ b/src/layer/mapped.rs
+@@ -242,7 +242,7 @@ impl MappedLayer {
+             ns,
+             geometry,
+             self.scale,
+-            false,
++            self.rules.geometry_corner_radius.is_some(),
+             surface,
+             surface_off,
+             surface_anim_scale,
+@@ -311,8 +311,8 @@ impl MappedLayer {
+                 ns,
+                 geometry,
+                 self.scale,
+-                false,
+-                surface,
++            popup_rules.geometry_corner_radius.is_some(),
++            surface,
+                 surface_off,
+                 surface_anim_scale,
+                 self.blur_config,
 diff --git a/src/render_helpers/background_effect.rs b/src/render_helpers/background_effect.rs
-index d148b6c1..d5d6e1ee 100644
+index d148b6c1..1a9eda14 100644
 --- a/src/render_helpers/background_effect.rs
 +++ b/src/render_helpers/background_effect.rs
 @@ -11,6 +11,7 @@ use crate::niri_render_elements;
@@ -443,7 +467,18 @@ index d148b6c1..d5d6e1ee 100644
          subregion,
          clip,
          scale,
-@@ -314,6 +351,14 @@ pub fn render_for_tile(
+@@ -304,6 +341,10 @@ pub fn render_for_tile(
+         let blur_region = get_cached_blur_region(states);
+         let has_blur_region = blur_region.as_ref().is_some_and(|r| !r.is_empty());
+ 
++        if ns.is_some() && !has_blur_region {
++            return;
++        }
++
+         background_effect.update_config(blur_config);
+         background_effect.update_render_elements(radius, effect, has_blur_region);
+ 
+@@ -314,6 +355,14 @@ pub fn render_for_tile(
          let mut surface_geo = surface_geo(states).unwrap_or_default().to_f64();
          surface_geo.loc += surface_off;
  
@@ -458,7 +493,7 @@ index d148b6c1..d5d6e1ee 100644
          let Some(params) = render_params_for_tile(
              geometry,
              scale,
-@@ -322,11 +367,12 @@ pub fn render_for_tile(
+@@ -322,11 +371,12 @@ pub fn render_for_tile(
              blur_region,
              surface_geo,
              surface_anim_scale,
@@ -692,7 +727,7 @@ index 474437af..eb9c592b 100644
  pub mod damage;
  pub mod debug;
 diff --git a/src/render_helpers/shaders/clipped_surface.frag b/src/render_helpers/shaders/clipped_surface.frag
-index e97f18c0..a2718bb9 100644
+index e97f18c0..67dfa8b3 100644
 --- a/src/render_helpers/shaders/clipped_surface.frag
 +++ b/src/render_helpers/shaders/clipped_surface.frag
 @@ -26,29 +26,189 @@ uniform vec2 geo_size;
@@ -873,8 +908,8 @@ index e97f18c0..a2718bb9 100644
 +        // Normalize strength (config 0-100 -> shader 0-1)
 +        float normStrength = clamp(lg_refraction_strength * 0.05, 0.0, 1.0);
 +
-+        // Remap corner radius: niri=[TL,TR,BR,BL] -> kwin=[BL,BR,TL,TR]
-+        vec4 cr = vec4(corner_radius.w, corner_radius.z, corner_radius.x, corner_radius.y);
++        // Remap corner radius: niri=[TL,TR,BR,BL] -> kwin=[TL,TR,BL,BR]
++        vec4 cr = vec4(corner_radius.x, corner_radius.y, corner_radius.w, corner_radius.z);
 +
 +        vec4 result = glass_effect(
 +            v_coords,       // uv_tex
