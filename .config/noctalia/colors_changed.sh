@@ -88,7 +88,7 @@ def update_icon_theme(accent_rgb_str):
 Name=Breeze Noctalia
 Comment=Dynamic macOS folders & extensions for Noctalia with Breeze fallbacks
 Inherits=breeze,breeze-dark,hicolor
-Directories=places/16,places/22,places/24,places/scalable,places/symbolic,mimes/16,mimes/22,mimes/scalable,mimes/symbolic,mimetypes/16,mimetypes/22,mimetypes/scalable,mimetypes/symbolic
+Directories=places/16,places/22,places/24,places/scalable,places/symbolic,mimes/16,mimes/22,mimes/scalable,mimes/symbolic,mimetypes/16,mimetypes/22,mimetypes/scalable,mimetypes/symbolic,apps/16,apps/22,apps/24,apps/scalable,apps/symbolic
 
 [places/16]
 Size=16
@@ -166,6 +166,35 @@ Context=Mimetypes
 MinSize=16
 MaxSize=512
 Type=Scalable
+
+[apps/16]
+Size=16
+Context=Applications
+Type=Fixed
+
+[apps/22]
+Size=22
+Context=Applications
+Type=Fixed
+
+[apps/24]
+Size=24
+Context=Applications
+Type=Fixed
+
+[apps/scalable]
+Size=256
+MinSize=16
+MaxSize=512
+Context=Applications
+Type=Scalable
+
+[apps/symbolic]
+Size=16
+Context=Applications
+MinSize=16
+MaxSize=512
+Type=Scalable
 """
     with open(index_path, 'w') as f:
         f.write(index_content)
@@ -230,6 +259,24 @@ Type=Scalable
                         dst_file.unlink()
                     shutil.copy2(src_file, dst_file)
                 places_count += 1
+
+    # 2b. Symlink Nautilus icon to the plain folder icon (without signs) in the apps context
+    apps_dst = dst_base / 'apps'
+    if apps_dst.exists():
+        shutil.rmtree(apps_dst)
+
+    for size_dir in ['16', '22', '24', 'scalable']:
+        size_path = apps_dst / size_dir
+        size_path.mkdir(parents=True, exist_ok=True)
+        for name in ['org.gnome.Nautilus.svg', 'nautilus.svg']:
+            sym_link = size_path / name
+            os.symlink(f'../../places/{size_dir}/folder.svg', sym_link)
+
+    symbolic_path = apps_dst / 'symbolic'
+    symbolic_path.mkdir(parents=True, exist_ok=True)
+    for name in ['org.gnome.Nautilus-symbolic.svg', 'nautilus-symbolic.svg']:
+        sym_link = symbolic_path / name
+        os.symlink('../../places/symbolic/folder-symbolic.svg', sym_link)
 
     # 3. Copy mimes (mimetypes) to both mimes and mimetypes directories
     mimes_src = src_base / 'mimes'
