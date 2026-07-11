@@ -297,7 +297,12 @@ layer-rule {
 layer-rule {
     match namespace="^noctalia-notification$"
     geometry-corner-radius 12
+    opacity 0.80
     background-effect {
+        blur {
+            passes 4
+            offset 4
+        }
         xray false
 }
 }
