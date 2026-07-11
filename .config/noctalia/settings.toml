@@ -53,7 +53,7 @@ active_scale = 0.80000001192092896
 auto_hide = false
 background_opacity = 0.099999997764825821
 cross_axis_padding = 16
-icon_size = 64
+icon_size = 48
 inactive_opacity = 0.84999998100101948
 inactive_scale = 0.85000001266598701
 item_spacing = 12
@@ -63,12 +63,13 @@ magnification_scale = 1.2000000029802322
 main_axis_padding = 32
 margin_edge = 4
 margin_ends = 0
-pinned = [ "org.gnome.Nautilus", "helium" ]
+pinned = [ "helium" ]
 radius = 0
 radius_bottom_left = 80
 radius_bottom_right = 80
 radius_top_left = 80
 radius_top_right = 80
+reserve_space = false
 
 [location]
 auto_locate = false
