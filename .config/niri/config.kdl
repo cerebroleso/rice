@@ -190,7 +190,7 @@ window-rule {
     background-effect {
         blur true
         xray true
-    }
+}
     popups {
         opacity 1.0
     }
@@ -213,8 +213,8 @@ window-rule {
     adaptive-dim 0.2
     adaptive-boost 0.2
     fringing 3.0
-        }
     }
+}
 }
 
 layer-rule {
@@ -234,8 +234,8 @@ layer-rule {
     adaptive-dim 0.2
     adaptive-boost 0.2
     fringing 3.0
-        }
     }
+}
 }
 
 layer-rule {
@@ -258,8 +258,8 @@ layer-rule {
     adaptive-dim 0.2
     adaptive-boost 0.2
     fringing 3.0
-        }
     }
+}
 }
 
 layer-rule {
@@ -272,7 +272,7 @@ layer-rule {
         }
         xray false
         liquid-glass {
-            edge-padding 0.1
+            edge-padding 0.10
             geometry-offset-x 0
             geometry-scale-x 0.995
             geometry-offset-y 9.5 // 8.8
@@ -281,7 +281,7 @@ layer-rule {
             power-factor 10
             refraction-power 10.0
             glow-weight 0.0001
-            edge-lighting 0.1 // 0.20
+            edge-lighting 0.10 // 0.20
             saturation 0.9
             vibrancy 0.2
             adaptive-dim 0.2
@@ -294,7 +294,7 @@ layer-rule {
 layer-rule {
     match namespace="^noctalia-notification$"
     geometry-corner-radius 12
-    opacity 0.8
+    opacity 0.80
     background-effect {
         blur {
             passes 1
@@ -312,8 +312,8 @@ layer-rule {
     adaptive-dim 0.2
     adaptive-boost 0.2
     fringing 0.1
-        }
     }
+}
 }
 
 layer-rule {
@@ -336,8 +336,8 @@ layer-rule {
     adaptive-dim 0.2
     adaptive-boost 0.2
     fringing 3.0
-        }
     }
+}
 }
 
 // ==================================================
