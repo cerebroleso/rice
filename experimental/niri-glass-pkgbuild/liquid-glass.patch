@@ -312,7 +312,7 @@ index fbaa6fc6..e2dd0e03 100644
                  surface_anim_scale,
                  self.blur_config,
 diff --git a/src/render_helpers/background_effect.rs b/src/render_helpers/background_effect.rs
-index d148b6c1..1a9eda14 100644
+index d148b6c1..d0906bb3 100644
 --- a/src/render_helpers/background_effect.rs
 +++ b/src/render_helpers/background_effect.rs
 @@ -11,6 +11,7 @@ use crate::niri_render_elements;
@@ -323,7 +323,19 @@ index d148b6c1..1a9eda14 100644
  use crate::render_helpers::xray::{XrayElement, XrayPos};
  use crate::render_helpers::RenderCtx;
  use crate::utils::region::TransformedRegion;
-@@ -34,8 +35,11 @@ pub struct BackgroundEffect {
+@@ -28,14 +29,23 @@ pub struct BackgroundEffect {
+     corner_radius: CornerRadius,
+     blur_config: niri_config::Blur,
+     options: Options,
++    /// Whether this surface has had at least one render pass.
++    ///
++    /// Used to skip the first frame for surfaces without a blur region,
++    /// preventing full-geometry flash on oversized layer surfaces (e.g.
++    /// notification trays) that constrain the effect area after mapping.
++    has_rendered_once: bool,
+ }
+ 
+ #[derive(Debug, Clone, Copy, PartialEq, Default)]
  pub struct Options {
      pub blur: bool,
      pub xray: bool,
@@ -335,7 +347,7 @@ index d148b6c1..1a9eda14 100644
  }
  
  impl Options {
-@@ -44,14 +48,17 @@ impl Options {
+@@ -44,14 +54,17 @@ impl Options {
              || self.blur
              || self.noise.is_some_and(|x| x > 0.)
              || self.saturation.is_some_and(|x| x != 1.)
@@ -354,7 +366,15 @@ index d148b6c1..1a9eda14 100644
      /// Effect subregion, will be clipped to `geometry`.
      ///
      /// `subregion.iter()` should return `geometry`-relative rectangles.
-@@ -121,11 +128,16 @@ impl BackgroundEffect {
+@@ -89,6 +102,7 @@ impl BackgroundEffect {
+             corner_radius: CornerRadius::default(),
+             blur_config: niri_config::Blur::default(),
+             options: Options::default(),
++            has_rendered_once: false,
+         }
+     }
+ 
+@@ -121,11 +135,16 @@ impl BackgroundEffect {
              effect.blur == Some(true)
          };
  
@@ -371,7 +391,7 @@ index d148b6c1..1a9eda14 100644
          };
  
          // If we have some background effect but xray wasn't explicitly set, default it to true
-@@ -154,6 +166,7 @@ impl BackgroundEffect {
+@@ -154,6 +173,7 @@ impl BackgroundEffect {
          ns: Option<usize>,
          mut params: RenderParams,
          xray_pos: XrayPos,
@@ -379,7 +399,7 @@ index d148b6c1..1a9eda14 100644
          push: &mut dyn FnMut(BackgroundEffectElement),
      ) {
          if !self.is_visible() {
-@@ -167,14 +180,19 @@ impl BackgroundEffect {
+@@ -167,14 +187,19 @@ impl BackgroundEffect {
  
          let damage = self.damage.render(params.geometry);
  
@@ -404,7 +424,7 @@ index d148b6c1..1a9eda14 100644
          } else {
              1.
          };
-@@ -185,21 +203,29 @@ impl BackgroundEffect {
+@@ -185,21 +210,29 @@ impl BackgroundEffect {
                  return;
              };
  
@@ -437,7 +457,7 @@ index d148b6c1..1a9eda14 100644
              push(elem.into());
          }
      }
-@@ -213,11 +239,21 @@ fn render_params_for_tile(
+@@ -213,11 +246,21 @@ fn render_params_for_tile(
      blur_region: Option<Arc<Vec<Rectangle<i32, Logical>>>>,
      surface_geo: Rectangle<f64, Logical>,
      surface_anim_scale: Scale<f64>,
@@ -459,7 +479,7 @@ index d148b6c1..1a9eda14 100644
      let mut subregion = None;
      if let Some(rects) = blur_region {
          if rects.is_empty() {
-@@ -255,6 +291,7 @@ fn render_params_for_tile(
+@@ -255,6 +298,7 @@ fn render_params_for_tile(
  
      Some(RenderParams {
          geometry: effect_geometry,
@@ -467,7 +487,7 @@ index d148b6c1..1a9eda14 100644
          subregion,
          clip,
          scale,
-@@ -304,6 +341,10 @@ pub fn render_for_tile(
+@@ -304,6 +348,10 @@ pub fn render_for_tile(
          let blur_region = get_cached_blur_region(states);
          let has_blur_region = blur_region.as_ref().is_some_and(|r| !r.is_empty());
  
@@ -478,7 +498,21 @@ index d148b6c1..1a9eda14 100644
          background_effect.update_config(blur_config);
          background_effect.update_render_elements(radius, effect, has_blur_region);
  
-@@ -314,6 +355,14 @@ pub fn render_for_tile(
+@@ -311,9 +359,28 @@ pub fn render_for_tile(
+             return;
+         }
+ 
++        // Skip the first render pass for surfaces without a blur region.
++        // This prevents full-geometry flash on oversized layer surfaces
++        // (like notification trays anchored to full screen height) that
++        // constrain the effect area only after their initial commit.
++        if !background_effect.has_rendered_once {
++            background_effect.has_rendered_once = true;
++            if !has_blur_region {
++                return;
++            }
++        }
++
          let mut surface_geo = surface_geo(states).unwrap_or_default().to_f64();
          surface_geo.loc += surface_off;
  
@@ -493,7 +527,7 @@ index d148b6c1..1a9eda14 100644
          let Some(params) = render_params_for_tile(
              geometry,
              scale,
-@@ -322,11 +371,12 @@ pub fn render_for_tile(
+@@ -322,11 +389,12 @@ pub fn render_for_tile(
              blur_region,
              surface_geo,
              surface_anim_scale,
@@ -638,82 +672,6 @@ index 4dc529db..8b7b5b16 100644
      }
  }
  
-diff --git a/src/render_helpers/liquid_glass.rs b/src/render_helpers/liquid_glass.rs
-new file mode 100644
-index 00000000..599e7e8a
---- /dev/null
-+++ b/src/render_helpers/liquid_glass.rs
-@@ -0,0 +1,70 @@
-+#[derive(Debug, Default, Clone, Copy, PartialEq)]
-+pub struct LiquidGlassOptions {
-+    pub refraction_strength: f64,
-+    pub power_factor: f64,
-+    pub refraction_a: f64,
-+    pub refraction_b: f64,
-+    pub refraction_c: f64,
-+    pub refraction_d: f64,
-+    pub refraction_power: f64,
-+    pub glow_weight: f64,
-+    pub glow_bias: f64,
-+    pub glow_edge0: f64,
-+    pub glow_edge1: f64,
-+    pub edge_lighting: f64,
-+    pub fringing: f64,
-+    pub refraction_dilute: f64,
-+    pub dilute_strength: f64,
-+    pub dilute_fringing: f64,
-+    pub physical_refraction: f64,
-+    pub lens_distortion: f64,
-+    pub brightness: f64,
-+    pub contrast: f64,
-+    pub saturation: f64,
-+    pub vibrancy: f64,
-+    pub adaptive_dim: f64,
-+    pub adaptive_boost: f64,
-+    pub edge_thickness: f64,
-+    pub edge_padding: f64,
-+    pub geometry_offset_x: f64,
-+    pub geometry_offset_y: f64,
-+    pub geometry_scale_x: f64,
-+    pub geometry_scale_y: f64,
-+}
-+
-+impl From<niri_config::LiquidGlass> for LiquidGlassOptions {
-+    fn from(config: niri_config::LiquidGlass) -> Self {
-+        Self {
-+            refraction_strength: config.refraction_strength,
-+            power_factor: config.power_factor,
-+            refraction_a: config.refraction_a,
-+            refraction_b: config.refraction_b,
-+            refraction_c: config.refraction_c,
-+            refraction_d: config.refraction_d,
-+            refraction_power: config.refraction_power,
-+            glow_weight: config.glow_weight,
-+            glow_bias: config.glow_bias,
-+            glow_edge0: config.glow_edge0,
-+            glow_edge1: config.glow_edge1,
-+            edge_lighting: config.edge_lighting,
-+            fringing: config.fringing,
-+            refraction_dilute: config.refraction_dilute,
-+            dilute_strength: config.dilute_strength,
-+            dilute_fringing: config.dilute_fringing,
-+            physical_refraction: config.physical_refraction,
-+            lens_distortion: config.lens_distortion,
-+            brightness: config.brightness,
-+            contrast: config.contrast,
-+            saturation: config.saturation,
-+            vibrancy: config.vibrancy,
-+            adaptive_dim: config.adaptive_dim,
-+            adaptive_boost: config.adaptive_boost,
-+            edge_thickness: config.edge_thickness,
-+            edge_padding: config.edge_padding,
-+            geometry_offset_x: config.geometry_offset_x,
-+            geometry_offset_y: config.geometry_offset_y,
-+            geometry_scale_x: config.geometry_scale_x,
-+            geometry_scale_y: config.geometry_scale_y,
-+        }
-+    }
-+}
 diff --git a/src/render_helpers/mod.rs b/src/render_helpers/mod.rs
 index 474437af..eb9c592b 100644
 --- a/src/render_helpers/mod.rs
@@ -727,10 +685,10 @@ index 474437af..eb9c592b 100644
  pub mod damage;
  pub mod debug;
 diff --git a/src/render_helpers/shaders/clipped_surface.frag b/src/render_helpers/shaders/clipped_surface.frag
-index e97f18c0..67dfa8b3 100644
+index e97f18c0..74c9e6f5 100644
 --- a/src/render_helpers/shaders/clipped_surface.frag
 +++ b/src/render_helpers/shaders/clipped_surface.frag
-@@ -26,29 +26,189 @@ uniform vec2 geo_size;
+@@ -26,29 +26,192 @@ uniform vec2 geo_size;
  uniform vec4 corner_radius;
  uniform mat3 input_to_geo;
  
@@ -861,13 +819,15 @@ index e97f18c0..67dfa8b3 100644
 +    }
 +    
 +    // Multiplicative tinting (map glass_tint to lg_brightness)
-+    glassColor *= clamp(lg_brightness, 0.0, 2.0);
++    // Interpolate towards 1.0 for transparent surfaces to avoid tinting the invisible background
++    float effectiveBrightness = mix(1.0, clamp(lg_brightness, 0.0, 2.0), baseColor.a);
++    glassColor *= effectiveBrightness;
 +
 +    // SAFE BORDER HIGHLIGHT:
 +    // Draw a clean, anti-aliased 1.5-pixel border at the exact boundary of the SDF.
-+    // Controlled dynamically by 'edge-lighting' in your config.
++    // Controlled dynamically by 'edge-lighting' in your config, scaled by surface alpha.
 +    float borderWidth = 1.5 / size;
-+    float borderAlpha = smoothstep(borderWidth, 0.0, inversedSDF) * lg_edge_lighting;
++    float borderAlpha = smoothstep(borderWidth, 0.0, inversedSDF) * lg_edge_lighting * baseColor.a;
 +    glassColor = mix(glassColor, vec3(1.0), borderAlpha);
 +    
 +    return vec4(glassColor, baseColor.a);
@@ -906,7 +866,8 @@ index e97f18c0..67dfa8b3 100644
 +
 +    if (effectMask > 0.0) {
 +        // Normalize strength (config 0-100 -> shader 0-1)
-+        float normStrength = clamp(lg_refraction_strength * 0.05, 0.0, 1.0);
++        // Scale by surface alpha so transparent surfaces don't refract
++        float normStrength = clamp(lg_refraction_strength * 0.05, 0.0, 1.0) * color.a;
 +
 +        // Remap corner radius: niri=[TL,TR,BR,BL] -> kwin=[TL,TR,BL,BR]
 +        vec4 cr = vec4(corner_radius.x, corner_radius.y, corner_radius.w, corner_radius.z);

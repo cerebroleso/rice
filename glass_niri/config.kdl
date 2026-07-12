@@ -190,6 +190,18 @@ window-rule {
     background-effect {
         blur true
         xray true
+}
+    popups {
+        opacity 1.0
+    }
+}
+
+window-rule {
+    match app-id="kitty"
+    opacity 0.85
+    background-effect {
+        blur false
+        xray false
     liquid-glass {
     refraction-strength 3.0
     power-factor 10
@@ -203,18 +215,6 @@ window-rule {
     fringing 3.0
     }
 }
-    popups {
-        opacity 1.0
-    }
-}
-
-window-rule {
-    match app-id="kitty"
-    opacity 0.85
-    background-effect {
-        blur false
-        xray false
-    }
 }
 
 layer-rule {
@@ -297,8 +297,8 @@ layer-rule {
     opacity 0.80
     background-effect {
         blur {
-            passes 4
-            offset 4
+            passes 1
+            offset 1
         }
         xray false
     liquid-glass {

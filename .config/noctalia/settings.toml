@@ -50,7 +50,7 @@ widget_order = []
 [dock]
 active_opacity = 0.84999998100101948
 active_scale = 0.80000001192092896
-auto_hide = false
+auto_hide = true
 background_opacity = 0.099999997764825821
 cross_axis_padding = 16
 icon_size = 48
