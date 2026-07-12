@@ -201,7 +201,7 @@ window-rule {
     opacity 0.85
     background-effect {
         blur false
-        xray false
+        xray true
     liquid-glass {
     refraction-strength 3.0
     power-factor 10
