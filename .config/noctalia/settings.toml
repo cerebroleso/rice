@@ -8,7 +8,7 @@ blur_intensity = 0.04999999888241291
 border_width = 0.5
 capsule = true
 capsule_opacity = 0.74999998323619366
-center = [ "clock" ]
+center = []
 color = "primary"
 contact_shadow = true
 end = [
@@ -23,13 +23,15 @@ end = [
     "spacer_3",
     "tray",
     "spacer_4",
-    "keyboard_layout",
-    "notifications"
+    "notifications",
+    "date",
+    "clock"
 ]
 font_weight = 300
 margin_edge = 4
 margin_ends = 12
 padding = 8
+start = [ "control-center", "wallpaper", "workspaces", "spacer_10", "bongocat", "active_window", "audio_visualizer" ]
 thickness = 20
 widget_spacing = 4
 
@@ -51,7 +53,7 @@ widget_order = []
 active_opacity = 0.84999998100101948
 active_scale = 0.80000001192092896
 auto_hide = true
-background_opacity = 0.099999997764825821
+background_opacity = 0.29999999329447746
 cross_axis_padding = 16
 icon_size = 48
 inactive_opacity = 0.84999998100101948
@@ -196,5 +198,26 @@ directory = "/home/chri/Pictures"
 [weather]
 enabled = false
 
+[widget.active_window]
+max_length = 504
+show_empty_label = true
+title_scroll = "none"
+
+[widget.audio_visualizer]
+mirrored = false
+
 [widget.media]
 max_length = 300
+
+[widget.network_rx]
+network_speed_compact = true
+
+[widget.spacer_10]
+type = "spacer"
+
+[widget.spacer_9]
+type = "spacer"
+
+[widget.workspaces]
+display = "id"
+minimal = false
