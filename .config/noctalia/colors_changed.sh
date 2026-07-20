@@ -299,17 +299,56 @@ Type=Scalable
     run(['gtk-update-icon-cache', '-q', '-f', str(dst_base)], capture_output=True)
     print(f"Successfully generated {places_count} macOS folder icons with accent {accent_hex}")
 
-    # 5. Force running GTK applications (like Nautilus) to reload the icon theme
+    # 5. Foolproof configuration for GTK and xsettingsd icon themes to ensure breeze-noctalia is used
+    config_dir = Path('~/.config').expanduser()
+    (config_dir / 'gtk-3.0').mkdir(parents=True, exist_ok=True)
+    (config_dir / 'gtk-4.0').mkdir(parents=True, exist_ok=True)
+
+    # 5a. Update gsettings icon theme (toggle to force reload)
     try:
-        res = run(['gsettings', 'get', 'org.gnome.desktop.interface', 'icon-theme'], capture_output=True, text=True)
-        current_theme = res.stdout.strip().strip("'")
-        if current_theme:
-            temp_theme = 'Adwaita' if current_theme != 'Adwaita' else 'hicolor'
-            run(['gsettings', 'set', 'org.gnome.desktop.interface', 'icon-theme', temp_theme], capture_output=True)
-            time.sleep(0.1)
-            run(['gsettings', 'set', 'org.gnome.desktop.interface', 'icon-theme', current_theme], capture_output=True)
+        run(['gsettings', 'set', 'org.gnome.desktop.interface', 'icon-theme', 'Adwaita'], capture_output=True)
+        time.sleep(0.1)
+        run(['gsettings', 'set', 'org.gnome.desktop.interface', 'icon-theme', 'breeze-noctalia'], capture_output=True)
     except Exception as e:
-        print(f"Warning: Failed to toggle icon-theme to reload cache: {e}", file=sys.stderr)
+        print(f"Warning: Failed to set gsettings icon-theme to breeze-noctalia: {e}", file=sys.stderr)
+
+    # 5b. Update GTK 3.0 and GTK 4.0 settings.ini
+    for version in ['gtk-3.0', 'gtk-4.0']:
+        path = config_dir / version / 'settings.ini'
+        try:
+            if path.exists():
+                content = path.read_text()
+                if 'gtk-icon-theme-name' in content:
+                    content = re.sub(r'gtk-icon-theme-name\s*=\s*.*', 'gtk-icon-theme-name=breeze-noctalia', content)
+                else:
+                    if '[Settings]' in content:
+                        content = content.replace('[Settings]', '[Settings]\ngtk-icon-theme-name=breeze-noctalia')
+                    else:
+                        content = '[Settings]\ngtk-icon-theme-name=breeze-noctalia\n' + content
+            else:
+                content = '[Settings]\ngtk-icon-theme-name=breeze-noctalia\n'
+            path.write_text(content)
+        except Exception as e:
+            print(f"Warning: Failed to update {path} to breeze-noctalia: {e}", file=sys.stderr)
+
+    # 5c. Update xsettingsd.conf
+    xsettingsd_path = config_dir / 'xsettingsd' / 'xsettingsd.conf'
+    try:
+        if xsettingsd_path.exists():
+            content = xsettingsd_path.read_text()
+            if 'Net/IconThemeName' in content:
+                content = re.sub(r'Net/IconThemeName\s*".*"', 'Net/IconThemeName "breeze-noctalia"', content)
+            else:
+                content += '\nNet/IconThemeName "breeze-noctalia"\n'
+        else:
+            xsettingsd_path.parent.mkdir(parents=True, exist_ok=True)
+            content = 'Net/IconThemeName "breeze-noctalia"\n'
+        xsettingsd_path.write_text(content)
+        
+        # Send SIGHUP to xsettingsd to reload configuration if running
+        run(['pkill', '-HUP', 'xsettingsd'], capture_output=True)
+    except Exception as e:
+        print(f"Warning: Failed to update {xsettingsd_path} to breeze-noctalia: {e}", file=sys.stderr)
 
 def main():
     # Sleep to ensure Noctalia has finished writing templates to disk
@@ -343,6 +382,10 @@ def main():
 
     kglobals.set('General', 'AccentColor', accent_color)
     kglobals.set('General', 'accentColorFromWallpaper', 'false')
+
+    if not kglobals.has_section('Icons'):
+        kglobals.add_section('Icons')
+    kglobals.set('Icons', 'Theme', 'breeze-noctalia')
 
     with open(kglobals_path, 'w') as f:
         kglobals.write(f, space_around_delimiters=False)

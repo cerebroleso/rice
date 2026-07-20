@@ -169,6 +169,7 @@ source = "wallpaper"
 wallpaper_scheme = "m3-content"
 
     [theme.templates]
+    builtin_ids = [ "alacritty", "gtk3", "gtk4", "kcolorscheme", "qt", "kitty" ]
     community_ids = [ "vscode", "zed", "discord", "steam", "yazi", "zathura" ]
 
 [wallpaper]
@@ -196,10 +197,10 @@ directory = "/home/chri/Pictures"
     wallpaper_scheme = "m3-content"
 
     [[wallpaper.favorite]]
-    builtin_palette = "Ayu"
-    palette_source = "builtin"
+    palette_source = "wallpaper"
     path = "/home/chri/Pictures/walls/storm.jpg"
     theme_mode = "dark"
+    wallpaper_scheme = "m3-content"
 
 [weather]
 enabled = false
