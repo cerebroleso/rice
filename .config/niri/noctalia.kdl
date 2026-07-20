@@ -15,13 +15,7 @@ layout {
     }
 
     shadow {
-        on
-
         color "#00000070"
-
-        softness 30
-
-        spread 10
     }
 
     tab-indicator {

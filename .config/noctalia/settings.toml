@@ -195,6 +195,12 @@ directory = "/home/chri/Pictures"
     theme_mode = "dark"
     wallpaper_scheme = "m3-content"
 
+    [[wallpaper.favorite]]
+    builtin_palette = "Ayu"
+    palette_source = "builtin"
+    path = "/home/chri/Pictures/walls/storm.jpg"
+    theme_mode = "dark"
+
 [weather]
 enabled = false
 
