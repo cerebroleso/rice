@@ -13,9 +13,9 @@ color = "primary"
 contact_shadow = true
 end = [
     "spacer_1",
-    "spacer_11",
     "volume",
     "brightness",
+    "spacer_11",
     "clipboard",
     "battery",
     "bluetooth",
@@ -31,8 +31,10 @@ end = [
 font_weight = 300
 margin_edge = 4
 margin_ends = 12
+margin_opposite_edge = 0
 padding = 8
-start = [ "control-center", "wallpaper", "workspaces", "spacer_10", "active_window", "audio_visualizer" ]
+reserve_space = true
+start = [ "control-center", "wallpaper", "spacer_12", "workspaces", "spacer_10", "active_window", "audio_visualizer" ]
 thickness = 20
 widget_spacing = 4
 
@@ -240,24 +242,35 @@ network_speed_compact = true
 type = "spacer"
 
 [widget.spacer_10]
+length = 10
 type = "spacer"
 
 [widget.spacer_11]
-length = 20
+length = 10
+type = "spacer"
+
+[widget.spacer_12]
+length = 10
 type = "spacer"
 
 [widget.spacer_4]
-length = 20
+length = 15
+
+[widget.spacer_7]
+length = 15
 
 [widget.spacer_9]
 type = "spacer"
 
 [widget.tray]
-hidden = [ "blueman", "network" ]
+detached_panel = true
+drawer = true
+drawer_columns = 5
+hidden = []
 
 [widget.volume]
 show_label = false
 
 [widget.workspaces]
 display = "id"
-minimal = false
+minimal = true
