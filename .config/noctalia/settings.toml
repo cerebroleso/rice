@@ -12,15 +12,16 @@ center = []
 color = "primary"
 contact_shadow = true
 end = [
-    "spacer_7",
-    "clipboard",
-    "battery",
-    "cpu",
-    "network",
-    "bluetooth",
+    "spacer_1",
+    "spacer_11",
     "volume",
     "brightness",
-    "spacer_3",
+    "clipboard",
+    "battery",
+    "bluetooth",
+    "network",
+    "launcher",
+    "spacer_7",
     "tray",
     "spacer_4",
     "notifications",
@@ -31,7 +32,7 @@ font_weight = 300
 margin_edge = 4
 margin_ends = 12
 padding = 8
-start = [ "control-center", "wallpaper", "workspaces", "spacer_10", "bongocat", "active_window", "audio_visualizer" ]
+start = [ "control-center", "wallpaper", "workspaces", "spacer_10", "active_window", "audio_visualizer" ]
 thickness = 20
 widget_spacing = 4
 
@@ -138,7 +139,7 @@ offset_y = 64
 position = "bottom_center"
 
     [osd.kinds]
-    media = true
+    media = false
 
 [shell]
 app_icon_color = "primary"
@@ -213,17 +214,49 @@ title_scroll = "none"
 [widget.audio_visualizer]
 mirrored = false
 
+[widget.battery]
+capsule_padding = 6
+display_mode = "graphic"
+scale = 0.75
+show_label = false
+
+[widget.brightness]
+scale = 1.2
+show_label = false
+
+[widget.launcher]
+scale = 0.80000000000000004
+
 [widget.media]
 max_length = 300
+
+[widget.network]
+show_label = false
 
 [widget.network_rx]
 network_speed_compact = true
 
+[widget.spacer_1]
+type = "spacer"
+
 [widget.spacer_10]
 type = "spacer"
 
+[widget.spacer_11]
+length = 20
+type = "spacer"
+
+[widget.spacer_4]
+length = 20
+
 [widget.spacer_9]
 type = "spacer"
+
+[widget.tray]
+hidden = [ "blueman", "network" ]
+
+[widget.volume]
+show_label = false
 
 [widget.workspaces]
 display = "id"
