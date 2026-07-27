@@ -35,7 +35,17 @@ margin_opposite_edge = 0
 padding = 8
 reserve_space = true
 show_on_workspace_switch = true
-start = [ "control-center", "wallpaper", "spacer_12", "workspaces", "spacer_10", "active_window", "audio_visualizer" ]
+start = [
+    "control-center",
+    "spacer_16",
+    "wallpaper",
+    "spacer_12",
+    "workspaces",
+    "spacer_10",
+    "active_window",
+    "spacer_17",
+    "audio_visualizer"
+]
 thickness = 20
 widget_spacing = 12
 
@@ -210,22 +220,28 @@ directory = "/home/chri/Pictures"
 enabled = false
 
 [widget.active_window]
+capsule = true
 max_length = 504
 show_empty_label = true
 title_scroll = "none"
 
 [widget.audio_visualizer]
+capsule = true
 mirrored = false
 
 [widget.battery]
 capsule_padding = 12
 display_mode = "graphic"
-scale = 0.85000000000000009
+scale = 0.69999999999999996
 show_label = false
 
 [widget.brightness]
 scale = 1.1000000000000001
 show_label = false
+
+[widget.control-center]
+capsule = true
+capsule_opacity = 1.0
 
 [widget.launcher]
 scale = 0.80000000000000004
@@ -243,7 +259,7 @@ network_speed_compact = true
 type = "spacer"
 
 [widget.spacer_10]
-length = 10
+length = 8
 type = "spacer"
 
 [widget.spacer_11]
@@ -251,7 +267,7 @@ length = 5
 type = "spacer"
 
 [widget.spacer_12]
-length = 10
+length = 8
 type = "spacer"
 
 [widget.spacer_13]
@@ -259,6 +275,18 @@ type = "spacer"
 
 [widget.spacer_14]
 length = 16
+type = "spacer"
+
+[widget.spacer_15]
+length = 0
+type = "spacer"
+
+[widget.spacer_16]
+length = 4
+type = "spacer"
+
+[widget.spacer_17]
+length = 10
 type = "spacer"
 
 [widget.spacer_4]
@@ -279,6 +307,10 @@ hidden = []
 [widget.volume]
 show_label = false
 
+[widget.wallpaper]
+capsule = true
+
 [widget.workspaces]
+capsule = true
 display = "id"
 minimal = true
