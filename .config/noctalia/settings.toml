@@ -5,18 +5,18 @@ enable_overdrive = true
 blur_intensity = 0.04999999888241291
 
 [bar.default]
+auto_hide = false
 border_width = 0.5
-capsule = true
+capsule = false
 capsule_opacity = 0.74999998323619366
 center = []
 color = "primary"
 contact_shadow = true
 end = [
-    "spacer_1",
     "volume",
     "brightness",
-    "spacer_11",
     "clipboard",
+    "spacer_14",
     "battery",
     "bluetooth",
     "network",
@@ -34,9 +34,10 @@ margin_ends = 12
 margin_opposite_edge = 0
 padding = 8
 reserve_space = true
+show_on_workspace_switch = true
 start = [ "control-center", "wallpaper", "spacer_12", "workspaces", "spacer_10", "active_window", "audio_visualizer" ]
 thickness = 20
-widget_spacing = 4
+widget_spacing = 12
 
 [control_center]
 hidden_tabs = [ "media" ]
@@ -219,7 +220,7 @@ mirrored = false
 [widget.battery]
 capsule_padding = 12
 display_mode = "graphic"
-scale = 0.60000000000000009
+scale = 0.85000000000000009
 show_label = false
 
 [widget.brightness]
@@ -246,11 +247,18 @@ length = 10
 type = "spacer"
 
 [widget.spacer_11]
-length = 10
+length = 5
 type = "spacer"
 
 [widget.spacer_12]
 length = 10
+type = "spacer"
+
+[widget.spacer_13]
+type = "spacer"
+
+[widget.spacer_14]
+length = 16
 type = "spacer"
 
 [widget.spacer_4]
