@@ -179,13 +179,13 @@ wallpaper_scheme = "m3-content"
 directory = "/home/chri/Pictures"
 
     [wallpaper.default]
-    path = "/home/chri/Pictures/wp12654734-catalina-4k-wallpapers.jpg"
+    path = "/home/chri/Pictures/walls/storm.jpg"
 
     [wallpaper.last]
-    path = "/home/chri/Pictures/wp12654734-catalina-4k-wallpapers.jpg"
+    path = "/home/chri/Pictures/walls/storm.jpg"
 
     [wallpaper.monitors.eDP-1]
-    path = "/home/chri/Pictures/wp12654734-catalina-4k-wallpapers.jpg"
+    path = "/home/chri/Pictures/walls/storm.jpg"
 
     [[wallpaper.favorite]]
     palette_source = "wallpaper"
@@ -217,13 +217,13 @@ title_scroll = "none"
 mirrored = false
 
 [widget.battery]
-capsule_padding = 6
+capsule_padding = 12
 display_mode = "graphic"
-scale = 0.75
+scale = 0.60000000000000009
 show_label = false
 
 [widget.brightness]
-scale = 1.2
+scale = 1.1000000000000001
 show_label = false
 
 [widget.launcher]
