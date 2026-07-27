@@ -221,12 +221,14 @@ enabled = false
 
 [widget.active_window]
 capsule = true
+capsule_opacity = 0.5
 max_length = 504
 show_empty_label = true
 title_scroll = "none"
 
 [widget.audio_visualizer]
 capsule = true
+capsule_opacity = 0.5
 mirrored = false
 
 [widget.battery]
@@ -241,7 +243,7 @@ show_label = false
 
 [widget.control-center]
 capsule = true
-capsule_opacity = 1.0
+capsule_opacity = 0.5
 
 [widget.launcher]
 scale = 0.80000000000000004
@@ -309,8 +311,10 @@ show_label = false
 
 [widget.wallpaper]
 capsule = true
+capsule_opacity = 0.5
 
 [widget.workspaces]
 capsule = true
+capsule_opacity = 0.5
 display = "id"
 minimal = true
