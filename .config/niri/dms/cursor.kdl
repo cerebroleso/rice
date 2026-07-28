@@ -1,5 +1,5 @@
 // CURSOR_SIZE_SETTING - Search this comment to change cursor size fast
 cursor {
-    xcursor-theme "breeze_cursors"
+    xcursor-theme "BreezeX-RosePine-Linux"
     xcursor-size 24
 }

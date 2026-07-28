@@ -43,7 +43,8 @@
 *   **kitty**: GPU-accelerated Wayland terminal emulator.
 *   **zed**: Vulkan-rendered code editor.
 *   **helium-browser-bin**: Minimal web browser.
-*   **google-chrome**: Monolithic web browser.
+*   **ungoogled-chromium-bin**: Privacy-focused Chromium web browser.
+*   **rose-pine-cursor**: Rosé Pine & Rosé Pine Dawn cursor theme.
 *   **discord**: Electron-based communication client.
 *   **pwvucontrol**: Graphical PipeWire audio router.
 *   **network-manager-applet**: System tray interface for Wi-Fi.
@@ -81,10 +82,10 @@ paru -S niri xwayland-satellite wl-clipboard cliphist xdg-desktop-portal \
   xdg-desktop-portal-gnome xdg-desktop-portal-gtk hypridle hyprlock pipewire \
   wireplumber brightnessctl networkmanager bluez bluez-utils nwg-look qt5ct qt6ct \
   ttf-jetbrains-mono-nerd noto-fonts nautilus dolphin pcmanfm-qt file-roller zip unzip p7zip \
-  unrar yazi kitty zed helium-browser-bin google-chrome discord pwvucontrol \
+  unrar yazi kitty zed helium-browser-bin ungoogled-chromium-bin discord pwvucontrol \
   network-manager-applet blueman grim slurp satty hyprutils-git hyprlang-git \
   hyprwayland-scanner-git aquamarine-git hyprgraphics-git hyprtoolkit-git \
-  nirimod-git niri-display-manager playerctl noctalia-git ly
+  nirimod-git niri-display-manager playerctl noctalia-git ly rose-pine-cursor
 
 # Enable the Ly TUI display manager for system startup login
 sudo systemctl enable ly.service
@@ -175,6 +176,61 @@ gsettings set org.gnome.desktop.interface icon-theme 'breeze-noctalia'
 # Make hook script executable and initialize the dynamic folder icons theme
 chmod +x ~/dotfiles/.config/noctalia/colors_changed.sh
 ~/dotfiles/.config/noctalia/colors_changed.sh
+```
+
+---
+
+## Rosé Pine Cursors
+
+All natural pine, faux fur and a bit of soho vibes for the classy minimalist. Based on BreezeX_Cursor.
+
+### Usage
+
+#### 🐧 Linux
+
+**Arch (AUR):**
+```bash
+# Installs both Rosé Pine and Rosé Pine Dawn
+paru -S rose-pine-cursor
+```
+
+**Other Distributions (Manual Extraction):**
+* **Download:** Rosé Pine / Rosé Pine Dawn
+* **Extract:**
+  ```bash
+  mkdir -p ~/.local/share/icons
+  tar -xvf ~/Downloads/BreezeX-RosePine-Linux.tar.xz -C ~/.local/share/icons
+  tar -xvf ~/Downloads/BreezeX-RosePineDawn-Linux.tar.xz -C ~/.local/share/icons
+  ```
+* **Install / Configure:**
+  Use GNOME Tweaks, `nwg-look`, `lxappearance`, or set it via `gsettings`:
+  ```bash
+  gsettings set org.gnome.desktop.interface cursor-theme 'BreezeX-RosePine-Linux'
+  ```
+
+#### 🪟 Windows
+* **Download:** Rosé Pine / Rosé Pine Dawn
+* **Install:** Follow the instructions in the upstream repository.
+
+#### 🍎 macOS
+* **Download:** Mousecape, Rosé Pine, Rosé Pine Dawn
+* **Install:** Simply double click the cape file with Mousecape on your system and it will be imported into your library.
+
+### Building from Source
+
+**Requirements:**
+* **Bun:** [bun.sh](https://bun.sh)
+* **Clickgen:** `pip install clickgen`
+
+```bash
+git clone https://github.com/rose-pine/cursors/
+cd cursors
+
+bunx cbmp -d 'svg' -n 'BreezeX-RoséPine' -bc '#191724' -oc '#e0def4'
+bunx cbmp -d 'svg' -n 'BreezeX-RoséPineDawn' -bc '#faf4ed' -oc '#575279'
+
+ctgen build.toml -d 'bitmaps/BreezeX-RoséPine' -n 'BreezeX-RoséPine' -c 'Rosé Pine BreezeX cursors.'
+ctgen build.toml -d 'bitmaps/BreezeX-RosePineDawn' -n 'BreezeX-RosePineDawn' -c 'Rosé Pine Dawn BreezeX cursors.'
 ```
 
 ---
@@ -321,28 +377,6 @@ These are live metrics showing the resident set size (RSS) memory footprint of t
 | **PCManFM-Qt** | Desktop file manager / icons | **118.1 MB** (120,952 KB) | **0.0 MB** *(Disabled)* |
 | **XWayland Satellite** | XWayland compatibility layer | **10.6 MB** (10,876 KB) | **10.6 MB** (10,876 KB) |
 | **Total Core Components** | **Active base workspace footprint** | **~488.3 MB** | **~342.4 MB** |
-
-### 2. The Cascading Memory Profile (Butterfly Effect)
-
-Toggling off features dynamically slashes memory consumption. Here is the step-by-step modular memory breakdown:
-
-```
-[Full Suite: Niri Glass + Noctalia + PCManFM-Qt]  ---> 488.3 MB
-                      │
-                      ▼
-         Disable PCManFM-Qt Desktop
-         (Toggled via Mod+Shift+D)              ---> Saves 118.1 MB
-                      │
-                      ▼
-[Subtotal: Niri Glass + Noctalia (No Icons)]     ---> 370.2 MB
-                      │
-                      ▼
-         Disable Liquid Glass (Standard Niri)
-         (Toggled via Mod+Shift+G)              ---> Saves 23.7 MB
-                      │
-                      ▼
-[Minimal Suite: Niri Stock + Noctalia]           ---> 342.4 MB (Total Saved: 145.9 MB!)
-```
 
 *   **PCManFM-Qt Suspension:** Disabling the desktop icons immediately unloads the Qt6-based manager, recovering **118.1 MB** of RAM.
 *   **Compositor Shader Reduction:** Disabling the Liquid Glass refraction shader (switching to standard window borders) drops the compositor footprint by **23.7 MB** by cleaning up the active graphics pipeline, glow/fringing textures, and screen-behind buffers.
