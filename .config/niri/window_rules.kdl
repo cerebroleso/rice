@@ -57,3 +57,4 @@ window-rule {
   match app-id="anki"
   draw-border-with-background false
 }
+

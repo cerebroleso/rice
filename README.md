@@ -53,7 +53,6 @@
 *   **niri-display-manager**: PySide6/QML graphical monitor layout and settings manager.
 *   **grim**: Frame grabber for the Wayland buffer.
 *   **slurp**: Coordinate mapping utility for screen captures.
-*   **satty**: Wayland screenshot annotation GUI.
 
 ---
 
@@ -83,7 +82,7 @@ paru -S niri xwayland-satellite wl-clipboard cliphist xdg-desktop-portal \
   wireplumber brightnessctl networkmanager bluez bluez-utils nwg-look qt5ct qt6ct \
   ttf-jetbrains-mono-nerd noto-fonts nautilus dolphin pcmanfm-qt file-roller zip unzip p7zip \
   unrar yazi kitty zed helium-browser-bin ungoogled-chromium-bin discord pwvucontrol \
-  network-manager-applet blueman grim slurp satty hyprutils-git hyprlang-git \
+  network-manager-applet blueman grim slurp hyprutils-git hyprlang-git \
   hyprwayland-scanner-git aquamarine-git hyprgraphics-git hyprtoolkit-git \
   nirimod-git niri-display-manager playerctl noctalia-git ly rose-pine-cursor
 
@@ -343,7 +342,8 @@ The following tables document the keyboard shortcuts configured in [binds.kdl](f
 | `Mod+Shift+R` | Niri config reload | Reload Niri configuration and notify |
 | `Mod+Shift+G` | `toggle-glass.sh` | Toggle Niri Liquid Glass/Refraction mode |
 | `Mod+Shift+D` | `toggle-pcmanfm.sh` | Toggle desktop files/icons visibility |
-| `Mod+P` / `Mod+Shift+S` / `Mod+Ctrl+P` | Take Screenshot | Capture area/screen and edit in Satty |
+| `Mod+Shift+S` / `Mod+P` | `noctalia msg screenshot-region` | Noctalia native interactive region screenshot |
+| `Mod+Ctrl+P` | `noctalia msg screenshot-fullscreen` | Noctalia native fullscreen screenshot |
 
 ### Media & Hardware Controls
 | Keybind | Command / Action | Description |
