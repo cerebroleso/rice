@@ -69,6 +69,7 @@ active_scale = 0.80000001192092896
 auto_hide = true
 background_opacity = 0.29999999329447746
 cross_axis_padding = 16
+enabled = false
 icon_size = 48
 inactive_opacity = 0.84999998100101948
 inactive_scale = 0.85000001266598701
@@ -190,13 +191,13 @@ wallpaper_scheme = "m3-content"
 directory = "/home/chri/Pictures"
 
     [wallpaper.default]
-    path = "/home/chri/Pictures/walls/storm.jpg"
+    path = "/home/chri/Pictures/walls/snow-night-moon.png"
 
     [wallpaper.last]
-    path = "/home/chri/Pictures/walls/storm.jpg"
+    path = "/home/chri/Pictures/walls/snow-night-moon.png"
 
     [wallpaper.monitors.eDP-1]
-    path = "/home/chri/Pictures/walls/storm.jpg"
+    path = "/home/chri/Pictures/walls/snow-night-moon.png"
 
     [[wallpaper.favorite]]
     palette_source = "wallpaper"
@@ -222,7 +223,8 @@ enabled = false
 [widget.active_window]
 capsule = true
 capsule_opacity = 0.5
-max_length = 504
+max_length = 500
+min_length = 40
 show_empty_label = true
 title_scroll = "none"
 

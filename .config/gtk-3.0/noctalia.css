@@ -4,9 +4,9 @@
 * stylelint-disable at-rule-no-unknown
 */
 
-@define-color accent_color #c4c4e1;
-@define-color accent_bg_color #c4c4e1;
-@define-color accent_fg_color #2d2f45;
+@define-color accent_color #c2c5e0;
+@define-color accent_bg_color #c2c5e0;
+@define-color accent_fg_color #2b2f45;
 
 @define-color destructive_bg_color #ffb4ab;
 @define-color destructive_fg_color #690005;
