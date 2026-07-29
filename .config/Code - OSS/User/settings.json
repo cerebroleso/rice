@@ -1,0 +1,7 @@
+{
+    "security.workspace.trust.untrustedFiles": "open",
+    "files.autoSave": "onFocusChange",
+    "svelte.enable-ts-plugin": true,
+    "terminal.integrated.scrollback": 10000,
+    "window.titleBarStyle": "native"
+}

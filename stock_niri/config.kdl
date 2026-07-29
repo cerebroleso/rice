@@ -124,6 +124,7 @@ environment {
     GTK_CSD "0"
     ELECTRON_OZONE_PLATFORM_HINT "wayland"
     LIBDECOR_PLUGIN "dummy"
+    QT_WAYLAND_DISABLE_WINDOWDECORATION "1"
 }
 
 screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"

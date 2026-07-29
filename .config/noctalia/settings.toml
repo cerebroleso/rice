@@ -147,6 +147,7 @@ enabled = false
 [notification]
 offset_x = 24
 offset_y = 24
+scale = 1.0000000074505806
 
 [osd]
 offset_y = 64

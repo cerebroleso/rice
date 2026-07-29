@@ -161,6 +161,11 @@ elif [ -L ~/.local/state/noctalia/settings.toml ]; then
 fi
 ln -sf ~/dotfiles/.config/noctalia/settings.toml ~/.local/state/noctalia/settings.toml
 
+# Symlink IDE settings.json for frameless titlebars
+mkdir -p ~/.config/"Antigravity IDE"/User ~/.config/"Code - OSS"/User
+ln -sf ~/dotfiles/.config/"Antigravity IDE"/User/settings.json ~/.config/"Antigravity IDE"/User/settings.json
+ln -sf ~/dotfiles/.config/"Code - OSS"/User/settings.json ~/.config/"Code - OSS"/User/settings.json
+
 # Install WhiteSur icon theme locally if not already present (needed for macOS folders & extensions)
 if [ ! -d ~/.local/share/icons/WhiteSur ]; then
     echo "Installing WhiteSur icon theme..."
