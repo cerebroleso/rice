@@ -121,6 +121,9 @@ environment {
     XDG_CURRENT_DESKTOP "niri"
     QT_QPA_PLATFORMTHEME "qt5ct"
     QT_QPA_PLATFORMTHEME_QT6 "qt6ct"
+    GTK_CSD "0"
+    ELECTRON_OZONE_PLATFORM_HINT "wayland"
+    LIBDECOR_PLUGIN "dummy"
 }
 
 screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"

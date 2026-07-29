@@ -80,7 +80,7 @@ git clone https://github.com/cerebroleso/rice.git ~/dotfiles
 paru -S niri xwayland-satellite wl-clipboard cliphist xdg-desktop-portal \
   xdg-desktop-portal-gnome xdg-desktop-portal-gtk hypridle hyprlock pipewire \
   wireplumber brightnessctl networkmanager bluez bluez-utils nwg-look qt5ct qt6ct \
-  ttf-jetbrains-mono-nerd noto-fonts nautilus dolphin pcmanfm-qt file-roller zip unzip p7zip \
+  ttf-jetbrains-mono-nerd noto-fonts nautilus dolphin pcmanfm-qt file-roller zip unzip 7zip \
   unrar yazi kitty zed helium-browser-bin ungoogled-chromium-bin discord pwvucontrol \
   network-manager-applet blueman grim slurp hyprutils-git hyprlang-git \
   hyprwayland-scanner-git aquamarine-git hyprgraphics-git hyprtoolkit-git \
@@ -139,7 +139,7 @@ Run this block to link the non-legacy configurations from your repository to you
 mkdir -p ~/.config
 
 # Symlink active configuration folders from the repository (excluding legacy fuzzel, waybar, vicinae)
-for folder in niri noctalia gtk-3.0 gtk-4.0 qt5ct qt6ct pcmanfm-qt; do
+for folder in niri noctalia gtk-3.0 gtk-4.0 qt5ct qt6ct pcmanfm-qt kitty; do
     if [ -e ~/.config/"$folder" ] && [ ! -L ~/.config/"$folder" ]; then
         echo "Backing up existing ~/.config/$folder to ~/.config/${folder}.bak"
         mv ~/.config/"$folder" ~/.config/"$folder".bak
@@ -169,70 +169,15 @@ if [ ! -d ~/.local/share/icons/WhiteSur ]; then
     rm -rf /tmp/WhiteSur-icon-theme
 fi
 
-# Set GTK icon theme to breeze-noctalia (so Nautilus uses our dynamic folders & extensions)
+# Set GTK icon theme and cursor theme to Rosé Pine
 gsettings set org.gnome.desktop.interface icon-theme 'breeze-noctalia'
+gsettings set org.gnome.desktop.interface cursor-theme 'BreezeX-RosePine-Linux'
+gsettings set org.gnome.desktop.wm.preferences button-layout ''
 
 # Make hook script executable and initialize the dynamic folder icons theme
 chmod +x ~/dotfiles/.config/noctalia/colors_changed.sh
 ~/dotfiles/.config/noctalia/colors_changed.sh
 ```
-
----
-
-## Rosé Pine Cursors
-
-All natural pine, faux fur and a bit of soho vibes for the classy minimalist. Based on BreezeX_Cursor.
-
-### Usage
-
-#### 🐧 Linux
-
-**Arch (AUR):**
-```bash
-# Installs both Rosé Pine and Rosé Pine Dawn
-paru -S rose-pine-cursor
-```
-
-**Other Distributions (Manual Extraction):**
-* **Download:** Rosé Pine / Rosé Pine Dawn
-* **Extract:**
-  ```bash
-  mkdir -p ~/.local/share/icons
-  tar -xvf ~/Downloads/BreezeX-RosePine-Linux.tar.xz -C ~/.local/share/icons
-  tar -xvf ~/Downloads/BreezeX-RosePineDawn-Linux.tar.xz -C ~/.local/share/icons
-  ```
-* **Install / Configure:**
-  Use GNOME Tweaks, `nwg-look`, `lxappearance`, or set it via `gsettings`:
-  ```bash
-  gsettings set org.gnome.desktop.interface cursor-theme 'BreezeX-RosePine-Linux'
-  ```
-
-#### 🪟 Windows
-* **Download:** Rosé Pine / Rosé Pine Dawn
-* **Install:** Follow the instructions in the upstream repository.
-
-#### 🍎 macOS
-* **Download:** Mousecape, Rosé Pine, Rosé Pine Dawn
-* **Install:** Simply double click the cape file with Mousecape on your system and it will be imported into your library.
-
-### Building from Source
-
-**Requirements:**
-* **Bun:** [bun.sh](https://bun.sh)
-* **Clickgen:** `pip install clickgen`
-
-```bash
-git clone https://github.com/rose-pine/cursors/
-cd cursors
-
-bunx cbmp -d 'svg' -n 'BreezeX-RoséPine' -bc '#191724' -oc '#e0def4'
-bunx cbmp -d 'svg' -n 'BreezeX-RoséPineDawn' -bc '#faf4ed' -oc '#575279'
-
-ctgen build.toml -d 'bitmaps/BreezeX-RoséPine' -n 'BreezeX-RoséPine' -c 'Rosé Pine BreezeX cursors.'
-ctgen build.toml -d 'bitmaps/BreezeX-RosePineDawn' -n 'BreezeX-RosePineDawn' -c 'Rosé Pine Dawn BreezeX cursors.'
-```
-
----
 
 ## Building Patched Niri with Liquid Glass/Refraction Effects
 
@@ -290,6 +235,26 @@ To toggle back and forth between standard and glass modes, run:
 ```
 
 This will copy the files from the selected mode into your active `~/.config/niri` folder and trigger an automatic configuration reload.
+
+---
+
+## Global Frameless & CSD-Free Aesthetic Architecture
+
+This repository enforces a borderless, minimalist window aesthetic across GTK, Electron, and Wayland applications by stripping window title bars and window control buttons (`_`, `[]`, `X`).
+
+### Key Modifications Enforced:
+
+1. **Global Master Environment Flags** (Configured in [config.kdl](file:///home/chri/dotfiles/.config/niri/config.kdl#L126-L132) & `~/.config/environment.d/10-no-csd.conf`):
+   * `GTK_CSD="0"`: Strips Client-Side Decoration (CSD) titlebars globally across GTK3, GTK4, and GTK-based Electron applications.
+   * `ELECTRON_OZONE_PLATFORM_HINT="wayland"`: Forces Electron apps (VS Code, Antigravity IDE, Discord, Spotify) to run in native Wayland Ozone mode without fallback X11 frames.
+   * `LIBDECOR_PLUGIN="dummy"`: Disables `libdecor` titlebar rendering for Wayland SDL/C++ applications.
+
+2. **GTK Button Layout Removal**:
+   * `gtk-decoration-layout=` set to empty in [gtk-3.0/settings.ini](file:///home/chri/dotfiles/.config/gtk-3.0/settings.ini#L8) and [gtk-4.0/settings.ini](file:///home/chri/dotfiles/.config/gtk-4.0/settings.ini#L7).
+   * `gsettings set org.gnome.desktop.wm.preferences button-layout ''`.
+
+3. **Electron Applications (VS Code / Antigravity IDE)**:
+   * `"window.titleBarStyle": "native"` set in `settings.json` so Electron yields window decoration control to the compositor environment, resulting in frameless application windows.
 
 ---
 
