@@ -1,6 +1,7 @@
 # Niri Desktop Environment Configuration with Noctalia
 
-![Desktop Preview (liquid glass)](desktop.png)
+![Desktop Preview (frost)](desktop-frost.png)
+![Desktop Preview (glass)](desktop-glass.png)
 
 
 ## 1. Underlying Utilities & Background Services
