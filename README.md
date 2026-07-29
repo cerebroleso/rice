@@ -294,6 +294,11 @@ The following tables document the keyboard shortcuts configured in [binds.kdl](f
 | `Mod+Ctrl+Right` | `focus-column-right` | Focus column to the right |
 | `Mod+Shift+Left` | `move-column-left` | Move column left |
 | `Mod+Shift+Right` | `move-column-right` | Move column right |
+| `Super + Shift + Left Click` / `Super + Middle Click` | `toggle-window-floating` | Toggle window floating / tiled state |
+| `Super + Left Click + Drag` | Niri native move | Drag and move floating window across desktop |
+| `Super + Right Click + Drag` | Niri native resize | Resize floating window with mouse cursor |
+| `Mod+-` / `Mod+=` | `set-column-width -10% / +10%` | Interactively shrink / expand column width |
+| `Mod+Shift+-` / `Mod+Shift+=` | `set-window-height -10% / +10%` | Interactively shrink / expand window height |
 
 ### Workspace Navigation
 | Keybind | Command / Action | Description |
