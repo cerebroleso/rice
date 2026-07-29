@@ -306,7 +306,7 @@ The following tables document the keyboard shortcuts configured in [binds.kdl](f
 | `Mod+Ctrl+Right` / `Mod+L` | `focus-column-right` | Focus column to the right |
 | `Mod+Shift+Left` / `Mod+Shift+H` | `move-column-left` | Move column left |
 | `Mod+Shift+Right` / `Mod+Shift+L` | `move-column-right` | Move column right |
-| `Super + Shift + Left Click` / `Super + Middle Click` | `toggle-window-floating` | Toggle window floating / tiled state |
+| `Mod+Shift+Space` / `Super + Middle Click` | `toggle-window-floating` | Toggle window floating / tiled state |
 | `Super + Left Click + Drag` | Niri native move | Drag and move floating window across desktop |
 | `Super + Right Click + Drag` | Niri native resize | Resize floating window with mouse cursor |
 | `Mod+-` / `Mod+=` | `set-column-width -10% / +10%` | Interactively shrink / expand column width |
