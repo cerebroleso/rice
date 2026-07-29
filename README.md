@@ -302,10 +302,10 @@ The following tables document the keyboard shortcuts configured in [binds.kdl](f
 | `Mod+Right` | `move-column-right; set-column-width 50%` | Move column right and set width to 50% |
 | `Mod+Up` | `move-window-up; set-window-height 50%` | Move window up and set height to 50% |
 | `Mod+Down` | `move-window-down; set-window-height 50%` | Move window down and set height to 50% |
-| `Mod+Ctrl+Left` | `focus-column-left` | Focus column to the left |
-| `Mod+Ctrl+Right` | `focus-column-right` | Focus column to the right |
-| `Mod+Shift+Left` | `move-column-left` | Move column left |
-| `Mod+Shift+Right` | `move-column-right` | Move column right |
+| `Mod+Ctrl+Left` / `Mod+H` | `focus-column-left` | Focus column to the left |
+| `Mod+Ctrl+Right` / `Mod+L` | `focus-column-right` | Focus column to the right |
+| `Mod+Shift+Left` / `Mod+Shift+H` | `move-column-left` | Move column left |
+| `Mod+Shift+Right` / `Mod+Shift+L` | `move-column-right` | Move column right |
 | `Super + Shift + Left Click` / `Super + Middle Click` | `toggle-window-floating` | Toggle window floating / tiled state |
 | `Super + Left Click + Drag` | Niri native move | Drag and move floating window across desktop |
 | `Super + Right Click + Drag` | Niri native resize | Resize floating window with mouse cursor |
@@ -315,10 +315,12 @@ The following tables document the keyboard shortcuts configured in [binds.kdl](f
 ### Workspace Navigation
 | Keybind | Command / Action | Description |
 | :--- | :--- | :--- |
-| `Mod+Ctrl+Up` | `focus-workspace-up` | Focus adjacent workspace up |
-| `Mod+Ctrl+Down` | `focus-workspace-down` | Focus adjacent workspace down |
+| `Mod+Ctrl+Up` / `Mod+K` | `focus-workspace-up` | Focus adjacent workspace up |
+| `Mod+Ctrl+Down` / `Mod+J` | `focus-workspace-down` | Focus adjacent workspace down |
 | `Mod+Shift+Up` | `move-window-to-workspace-up` | Move window to workspace up |
 | `Mod+Shift+Down` | `move-window-to-workspace-down` | Move window to workspace down |
+| `Mod+1` .. `Mod+9` | `focus-workspace 1..9` | Direct jump to workspace 1 through 9 |
+| `Mod+Shift+1` .. `Mod+Shift+9` | `move-column-to-workspace 1..9` | Move window to workspace 1 through 9 |
 
 ### Desktop Shell & System Utilities
 | Keybind | Command / Action | Description |
@@ -326,6 +328,7 @@ The following tables document the keyboard shortcuts configured in [binds.kdl](f
 | `Mod+Space` | `noctalia msg panel-toggle launcher` | Toggle Noctalia Application Launcher |
 | `Mod+V` | `noctalia msg panel-toggle clipboard` | Toggle Noctalia Clipboard History |
 | `Mod+N` | `noctalia msg notifications toggleHistory` | Toggle Notification History panel |
+| `Mod+Shift+L` | `noctalia msg session lock` | Lock screen via Noctalia native lock screen |
 | `Mod+Shift+R` | Niri config reload | Reload Niri configuration and notify |
 | `Mod+Shift+G` | `toggle-glass.sh` | Toggle Niri Liquid Glass/Refraction mode |
 | `Mod+Shift+D` | `toggle-pcmanfm.sh` | Toggle desktop files/icons visibility |
