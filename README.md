@@ -1,6 +1,9 @@
 # Niri Desktop Environment Configuration with Noctalia
 
+### Frost Mode
 ![Desktop Preview (frost)](desktop-frost.png)
+
+### Liquid Glass Mode
 ![Desktop Preview (glass)](desktop-glass.png)
 
 
