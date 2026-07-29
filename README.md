@@ -32,6 +32,10 @@
 *   **ttf-jetbrains-mono-nerd**: Base typography and icon glyphs.
 *   **noto-fonts**: System UI fallback typography.
 *   **playerctl**: MPRIS command-line controller for media keys.
+*   **zsh**: Advanced interactive shell parser.
+*   **zsh-theme-powerlevel10k**: Fast, flexible Powerlevel10k prompt engine for Zsh.
+*   **zsh-autosuggestions**: Fish-like autocomplete predictions for Zsh.
+*   **zsh-syntax-highlighting**: Live shell syntax highlighting.
 
 ---
 
@@ -87,7 +91,8 @@ paru -S niri xwayland-satellite wl-clipboard cliphist xdg-desktop-portal \
   unrar yazi kitty zed helium-browser-bin ungoogled-chromium-bin discord pwvucontrol \
   network-manager-applet blueman grim slurp hyprutils-git hyprlang-git \
   hyprwayland-scanner-git aquamarine-git hyprgraphics-git hyprtoolkit-git \
-  nirimod-git niri-display-manager playerctl noctalia-git ly rose-pine-cursor
+  nirimod-git niri-display-manager playerctl noctalia-git ly rose-pine-cursor \
+  zsh zsh-theme-powerlevel10k zsh-autosuggestions zsh-syntax-highlighting zsh-completions
 
 # Enable the Ly TUI display manager for system startup login
 sudo systemctl enable ly.service
@@ -168,6 +173,10 @@ ln -sf ~/dotfiles/.config/noctalia/settings.toml ~/.local/state/noctalia/setting
 mkdir -p ~/.config/"Antigravity IDE"/User ~/.config/"Code - OSS"/User
 ln -sf ~/dotfiles/.config/"Antigravity IDE"/User/settings.json ~/.config/"Antigravity IDE"/User/settings.json
 ln -sf ~/dotfiles/.config/"Code - OSS"/User/settings.json ~/.config/"Code - OSS"/User/settings.json
+
+# Symlink Zsh shell and Powerlevel10k prompt configuration files
+ln -sf ~/dotfiles/.zshrc ~/.zshrc
+ln -sf ~/dotfiles/.p10k.zsh ~/.p10k.zsh
 
 # Install WhiteSur icon theme locally if not already present (needed for macOS folders & extensions)
 if [ ! -d ~/.local/share/icons/WhiteSur ]; then
