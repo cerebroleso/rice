@@ -246,7 +246,7 @@ Type=Scalable
                     dst_file.unlink()
                 os.symlink(target, dst_file)
             else:
-                if file.endswith('.svg') and file.startswith('folder'):
+                if file.endswith('.svg') and (file.startswith('folder') or 'desktop' in file):
                     with open(src_file, 'r', encoding='utf-8', errors='ignore') as f:
                         content = f.read()
                     modified = replace_colors(content)
@@ -361,7 +361,7 @@ def main():
         sys.exit(0)
 
     # Read the generated color scheme
-    scheme = configparser.RawConfigParser()
+    scheme = configparser.RawConfigParser(strict=False)
     scheme.optionxform = lambda option: option
     scheme.read(scheme_path)
 
@@ -372,7 +372,7 @@ def main():
     accent_color = scheme.get('Colors:Selection', 'BackgroundNormal')
 
     # Read and update kdeglobals
-    kglobals = configparser.RawConfigParser()
+    kglobals = configparser.RawConfigParser(strict=False)
     kglobals.optionxform = lambda option: option
     if kglobals_path.exists():
         kglobals.read(kglobals_path)
