@@ -218,6 +218,12 @@ directory = "/home/chri/Pictures"
     theme_mode = "dark"
     wallpaper_scheme = "m3-content"
 
+    [[wallpaper.favorite]]
+    palette_source = "wallpaper"
+    path = "/home/chri/Pictures/walls/snow-night-moon.png"
+    theme_mode = "dark"
+    wallpaper_scheme = "m3-content"
+
 [weather]
 enabled = false
 
