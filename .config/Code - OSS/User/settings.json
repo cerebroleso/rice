@@ -3,5 +3,6 @@
     "files.autoSave": "onFocusChange",
     "svelte.enable-ts-plugin": true,
     "terminal.integrated.scrollback": 10000,
-    "window.titleBarStyle": "native"
+    "window.titleBarStyle": "custom",
+    "window.controlsStyle": "hidden"
 }
