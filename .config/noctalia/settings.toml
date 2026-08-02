@@ -202,18 +202,6 @@ directory = "/home/chri/Pictures"
 
     [[wallpaper.favorite]]
     palette_source = "wallpaper"
-    path = "/home/chri/Pictures/gtaIV/20260709_22h53m55s_grim.png"
-    theme_mode = "dark"
-    wallpaper_scheme = "m3-content"
-
-    [[wallpaper.favorite]]
-    palette_source = "wallpaper"
-    path = "/home/chri/Pictures/wp12654734-catalina-4k-wallpapers.jpg"
-    theme_mode = "dark"
-    wallpaper_scheme = "m3-content"
-
-    [[wallpaper.favorite]]
-    palette_source = "wallpaper"
     path = "/home/chri/Pictures/walls/storm.jpg"
     theme_mode = "dark"
     wallpaper_scheme = "m3-content"

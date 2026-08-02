@@ -393,4 +393,159 @@ By rolling these tools into a single, cohesive binary, **Noctalia** minimizes co
 #### The Cost of "Glass"
 Running **Liquid Glass** in Niri requires real-time computations for background refraction, adaptive dimming, borders, glows, and fringing. These shaders force the compositor to retain additional window-behind texture buffers in GPU/CPU RAM, which is why Niri Glass uses **23.7 MB** more than the stock configuration.
 
+---
+
+## NixOS Deployment & Flake Architecture Guide
+
+This section describes how to deploy and manage this dotfiles repository on **NixOS** using Flakes, Home Manager (Strategy 2 `mkOutOfStoreSymlink`), and the **CachyOS kernel**.
+
+### 1. NixOS System Flake Setup (`flake.nix`)
+
+NixOS allows declaring both laptop and desktop systems with the optimized CachyOS Linux kernel provided by the `chaotic-nyx` Flake input:
+
+```nix
+{
+  description = "Niri Desktop Environment on NixOS with CachyOS Kernel";
+
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    chaotic.url = "github:chaotic-cx/nyx"; # CachyOS kernel & optimized packages
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+
+  outputs = { self, nixpkgs, chaotic, home-manager, ... }: {
+    nixosConfigurations = {
+      # Laptop Configuration
+      laptop = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [
+          chaotic.nixosModules.default
+          ./hardware-configuration.nix
+          ./configuration.nix
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.chri = import ./home.nix;
+          }
+        ];
+      };
+    };
+  };
+}
+```
+
+### 2. CachyOS Kernel & Hardware Configuration (`configuration.nix`)
+
+Enable the CachyOS kernel, Niri Wayland compositor, audio, and graphics in `configuration.nix`:
+
+```nix
+{ config, pkgs, ... }:
+
+{
+  # Use CachyOS optimized kernel
+  boot.kernelPackages = pkgs.linuxPackages_cachyos;
+
+  # Enable Wayland graphics & 32-bit drivers
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true;
+  };
+
+  # Sound & Bluetooth
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    pulse.enable = true;
+  };
+  hardware.bluetooth.enable = true;
+
+  # Enable Flatpak (for Bottles / Steam compatibility)
+  services.flatpak.enable = true;
+
+  # Install Niri & Core System Packages
+  environment.systemPackages = with pkgs; [
+    niri
+    kitty
+    waybar
+    noctalia
+    qdirstat
+    neovim
+    git
+    zsh
+    procps
+    gnused
+    libnotify
+  ];
+
+  # Set default shell to Zsh
+  users.users.chri = {
+    isNormalUser = true;
+    extraGroups = [ "wheel" "video" "input" "libvirtd" ];
+    shell = pkgs.zsh;
+  };
+}
+```
+
+### 3. Home Manager Dotfiles Symlinking (`home.nix`)
+
+Instead of manual symlinking scripts, Home Manager connects your `~/dotfiles` repository directly to `~/.config/` using `mkOutOfStoreSymlink`. 
+
+Because `mkOutOfStoreSymlink` targets your cloned repository in regular user home space, **bash scripts like `toggle-glass.sh` and `toggle-pcmanfm.sh` and Noctalia color scheme generators continue to edit files seamlessly at runtime without read-only errors**:
+
+```nix
+{ config, pkgs, ... }:
+
+let
+  dotfilesDir = "/home/chri/dotfiles";
+  mkSymlink = path: config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/${path}";
+in
+{
+  home.username = "chri";
+  home.homeDirectory = "/home/chri";
+  home.stateVersion = "24.05";
+
+  # Symlink active dotfiles configs live into ~/.config
+  xdg.configFile."niri".source = mkSymlink ".config/niri";
+  xdg.configFile."noctalia".source = mkSymlink ".config/noctalia";
+  xdg.configFile."gtk-3.0".source = mkSymlink ".config/gtk-3.0";
+  xdg.configFile."gtk-4.0".source = mkSymlink ".config/gtk-4.0";
+  xdg.configFile."qt5ct".source = mkSymlink ".config/qt5ct";
+  xdg.configFile."qt6ct".source = mkSymlink ".config/qt6ct";
+  xdg.configFile."pcmanfm-qt".source = mkSymlink ".config/pcmanfm-qt";
+  xdg.configFile."kitty".source = mkSymlink ".config/kitty";
+  
+  # Symlink Shell configs
+  home.file.".zshrc".source = mkSymlink ".zshrc";
+  home.file.".p10k.zsh".source = mkSymlink ".p10k.zsh";
+
+  # Qt Engine integration
+  qt = {
+    enable = true;
+    platformTheme.name = "qt5ct";
+    style.name = "adwaita-dark";
+  };
+}
+```
+
+### 4. Deploying on NixOS
+
+To deploy this configuration on a fresh NixOS machine:
+
+```bash
+# 1. Clone your dotfiles repository
+git clone https://github.com/cerebroleso/rice.git ~/dotfiles
+
+# 2. Rebuild NixOS System & Home Manager
+sudo nixos-rebuild switch --flake ~/dotfiles#laptop
+
+# 3. Initialize Noctalia Dynamic Folder Colors
+chmod +x ~/dotfiles/.config/noctalia/colors_changed.sh
+~/dotfiles/.config/noctalia/colors_changed.sh
+```
+
+
 
