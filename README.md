@@ -547,5 +547,49 @@ chmod +x ~/dotfiles/.config/noctalia/colors_changed.sh
 ~/dotfiles/.config/noctalia/colors_changed.sh
 ```
 
+---
+
+### 5. Building Patched Niri with Liquid Glass / Refraction Effects on NixOS
+
+On Arch, `makepkg` compiles the patch using `/usr/include` headers. On NixOS, you have two methods to build Niri with `experimental/liquid-glass.patch`:
+
+#### Method A: Pure Declarative Nix Override (Recommended 🏆)
+In your NixOS configuration (`configuration.nix` or `flake.nix`), override the default `niri` package to apply your patch automatically during `nixos-rebuild switch`:
+
+```nix
+environment.systemPackages = [
+  (pkgs.niri.overrideAttrs (oldAttrs: {
+    src = pkgs.fetchFromGitHub {
+      owner = "niri-wm";
+      repo = "niri";
+      rev = "0777769e719b7c9b7c980d4ea66288bfbb4da5b3";
+      hash = "sha256-0000000000000000000000000000000000000000000="; # Update with actual hash
+    };
+    patches = (oldAttrs.patches or []) ++ [
+      ./experimental/liquid-glass.patch
+    ];
+  }))
+];
+```
+Nix will automatically patch, compile, link all Wayland/Mesa C-libraries, and place the resulting Liquid Glass Niri binary in your system PATH.
+
+#### Method B: Manual Cargo Build via `nix-shell`
+If you want to manually run `cargo build --release` inside the `niri` source directory, drop into a Nix development shell to provide `pkg-config`, `libwayland`, `pango`, `cairo`, and `libxkbcommon`:
+
+```bash
+# Drop into Nix dev shell with all Wayland build dependencies
+nix-shell -p cargo rustc pkg-config wayland pango cairo libxkbcommon mesa libinput
+
+# Clone Niri and checkout patched commit
+git clone https://github.com/niri-wm/niri.git
+cd niri
+git checkout 0777769e719b7c9b7c980d4ea66288bfbb4da5b3
+
+# Apply Liquid Glass patch & build
+git apply ~/dotfiles/experimental/liquid-glass.patch
+cargo build --release
+```
+
+
 
 

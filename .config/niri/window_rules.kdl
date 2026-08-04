@@ -6,18 +6,22 @@ layer-rule {
   background-effect {
     blur true
     xray false
+    liquid-glass {
+    refraction-strength 3.0
+    power-factor 10
+    refraction-power 1.0
+    glow-weight 0.0001
+    edge-lighting 0.2
+    saturation 0.9
+    vibrancy 0.2
+    adaptive-dim 0.2
+    adaptive-boost 0.2
+    fringing 3.0
     }
+}
 }
 
 // Window rules
-
-window-rule {
-  match app-id="Spotify"
-  opacity 0.9
-  background-effect {
-    blur true
-    }
-}
 
 window-rule {
   match app-id="signal beta"
@@ -25,11 +29,6 @@ window-rule {
   default-window-height { proportion 0.65; }
   open-floating true
   default-floating-position x=550 y=250 relative-to="top-left"
-  opacity 0.9
-  background-effect {
-    blur true
-    xray false
-    }
 }
 
 window-rule {
@@ -38,10 +37,6 @@ window-rule {
   default-floating-position x=1300 y=250 relative-to="top-left"
   min-height 850
   min-width 750
-  opacity 0.9
-  background-effect {
-    blur true
-    }
 }
 
 window-rule {
@@ -58,22 +53,8 @@ window-rule {
 
 
 window-rule {
-  match app-id="foot"
-  match app-id="obsidian"
-  opacity 0.9
-  background-effect {
-    blur true
-    }
-}
-
-
-window-rule {
   match app-id="positron"
   match app-id="anki"
   draw-border-with-background false
-  opacity 0.9
-  background-effect {
-    blur true
-    }
 }
 
