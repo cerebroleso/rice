@@ -156,7 +156,7 @@ binds {
     
     
     Ctrl+Alt+T { spawn "kitty"; }
-    Mod+B { spawn "helium-browser"; }
+    Mod+W { spawn "helium-browser"; }
     Mod+D { spawn "zed"; }
     Mod+Shift+E { spawn-sh "kitty yazi"; }
     Mod+E { spawn "nautilus"; }

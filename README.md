@@ -284,7 +284,7 @@ The following tables document the keyboard shortcuts configured in [binds.kdl](f
 | :--- | :--- | :--- |
 | `Ctrl+Alt+T` | `spawn "kitty"` | Launch Kitty terminal |
 | `Mod+T` | `spawn "kitty"` | Launch Kitty terminal |
-| `Mod+B` | `spawn "helium-browser"` | Launch Helium browser |
+| `Mod+W` | `spawn "helium-browser"` | Launch Helium browser |
 | `Mod+D` | `spawn "zed"` | Launch Zed code editor |
 | `Mod+E` | `spawn "nautilus"` | Launch Nautilus file manager |
 | `Mod+Shift+E` | `spawn-sh "kitty yazi"` | Launch Yazi terminal file manager in Kitty |
