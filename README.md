@@ -471,9 +471,9 @@ Enable the CachyOS kernel, Niri Wayland compositor, audio, and graphics in `conf
     niri kitty waybar noctalia nwg-look satty grim slurp swayosd playerctl cliphist
     wl-clipboard libnotify qt5ct qt6ct virt-manager qemu_full libvirt
     ebtables dnsmasq OVMF steam ryujinx rpcs3 pcsx2 moonlight-qt mangohud
-    vkbasalt firefox discord qbittorrent meld qdirstat gparted xorg.xhost
+    vkbasalt firefox discord qbittorrent zathura meld qdirstat gparted xorg.xhost
     brightnessctl ddcutil tailscale nmap lshw pciutils usbutils
-    pavucontrol dbeaver-bin tuxedo-control-center git zsh btop ripgrep procps gnused rsync p7zip unzip
+    pavucontrol dbeaver-bin tuxedo-control-center git zsh zed-editor neovim btop ripgrep procps gnused rsync p7zip unzip
   ];
 
   # Set default shell to Zsh
