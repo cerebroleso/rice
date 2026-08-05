@@ -2,6 +2,7 @@
 // Startup applications (User's configuration)
 // ==================================================
 spawn-at-startup "xwayland-satellite"
+spawn-at-startup "xhost" "+local:root"
 spawn-at-startup "nm-applet"
 spawn-at-startup "blueman-applet"
 spawn-at-startup "noctalia" "--daemon"
@@ -47,8 +48,7 @@ hotkey-overlay {
 output "eDP-1" {
     mode "1920x1080@144.003"
     scale 1
-    transform "normal"
-    position x=0 y=0
+    position x=4520 y=0
 }
 
 // ==================================================

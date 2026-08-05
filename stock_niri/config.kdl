@@ -2,6 +2,7 @@
 // Startup applications (User's configuration)
 // ==================================================
 spawn-at-startup "xwayland-satellite"
+spawn-at-startup "xhost" "+local:root"
 spawn-at-startup "nm-applet"
 spawn-at-startup "blueman-applet"
 spawn-at-startup "noctalia" "--daemon"
