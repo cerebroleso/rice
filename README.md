@@ -466,14 +466,29 @@ Enable the CachyOS kernel, Niri Wayland compositor, audio, and graphics in `conf
   # Enable Flatpak (for Bottles / Steam compatibility)
   services.flatpak.enable = true;
 
-  # Install Niri & Core Packages
+  # --- Core Base Programs ---
   environment.systemPackages = with pkgs; [
-    niri kitty waybar noctalia nwg-look satty grim slurp swayosd playerctl cliphist
-    wl-clipboard libnotify qt5ct qt6ct virt-manager qemu_full libvirt
-    ebtables dnsmasq OVMF steam ryujinx rpcs3 pcsx2 moonlight-qt mangohud
-    vkbasalt firefox discord qbittorrent zathura meld qdirstat gparted xorg.xhost
-    brightnessctl ddcutil tailscale nmap lshw pciutils usbutils
-    pavucontrol dbeaver-bin tuxedo-control-center git zsh zed-editor neovim btop ripgrep procps gnused rsync p7zip unzip
+    # Desktop Environment & Ricing
+    niri kitty waybar noctalia nwg-look satty grim slurp swayosd playerctl brightnessctl cliphist
+    wl-clipboard libnotify qt5ct qt6ct
+
+    # Productivity, Media & Viewers
+    firefox chromium discord qbittorrent zathura file-roller loupe meld qdirstat gparted xorg.xhost
+    pavucontrol dbeaver-bin tailscale nmap lshw pciutils usbutils
+
+    # Editors & CLI Utilities
+    git zsh vscode-fhs zed-editor neovim btop ripgrep procps gnused rsync p7zip unzip
+
+    # --- Hardware-Specific & Laptop Tuning (Omit on other machines) ---
+    tuxedo-control-center
+    penguin-burner
+    ddcutil
+
+    # --- Virtualization Stack & Windows Runners ---
+    bottles virt-manager qemu_full libvirt ebtables dnsmasq OVMF
+
+    # --- Gaming & Emulators ---
+    steam ryujinx rpcs3 pcsx2 moonlight-qt mangohud vkbasalt
   ];
 
   # Set default shell to Zsh
