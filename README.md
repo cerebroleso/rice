@@ -466,19 +466,14 @@ Enable the CachyOS kernel, Niri Wayland compositor, audio, and graphics in `conf
   # Enable Flatpak (for Bottles / Steam compatibility)
   services.flatpak.enable = true;
 
-  # Install Niri & Core System Packages
+  # Install Niri & Core Packages
   environment.systemPackages = with pkgs; [
-    niri
-    kitty
-    waybar
-    noctalia
-    qdirstat
-    neovim
-    git
-    zsh
-    procps
-    gnused
-    libnotify
+    niri kitty waybar noctalia nwg-look satty grim slurp swayosd playerctl cliphist
+    wl-clipboard libnotify qt5ct qt6ct virt-manager qemu_full libvirt
+    ebtables dnsmasq OVMF steam ryujinx rpcs3 pcsx2 moonlight-qt mangohud
+    vkbasalt firefox discord qbittorrent meld qdirstat gparted xorg.xhost
+    brightnessctl ddcutil tailscale nmap lshw pciutils usbutils
+    pavucontrol dbeaver-bin tuxedo-control-center git zsh btop ripgrep procps gnused rsync p7zip unzip
   ];
 
   # Set default shell to Zsh
