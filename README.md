@@ -510,12 +510,12 @@ Because `mkOutOfStoreSymlink` targets your cloned repository in regular user hom
 { config, pkgs, ... }:
 
 let
-  dotfilesDir = "/home/chri/dotfiles";
+  dotfilesDir = "${config.home.homeDirectory}/dotfiles";
   mkSymlink = path: config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/${path}";
 in
 {
-  home.username = "chri";
-  home.homeDirectory = "/home/chri";
+  home.username = "tsui"; # Set your NixOS username here
+  home.homeDirectory = "/home/${config.home.username}";
   home.stateVersion = "24.05";
 
   # Symlink active dotfiles configs live into ~/.config

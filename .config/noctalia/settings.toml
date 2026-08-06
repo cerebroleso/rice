@@ -189,28 +189,30 @@ wallpaper_scheme = "m3-content"
     community_ids = [ "vscode", "zed", "discord", "steam", "yazi", "zathura" ]
 
 [wallpaper]
-directory = "/home/chri/Pictures"
+directory = "~/Pictures"
 
     [wallpaper.default]
-    path = "/home/chri/Pictures/walls/snow-night-moon.png"
+    path = "~/Pictures/walls/snow-night-moon.png"
 
     [wallpaper.last]
-    path = "/home/chri/Pictures/walls/snow-night-moon.png"
+    path = "~/Pictures/walls/snow-night-moon.png"
 
     [wallpaper.monitors.eDP-1]
-    path = "/home/chri/Pictures/walls/snow-night-moon.png"
+    path = "~/Pictures/walls/snow-night-moon.png"
 
     [[wallpaper.favorite]]
     palette_source = "wallpaper"
+    path = "/home/chri/Pictures/walls/snow-night-moon.png"
+    theme_mode = "dark"
+    wallpaper_scheme = "m3-content"
+
+    [[wallpaper.favorite]]
     path = "/home/chri/Pictures/walls/storm.jpg"
-    theme_mode = "dark"
-    wallpaper_scheme = "m3-content"
+    theme_mode = "auto"
 
     [[wallpaper.favorite]]
-    palette_source = "wallpaper"
-    path = "/home/chri/Pictures/walls/snow-night-moon.png"
-    theme_mode = "dark"
-    wallpaper_scheme = "m3-content"
+    path = "/home/chri/Pictures/walls/wp12654773-catalina-4k-wallpapers.jpg"
+    theme_mode = "auto"
 
 [weather]
 enabled = false
