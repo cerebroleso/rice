@@ -189,16 +189,16 @@ wallpaper_scheme = "m3-content"
     community_ids = [ "vscode", "zed", "discord", "steam", "yazi", "zathura" ]
 
 [wallpaper]
-directory = "~/Pictures"
+directory = "/home/chri/Pictures"
 
     [wallpaper.default]
-    path = "~/Pictures/walls/snow-night-moon.png"
+    path = "/home/chri/Pictures/walls/snow-night-moon.png"
 
     [wallpaper.last]
-    path = "~/Pictures/walls/snow-night-moon.png"
+    path = "/home/chri/Pictures/walls/snow-night-moon.png"
 
     [wallpaper.monitors.eDP-1]
-    path = "~/Pictures/walls/snow-night-moon.png"
+    path = "/home/chri/Pictures/walls/snow-night-moon.png"
 
     [[wallpaper.favorite]]
     palette_source = "wallpaper"

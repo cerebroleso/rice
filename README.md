@@ -429,7 +429,7 @@ NixOS allows declaring both laptop and desktop systems with the optimized CachyO
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.chri = import ./home.nix;
+            home-manager.users.tsui = import ./home.nix;
           }
         ];
       };
@@ -492,7 +492,7 @@ Enable the CachyOS kernel, Niri Wayland compositor, audio, and graphics in `conf
   ];
 
   # Set default shell to Zsh
-  users.users.chri = {
+  users.users.tsui = {
     isNormalUser = true;
     extraGroups = [ "wheel" "video" "input" "libvirtd" ];
     shell = pkgs.zsh;
@@ -549,10 +549,18 @@ To deploy this configuration on a fresh NixOS machine:
 # 1. Clone your dotfiles repository
 git clone https://github.com/cerebroleso/rice.git ~/dotfiles
 
-# 2. Rebuild NixOS System & Home Manager
+# 2. Fix hardcoded paths for your NixOS username
+# Noctalia and Qt5ct/Qt6ct require absolute paths (no tilde expansion).
+sed -i "s|/home/chri|$HOME|g" \
+  ~/dotfiles/.config/noctalia/settings.toml \
+  ~/dotfiles/.config/noctalia/config.toml \
+  ~/dotfiles/.config/qt5ct/qt5ct.conf \
+  ~/dotfiles/.config/qt6ct/qt6ct.conf
+
+# 3. Rebuild NixOS System & Home Manager
 sudo nixos-rebuild switch --flake ~/dotfiles#laptop
 
-# 3. Initialize Noctalia Dynamic Folder Colors
+# 4. Initialize Noctalia Dynamic Folder Colors
 chmod +x ~/dotfiles/.config/noctalia/colors_changed.sh
 ~/dotfiles/.config/noctalia/colors_changed.sh
 ```

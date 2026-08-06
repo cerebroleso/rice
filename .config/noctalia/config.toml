@@ -159,7 +159,7 @@ battery_percentage_changed = []
 battery_plugged = []
 bluetooth_disabled = []
 bluetooth_enabled = []
-colors_changed = [ "~/.config/noctalia/colors_changed.sh" ]
+colors_changed = [ "/home/chri/.config/noctalia/colors_changed.sh" ]
 logging_out = []
 power_profile_changed = []
 rebooting = []
@@ -517,7 +517,7 @@ wallpaper_scheme = "m3-content"
     enable_community_templates = true
 
 [wallpaper]
-directory = "~/Pictures"
+directory = "/home/chri/Pictures"
 directory_dark = ""
 directory_light = ""
 edge_smoothness = 0.30000001192092896
