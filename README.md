@@ -53,7 +53,7 @@ sudo nixos-rebuild switch
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.timeout = 1;
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgs.linuxPackages_xanmod_latest;
 
   networking.hostName = "nixos";
   networking.networkmanager.enable = true;
@@ -185,7 +185,7 @@ sudo nixos-rebuild switch
     dbeaver-bin tailscale nmap lshw pciutils usbutils vscode antigravity-ide zed-editor
     neovim git zsh zsh-powerlevel10k zsh-autosuggestions zsh-syntax-highlighting python3
     nerd-fonts.jetbrains-mono yazi btop ripgrep procps gnused rsync p7zip unzip ddcutil
-    (bottles.override { removeWarningPopup = true; }) virt-manager qemu libvirt ebtables dnsmasq OVMF steam ryubing rpcs3 pcsx2
+    (bottles.override { removeWarningPopup = true; }) wineWow64Packages.stable scx.full virt-manager qemu libvirt ebtables dnsmasq OVMF steam ryubing rpcs3 pcsx2
     moonlight-qt mangohud vkbasalt
   ];
 
@@ -337,4 +337,11 @@ sudo nixos-rebuild switch
 * **Fix**:
   1. Ensure `xhost +local:root` is enabled (automatically run via `glass_niri/config.kdl`).
   2. Launch GParted using `sudo -E gparted` or `sudo gparted`. `configuration.nix` configures `security.sudo.extraConfig` to preserve `DISPLAY` and `WAYLAND_DISPLAY`.
+
+### G. FitGirl Repacks & Wine / Bottles Installer Freeze at 0.2%?
+* **Cause**: FitGirl Repack setup wizards use 32-bit `unarc.dll` / `cls-*.dll` decompression algorithms. On 64-bit Wine, unconstrained decompression threads rapidly exceed the 2 GB 32-bit virtual memory address space, triggering Linux Out-Of-Memory (OOM) killer (exit code 137).
+* **Fix**:
+  1. On the **first screen of the FitGirl setup wizard** (before clicking *Next* to install), check the box: **"Limit installer to 2 GB of RAM usage"**.
+  2. Ensure `(bottles.override { removeWarningPopup = true; })` and `wineWow64Packages.stable` are present in `/etc/nixos/configuration.nix` for native 32-bit/64-bit Wine support.
+
 

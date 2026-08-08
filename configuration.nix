@@ -8,7 +8,7 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.timeout = 1;
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgs.linuxPackages_xanmod_latest;
   boot.supportedFilesystems = [ "btrfs" "vfat" "ntfs" "exfat" ];
 
   networking.hostName = "nixos";
@@ -210,6 +210,8 @@ EOF
     unzip
     ddcutil
     (bottles.override { removeWarningPopup = true; })
+    wineWow64Packages.stable
+    scx.full
     virt-manager
     qemu
     libvirt
