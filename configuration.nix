@@ -10,6 +10,7 @@
   boot.loader.timeout = 1;
   boot.kernelPackages = pkgs.linuxPackages_xanmod_latest;
   boot.supportedFilesystems = [ "btrfs" "vfat" "ntfs" "exfat" ];
+  boot.kernel.sysctl."vm.max_map_count" = 2147483642;
 
   networking.hostName = "nixos";
   networking.networkmanager.enable = true;
