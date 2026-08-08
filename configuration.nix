@@ -9,6 +9,7 @@
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.timeout = 1;
   boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.supportedFilesystems = [ "btrfs" "vfat" "ntfs" "exfat" ];
 
   networking.hostName = "nixos";
   networking.networkmanager.enable = true;
@@ -50,6 +51,9 @@
     enablePkexecWrapper = true;
     extraConfig = ''
       polkit.addRule(function(action, subject) {
+        if (action.id.indexOf("org.freedesktop.udisks2.") === 0 && subject.isInGroup("wheel")) {
+          return polkit.Result.YES;
+        }
         if (subject.isInGroup("wheel")) {
           return polkit.Result.AUTH_ADMIN_KEEP;
         }
@@ -79,6 +83,11 @@
   services.tailscale.enable = true;
   services.upower.enable = true;
   services.displayManager.ly.enable = true;
+
+  # USB Automounting & Storage Services
+  services.udisks2.enable = true;
+  services.gvfs.enable = true;
+  services.devmon.enable = true;
 
   # Bluetooth Hardware & Blueman Services
   hardware.bluetooth = {
@@ -120,6 +129,8 @@
 
   environment.systemPackages = with pkgs; [
     niri
+    nirimon
+    nirius
     kitty
     waybar
     nwg-look
@@ -135,6 +146,10 @@
     cliphist
     wl-clipboard
     libnotify
+    udiskie
+    ntfs3g
+    exfat
+    exfatprogs
     libsForQt5.qt5ct
     qt6Packages.qt6ct
     firefox
@@ -194,7 +209,7 @@ EOF
     p7zip
     unzip
     ddcutil
-    bottles
+    (bottles.override { removeWarningPopup = true; })
     virt-manager
     qemu
     libvirt

@@ -17,7 +17,9 @@
 *   **zsh & zsh-powerlevel10k**: Interactive shell with Powerlevel10k prompt engine and autosuggestions.
 *   **nautilus**: GNOME file manager with dynamic macOS styled accent folders.
 *   **pipewire & wireplumber**: Low-latency multimedia audio & video routing.
-*   **tuxedo-drivers & tuxedo**: Laptop hardware drivers & GUI/D-Bus daemon (`tccd`) for dynamic RGB keyboard LED sync.
+*   **nirimon & nirius**: Niri monitor layout manager & IPC command suite (`niri-mod` helper tools).
+*   **udiskie & udisks2**: Automatic USB drive & removable storage automounter with system tray status.
+*   **tuxedo-drivers & tuxedo-rs**: Laptop hardware drivers & GUI daemon (`tailord`/`tailor-gui`) for dynamic RGB keyboard LED sync.
 *   **rose-pine-cursor**: Rosé Pine BreezeX cursor theme (`BreezeX-RosePine-Linux`).
 
 ---
@@ -95,6 +97,9 @@ sudo nixos-rebuild switch
     enablePkexecWrapper = true;
     extraConfig = ''
       polkit.addRule(function(action, subject) {
+        if (action.id.indexOf("org.freedesktop.udisks2.") === 0 && subject.isInGroup("wheel")) {
+          return polkit.Result.YES;
+        }
         if (subject.isInGroup("wheel")) {
           return polkit.Result.AUTH_ADMIN_KEEP;
         }
@@ -119,7 +124,10 @@ sudo nixos-rebuild switch
     tailor-gui.enable = true;
   };
 
-  # Bluetooth Hardware & Services
+  # USB Automounting & Storage Services
+  services.udisks2.enable = true;
+  services.gvfs.enable = true;
+  services.devmon.enable = true;
   services.upower.enable = true;
   hardware.bluetooth = {
     enable = true;
@@ -171,13 +179,13 @@ sudo nixos-rebuild switch
 
   # System Packages
   environment.systemPackages = with pkgs; [
-    niri kitty waybar nwg-look satty grim slurp swayosd playerctl brightnessctl cliphist
-    wl-clipboard libnotify qt5ct qt6ct firefox chromium discord qbittorrent zathura file-roller
+    niri nirimon nirius kitty waybar nwg-look satty grim slurp swayosd playerctl brightnessctl cliphist
+    wl-clipboard libnotify udiskie ntfs3g exfat exfatprogs qt5ct qt6ct firefox chromium discord qbittorrent zathura file-roller
     loupe meld qdirstat gparted nautilus tuxedo tuxedo-rs rose-pine-cursor xhost pavucontrol
     dbeaver-bin tailscale nmap lshw pciutils usbutils vscode antigravity-ide zed-editor
     neovim git zsh zsh-powerlevel10k zsh-autosuggestions zsh-syntax-highlighting python3
     nerd-fonts.jetbrains-mono yazi btop ripgrep procps gnused rsync p7zip unzip ddcutil
-    bottles virt-manager qemu libvirt ebtables dnsmasq OVMF steam ryubing rpcs3 pcsx2
+    (bottles.override { removeWarningPopup = true; }) virt-manager qemu libvirt ebtables dnsmasq OVMF steam ryubing rpcs3 pcsx2
     moonlight-qt mangohud vkbasalt
   ];
 
