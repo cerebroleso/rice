@@ -19,44 +19,59 @@ def check_tccd_running():
         return False
 
 def update_keyboard_backlight(accent_color_str):
-    if not check_tccd_running():
-        return False
-
     try:
         rgb = [int(x.strip()) for x in accent_color_str.split(',')]
         if len(rgb) != 3:
             return False
 
-        res = run([
-            'busctl', 'call',
-            'com.tuxedocomputers.tccd',
-            '/com/tuxedocomputers/tccd',
-            'com.tuxedocomputers.tccd',
-            'GetKeyboardBacklightStatesJSON'
-        ], capture_output=True, text=True)
-        if res.returncode != 0:
-            return False
+        rgb_space = f"{rgb[0]} {rgb[1]} {rgb[2]}"
 
-        content = res.stdout.strip().partition(' ')[2]
-        states = json.loads(json.loads(content))
+        # 1. Direct Linux Kernel SysFS LED Interface
+        sysfs_paths = [
+            Path('/sys/class/leds/rgb:kbd_backlight/multi_intensity'),
+            Path('/sys/devices/platform/tuxedo_keyboard/leds/rgb:kbd_backlight/multi_intensity')
+        ]
+        for sysfs_path in sysfs_paths:
+            if sysfs_path.exists():
+                try:
+                    sysfs_path.write_text(rgb_space)
+                    print(f"Successfully set keyboard LED sysfs color to {rgb_space}")
+                except Exception as e:
+                    pass
 
-        for state in states:
-            state['red'] = rgb[0]
-            state['green'] = rgb[1]
-            state['blue'] = rgb[2]
+        # 2. Tuxedo Tailor D-Bus Interface (com.tux.Tailor)
+        try:
+            run(['busctl', 'call', 'com.tux.Tailor', '/com/tux/Tailor', 'com.tux.Tailor', 'SetColor', 'sss', 'all', f'#{rgb[0]:02x}{rgb[1]:02x}{rgb[2]:02x}', 'static'], capture_output=True)
+        except Exception:
+            pass
 
-        new_states_str = json.dumps(states)
+        # 3. Tuxedo TCCD D-Bus Interface (com.tuxedocomputers.tccd)
+        if check_tccd_running():
+            res = run([
+                'busctl', 'call',
+                'com.tuxedocomputers.tccd',
+                '/com/tuxedocomputers/tccd',
+                'com.tuxedocomputers.tccd',
+                'GetKeyboardBacklightStatesJSON'
+            ], capture_output=True, text=True)
+            if res.returncode == 0:
+                content = res.stdout.strip().partition(' ')[2]
+                states = json.loads(json.loads(content))
+                for state in states:
+                    state['red'] = rgb[0]
+                    state['green'] = rgb[1]
+                    state['blue'] = rgb[2]
+                new_states_str = json.dumps(states)
+                run([
+                    'busctl', 'call',
+                    'com.tuxedocomputers.tccd',
+                    '/com/tuxedocomputers/tccd',
+                    'com.tuxedocomputers.tccd',
+                    'SetKeyboardBacklightStatesJSON',
+                    's', new_states_str
+                ], capture_output=True, text=True)
 
-        set_res = run([
-            'busctl', 'call',
-            'com.tuxedocomputers.tccd',
-            '/com/tuxedocomputers/tccd',
-            'com.tuxedocomputers.tccd',
-            'SetKeyboardBacklightStatesJSON',
-            's', new_states_str
-        ], capture_output=True, text=True)
-        
-        return set_res.returncode == 0
+        return True
     except Exception as e:
         print(f"Warning: Failed to update keyboard backlight: {e}", file=sys.stderr)
         return False

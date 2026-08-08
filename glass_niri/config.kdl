@@ -301,10 +301,7 @@ layer-rule {
     geometry-corner-radius 12
     opacity 0.80
     background-effect {
-        blur {
-            passes 1
-            offset 1
-        }
+        blur true
         xray false
     liquid-glass {
     refraction-strength 1.0

@@ -304,12 +304,9 @@ layer-rule {
     geometry-corner-radius 12
     opacity 0.80
     background-effect {
-        blur {
-            passes 4
-            offset 4
-        }
+        blur true
         xray false
-}
+    }
 }
 
 layer-rule {

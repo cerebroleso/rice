@@ -37,6 +37,11 @@ input {
     mouse
 }
 
+cursor {
+    xcursor-theme "BreezeX-RosePine-Linux"
+    xcursor-size 24
+}
+
 hotkey-overlay {
     skip-at-startup
     hide-not-bound
@@ -118,6 +123,7 @@ overview {
 }
 
 environment {
+    PATH "/home/tsui/.local/bin:/run/current-system/sw/bin"
     XDG_CURRENT_DESKTOP "niri"
     QT_QPA_PLATFORMTHEME "qt5ct"
     QT_QPA_PLATFORMTHEME_QT6 "qt6ct"
@@ -303,12 +309,9 @@ layer-rule {
     geometry-corner-radius 12
     opacity 0.80
     background-effect {
-        blur {
-            passes 4
-            offset 4
-        }
+        blur true
         xray false
-}
+    }
 }
 
 layer-rule {

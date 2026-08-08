@@ -1,3 +1,5 @@
+config_version = 12
+
 [audio]
 enable_overdrive = true
 
@@ -5,7 +7,6 @@ enable_overdrive = true
 blur_intensity = 0.04999999888241291
 
 [bar.default]
-auto_hide = false
 border_width = 0.5
 capsule = false
 capsule_opacity = 0.74999998323619366
@@ -25,6 +26,7 @@ end = [
     "tray",
     "spacer_4",
     "notifications",
+    "spacer_18",
     "date",
     "clock"
 ]
@@ -35,6 +37,7 @@ margin_opposite_edge = 0
 padding = 8
 reserve_space = true
 show_on_workspace_switch = true
+smart_auto_hide = false
 start = [
     "control-center",
     "spacer_16",
@@ -119,7 +122,6 @@ widget_order = [ "lockscreen-login-box@HDMI-A-1", "lockscreen-login-box@eDP-1" ]
         show_caps_lock = true
         show_keyboard_layout = true
         show_login_button = true
-        show_password_hint = true
 
     [lockscreen_widgets.widget."lockscreen-login-box@eDP-1"]
     box_height = 70.0
@@ -139,7 +141,6 @@ widget_order = [ "lockscreen-login-box@HDMI-A-1", "lockscreen-login-box@eDP-1" ]
         show_caps_lock = true
         show_keyboard_layout = true
         show_login_button = true
-        show_password_hint = true
 
 [nightlight]
 enabled = false
@@ -161,6 +162,7 @@ app_icon_color = "primary"
 app_icon_colorize = true
 corner_radius_scale = 2.0
 lang = "en"
+password_style = "default"
 polkit_agent = true
 
     [shell.panel]
@@ -189,29 +191,31 @@ wallpaper_scheme = "m3-content"
     community_ids = [ "vscode", "zed", "discord", "steam", "yazi", "zathura" ]
 
 [wallpaper]
-directory = "/home/chri/Pictures"
+directory = "/home/tsui/Pictures"
 
     [wallpaper.default]
-    path = "/home/chri/Pictures/walls/snow-night-moon.png"
+    path = "/home/tsui/Pictures/walls/snow-night-moon.png"
 
     [wallpaper.last]
-    path = "/home/chri/Pictures/walls/snow-night-moon.png"
+    path = "/home/tsui/Pictures/walls/snow-night-moon.png"
 
     [wallpaper.monitors.eDP-1]
-    path = "/home/chri/Pictures/walls/snow-night-moon.png"
+    path = "/home/tsui/Pictures/walls/snow-night-moon.png"
 
     [[wallpaper.favorite]]
     palette_source = "wallpaper"
-    path = "/home/chri/Pictures/walls/snow-night-moon.png"
+    path = "/home/tsui/Pictures/walls/snow-night-moon.png"
     theme_mode = "dark"
     wallpaper_scheme = "m3-content"
 
     [[wallpaper.favorite]]
-    path = "/home/chri/Pictures/walls/storm.jpg"
-    theme_mode = "auto"
+    palette_source = "wallpaper"
+    path = "/home/tsui/Pictures/walls/storm.jpg"
+    theme_mode = "dark"
+    wallpaper_scheme = "m3-content"
 
     [[wallpaper.favorite]]
-    path = "/home/chri/Pictures/walls/wp12654773-catalina-4k-wallpapers.jpg"
+    path = "/home/tsui/Pictures/walls/wp12654773-catalina-4k-wallpapers.jpg"
     theme_mode = "auto"
 
 [weather]
@@ -256,6 +260,9 @@ show_label = false
 [widget.network_rx]
 network_speed_compact = true
 
+[widget.notifications]
+scale = 0.90000000000000013
+
 [widget.spacer_1]
 type = "spacer"
 
@@ -290,11 +297,15 @@ type = "spacer"
 length = 10
 type = "spacer"
 
+[widget.spacer_18]
+length = 10
+type = "spacer"
+
 [widget.spacer_4]
-length = 15
+length = 10
 
 [widget.spacer_7]
-length = 15
+length = 10
 
 [widget.spacer_9]
 type = "spacer"
@@ -303,6 +314,7 @@ type = "spacer"
 detached_panel = true
 drawer = true
 drawer_columns = 5
+enabled = true
 hidden = []
 
 [widget.volume]
@@ -315,5 +327,6 @@ capsule_opacity = 0.5
 [widget.workspaces]
 capsule = true
 capsule_opacity = 0.5
-display = "id"
+label_source = "id"
 minimal = true
+style = "focus_hint"
