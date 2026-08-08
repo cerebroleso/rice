@@ -119,6 +119,7 @@ layout {
 }
 
 overview {
+    backdrop-color "#11111b"
     workspace-shadow {
         off
     }

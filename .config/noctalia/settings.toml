@@ -14,11 +14,10 @@ center = []
 color = "primary"
 contact_shadow = true
 end = [
+    "battery",
     "volume",
     "brightness",
     "clipboard",
-    "spacer_14",
-    "battery",
     "bluetooth",
     "network",
     "launcher",
@@ -279,10 +278,6 @@ length = 8
 type = "spacer"
 
 [widget.spacer_13]
-type = "spacer"
-
-[widget.spacer_14]
-length = 16
 type = "spacer"
 
 [widget.spacer_15]
