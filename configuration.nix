@@ -132,6 +132,7 @@
     niri
     nirimon
     nirius
+    xwayland-satellite
     kitty
     waybar
     nwg-look
