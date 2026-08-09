@@ -325,6 +325,8 @@ Type=Scalable
     def replace_colors(text):
         for orig, new in replacements.items():
             text = re.sub(orig, new, text, flags=re.IGNORECASE)
+        # Strip class="ColorScheme-Text" so GTK dark mode does not bleach Pictures/Videos emblems white
+        text = re.sub(r'\bclass="ColorScheme-Text"\s*', '', text)
         return text
 
     places_count = 0
