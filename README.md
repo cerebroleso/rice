@@ -303,7 +303,7 @@ Keybindings are configured in [binds.kdl](file:///home/tsui/dotfiles/.config/nir
 Switch between standard rendering and Liquid Glass refraction effects:
 
 ```bash
-~/dotfiles/toggle-glass.sh
+~/dotfiles/scripts/toggle-glass.sh
 ```
 
 ---

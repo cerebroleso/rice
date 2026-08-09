@@ -45,6 +45,10 @@
     packages = with pkgs; [];
   };
 
+  nix.settings = {
+    experimental-features = [ "nix-command" "flakes" ];
+  };
+
   nixpkgs.config.allowUnfree = true;
 
   security.polkit = {
@@ -88,7 +92,8 @@
   services.upower.enable = true;
   services.displayManager.ly.enable = true;
 
-  # USB Automounting & Storage Services
+  # USB Automounting, iOS usbmuxd & Storage Services
+  services.usbmuxd.enable = true;
   services.udisks2.enable = true;
   services.gvfs.enable = true;
   services.devmon.enable = true;
@@ -217,6 +222,10 @@ EOF
     p7zip
     unzip
     ddcutil
+    usbmuxd
+    libimobiledevice
+    ifuse
+    appimage-run
     (bottles.override { removeWarningPopup = true; })
     wineWow64Packages.stable
     scx.full

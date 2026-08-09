@@ -180,7 +180,7 @@ binds {
     XF86MonBrightnessDown allow-when-locked=true { spawn "noctalia" "msg" "brightness-down"; }
 
     Mod+P { spawn "noctalia" "msg" "screenshot-region"; }
-    Mod+Ctrl+P { spawn "noctalia" "msg" "screenshot-fullscreen"; }
+    Mod+Shift+P { spawn "noctalia" "msg" "screenshot-fullscreen"; }
 
     Mod+N { spawn "noctalia" "msg" "notifications" "toggleHistory"; }
 
