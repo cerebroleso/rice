@@ -163,26 +163,26 @@ binds {
     Mod+Shift+R { spawn "bash" "-c" "niri msg action load-config-file && notify-send -e -a 'Niri' -i 'preferences-desktop' 'Niri Configuration' 'Reloaded successfully'"; }
 
     // Noctalia UI Trigger
-    Mod+Space { spawn "/home/tsui/.local/bin/noctalia" "msg" "panel-toggle" "launcher"; }
+    Mod+Space { spawn "noctalia" "msg" "panel-toggle" "launcher"; }
 
-    Mod+V { spawn "/home/tsui/.local/bin/noctalia" "msg" "panel-toggle" "clipboard"; }
+    Mod+V { spawn "noctalia" "msg" "panel-toggle" "clipboard"; }
 
     XF86AudioPlay allow-when-locked=true { spawn "playerctl" "play-pause"; }
     XF86AudioPause allow-when-locked=true { spawn "playerctl" "play-pause"; }
     XF86AudioNext allow-when-locked=true { spawn "playerctl" "next"; }
     XF86AudioPrev allow-when-locked=true { spawn "playerctl" "previous"; }
 
-    XF86AudioRaiseVolume allow-when-locked=true { spawn "/home/tsui/.local/bin/noctalia" "msg" "volume-up"; }
-    XF86AudioLowerVolume allow-when-locked=true { spawn "/home/tsui/.local/bin/noctalia" "msg" "volume-down"; }
-    XF86AudioMute allow-when-locked=true { spawn "/home/tsui/.local/bin/noctalia" "msg" "volume-mute"; }
-    XF86AudioMicMute allow-when-locked=true { spawn "/home/tsui/.local/bin/noctalia" "msg" "mic-mute"; }
-    XF86MonBrightnessUp allow-when-locked=true { spawn "/home/tsui/.local/bin/noctalia" "msg" "brightness-up"; }
-    XF86MonBrightnessDown allow-when-locked=true { spawn "/home/tsui/.local/bin/noctalia" "msg" "brightness-down"; }
+    XF86AudioRaiseVolume allow-when-locked=true { spawn "noctalia" "msg" "volume-up"; }
+    XF86AudioLowerVolume allow-when-locked=true { spawn "noctalia" "msg" "volume-down"; }
+    XF86AudioMute allow-when-locked=true { spawn "noctalia" "msg" "volume-mute"; }
+    XF86AudioMicMute allow-when-locked=true { spawn "noctalia" "msg" "mic-mute"; }
+    XF86MonBrightnessUp allow-when-locked=true { spawn "noctalia" "msg" "brightness-up"; }
+    XF86MonBrightnessDown allow-when-locked=true { spawn "noctalia" "msg" "brightness-down"; }
 
-    Mod+P { spawn "/home/tsui/.local/bin/noctalia" "msg" "screenshot-region"; }
-    Mod+Ctrl+P { spawn "/home/tsui/.local/bin/noctalia" "msg" "screenshot-fullscreen"; }
+    Mod+P { spawn "noctalia" "msg" "screenshot-region"; }
+    Mod+Ctrl+P { spawn "noctalia" "msg" "screenshot-fullscreen"; }
 
-    Mod+N { spawn "/home/tsui/.local/bin/noctalia" "msg" "notifications" "toggleHistory"; }
+    Mod+N { spawn "noctalia" "msg" "notifications" "toggleHistory"; }
 
     Mod+Q { close-window; }
     Mod+Shift+Q { quit skip-confirmation=true; }
@@ -208,12 +208,12 @@ binds {
     Mod+Ctrl+Down { focus-workspace-down; }
     Mod+Shift+Up { move-window-to-workspace-up; }
     Mod+Shift+Down { move-window-to-workspace-down; }
-    Mod+Shift+S { spawn "/home/tsui/.local/bin/noctalia" "msg" "screenshot-region"; }
+    Mod+Shift+S { spawn "noctalia" "msg" "screenshot-region"; }
     Mod+Ctrl+Shift+S { spawn "bash" "-c" "grim -g \"$(slurp -c '#00000040')\" - | wl-copy"; }
     Mod+T { spawn "kitty"; }
     Mod+Shift+G { spawn "~/dotfiles/scripts/toggle-glass.sh"; }
     Mod+Shift+D { spawn "~/dotfiles/scripts/toggle-pcmanfm.sh"; }
-    Mod+Shift+L { spawn "/home/tsui/.local/bin/noctalia" "msg" "session" "lock"; }
+    Mod+Shift+L { spawn "noctalia" "msg" "session" "lock"; }
 
     // Vim Navigation Keys
     Mod+H { focus-column-left; }
