@@ -213,6 +213,8 @@ EOF
     zsh-syntax-highlighting
     python3
     nerd-fonts.jetbrains-mono
+    nerd-fonts.iosevka
+
     yazi
     btop
     ripgrep
