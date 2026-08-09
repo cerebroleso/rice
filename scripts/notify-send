@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Intercept notify-send and default to nix-snowflake icon when no icon is provided
+has_icon=false
+for arg in "$@"; do
+  if [[ "$arg" == "-i" ]] || [[ "$arg" == "--icon"* ]] || [[ "$arg" == -i=* ]]; then
+    has_icon=true
+    break
+  fi
+done
+
+if [ "$has_icon" = false ]; then
+  exec /run/current-system/sw/bin/notify-send -i nix-snowflake "$@"
+else
+  exec /run/current-system/sw/bin/notify-send "$@"
+fi

@@ -38,11 +38,6 @@ input {
     mouse
 }
 
-cursor {
-    xcursor-theme "BreezeX-RosePine-Linux"
-    xcursor-size 24
-}
-
 hotkey-overlay {
     skip-at-startup
     hide-not-bound
@@ -54,7 +49,8 @@ hotkey-overlay {
 output "eDP-1" {
     mode "1920x1080@144.003"
     scale 1
-    position x=4520 y=0
+    transform "normal"
+    position x=0 y=0
 }
 
 // ==================================================
@@ -125,7 +121,6 @@ overview {
 }
 
 environment {
-    PATH "/home/tsui/.local/bin:/run/current-system/sw/bin"
     XDG_CURRENT_DESKTOP "niri"
     QT_QPA_PLATFORMTHEME "qt5ct"
     QT_QPA_PLATFORMTHEME_QT6 "qt6ct"
