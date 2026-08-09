@@ -375,7 +375,7 @@ Type=Scalable
         sym_link = symbolic_path / name
         os.symlink('../../places/symbolic/folder-symbolic.svg', sym_link)
 
-    # Force NixOS Snowflake icon for all notification, bell, system, and bluetooth fallback names
+    # Force NixOS Snowflake icon for notification, bell, and dialog fallback names
     notification_icon_names = [
         'nix-snowflake.svg',
         'bell.svg',
@@ -391,20 +391,7 @@ Type=Scalable
         'dialog-warning.svg',
         'dialog-warning-symbolic.svg',
         'dialog-error.svg',
-        'dialog-error-symbolic.svg',
-        'bluetooth.svg',
-        'bluetooth-active.svg',
-        'bluetooth-paired.svg',
-        'bluetooth-disabled.svg',
-        'bluetooth-symbolic.svg',
-        'bluetooth-active-symbolic.svg',
-        'bluetooth-paired-symbolic.svg',
-        'bluetooth-disabled-symbolic.svg',
-        'preferences-system-bluetooth.svg',
-        'preferences-system-bluetooth-symbolic.svg',
-        'preferences-system-bluetooth-activated-symbolic.svg',
-        'network-bluetooth.svg',
-        'network-bluetooth-activated.svg'
+        'dialog-error-symbolic.svg'
     ]
 
     nix_icon_src = Path('/run/current-system/sw/share/icons/hicolor/scalable/apps/nix-snowflake.svg')

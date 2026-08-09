@@ -52,11 +52,16 @@
     enablePkexecWrapper = true;
     extraConfig = ''
       polkit.addRule(function(action, subject) {
-        if (action.id.indexOf("org.freedesktop.udisks2.") === 0 && subject.isInGroup("wheel")) {
-          return polkit.Result.YES;
-        }
         if (subject.isInGroup("wheel")) {
-          return polkit.Result.AUTH_ADMIN_KEEP;
+          if (
+            action.id.indexOf("org.freedesktop.NetworkManager.") === 0 ||
+            action.id.indexOf("org.freedesktop.udisks2.") === 0 ||
+            action.id.indexOf("org.freedesktop.login1.") === 0 ||
+            action.id.indexOf("org.freedesktop.upower.") === 0 ||
+            action.id.indexOf("org.bluez.") === 0
+          ) {
+            return polkit.Result.YES;
+          }
         }
       });
     '';
