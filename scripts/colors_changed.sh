@@ -103,7 +103,7 @@ def update_icon_theme(accent_rgb_str):
 Name=Breeze Noctalia
 Comment=Dynamic macOS folders & extensions for Noctalia with Breeze fallbacks
 Inherits=breeze,breeze-dark,hicolor
-Directories=places/16,places/22,places/24,places/scalable,places/symbolic,mimes/16,mimes/22,mimes/scalable,mimes/symbolic,mimetypes/16,mimetypes/22,mimetypes/scalable,mimetypes/symbolic,apps/16,apps/22,apps/24,apps/scalable,apps/symbolic
+Directories=places/16,places/22,places/24,places/scalable,places/symbolic,mimes/16,mimes/22,mimes/scalable,mimes/symbolic,mimetypes/16,mimetypes/22,mimetypes/scalable,mimetypes/symbolic,apps/16,apps/22,apps/24,apps/scalable,apps/symbolic,status/16,status/22,status/24,status/scalable,status/symbolic,devices/16,devices/22,devices/24,devices/32,devices/scalable,devices/symbolic,preferences/32,preferences/scalable,preferences/symbolic
 
 [places/16]
 Size=16
@@ -210,6 +210,88 @@ Context=Applications
 MinSize=16
 MaxSize=512
 Type=Scalable
+
+[status/16]
+Size=16
+Context=Status
+Type=Fixed
+
+[status/22]
+Size=22
+Context=Status
+Type=Fixed
+
+[status/24]
+Size=24
+Context=Status
+Type=Fixed
+
+[status/scalable]
+Size=256
+MinSize=16
+MaxSize=512
+Context=Status
+Type=Scalable
+
+[status/symbolic]
+Size=16
+Context=Status
+MinSize=16
+MaxSize=512
+Type=Scalable
+
+[devices/16]
+Size=16
+Context=Devices
+Type=Fixed
+
+[devices/22]
+Size=22
+Context=Devices
+Type=Fixed
+
+[devices/24]
+Size=24
+Context=Devices
+Type=Fixed
+
+[devices/32]
+Size=32
+Context=Devices
+Type=Fixed
+
+[devices/scalable]
+Size=256
+MinSize=16
+MaxSize=512
+Context=Devices
+Type=Scalable
+
+[devices/symbolic]
+Size=16
+Context=Devices
+MinSize=16
+MaxSize=512
+Type=Scalable
+
+[preferences/32]
+Size=32
+Context=Preferences
+Type=Fixed
+
+[preferences/scalable]
+Size=256
+MinSize=16
+MaxSize=512
+Context=Preferences
+Type=Scalable
+
+[preferences/symbolic]
+Size=16
+Context=Preferences
+MinSize=16
+MaxSize=512
+Type=Scalable
 """
     with open(index_path, 'w') as f:
         f.write(index_content)
@@ -293,15 +375,49 @@ Type=Scalable
         sym_link = symbolic_path / name
         os.symlink('../../places/symbolic/folder-symbolic.svg', sym_link)
 
-    # Symlink NixOS Snowflake icon into breeze-noctalia theme
+    # Force NixOS Snowflake icon for all notification, bell, system, and bluetooth fallback names
+    notification_icon_names = [
+        'nix-snowflake.svg',
+        'bell.svg',
+        'bell-symbolic.svg',
+        'bell-outline-symbolic.svg',
+        'notification.svg',
+        'notifications.svg',
+        'notification-symbolic.svg',
+        'preferences-desktop-notification.svg',
+        'preferences-desktop-notification-symbolic.svg',
+        'dialog-information.svg',
+        'dialog-information-symbolic.svg',
+        'dialog-warning.svg',
+        'dialog-warning-symbolic.svg',
+        'dialog-error.svg',
+        'dialog-error-symbolic.svg',
+        'bluetooth.svg',
+        'bluetooth-active.svg',
+        'bluetooth-paired.svg',
+        'bluetooth-disabled.svg',
+        'bluetooth-symbolic.svg',
+        'bluetooth-active-symbolic.svg',
+        'bluetooth-paired-symbolic.svg',
+        'bluetooth-disabled-symbolic.svg',
+        'preferences-system-bluetooth.svg',
+        'preferences-system-bluetooth-symbolic.svg',
+        'preferences-system-bluetooth-activated-symbolic.svg',
+        'network-bluetooth.svg',
+        'network-bluetooth-activated.svg'
+    ]
+
     nix_icon_src = Path('/run/current-system/sw/share/icons/hicolor/scalable/apps/nix-snowflake.svg')
     if nix_icon_src.exists():
-        for size_dir in ['16', '22', '24', 'scalable']:
-            size_path = apps_dst / size_dir
-            size_path.mkdir(parents=True, exist_ok=True)
-            sym_link = size_path / 'nix-snowflake.svg'
-            if not sym_link.exists():
-                os.symlink(str(nix_icon_src), sym_link)
+        for ctx_dir in ['apps', 'status', 'devices', 'preferences']:
+            for size_dir in ['16', '22', '24', '32', 'scalable', 'symbolic']:
+                target_dir = dst_base / ctx_dir / size_dir
+                target_dir.mkdir(parents=True, exist_ok=True)
+                for name in notification_icon_names:
+                    sym_link = target_dir / name
+                    if sym_link.exists() or sym_link.is_symlink():
+                        sym_link.unlink()
+                    os.symlink(str(nix_icon_src), sym_link)
 
     # 3. Copy mimes (mimetypes) to both mimes and mimetypes directories
     mimes_src = src_base / 'mimes'
@@ -319,6 +435,15 @@ Type=Scalable
         shutil.copytree(mimes_src, mimes_dst, symlinks=True)
         # Duplicate to mimetypes to ensure compatibility with GTK's fallback lookups
         shutil.copytree(mimes_src, mimetypes_dst, symlinks=True)
+
+    # 3b. Copy status, devices, and preferences context directories for Bluetooth and system icons
+    for ctx in ['status', 'devices', 'preferences']:
+        ctx_src = src_base / ctx
+        ctx_dst = dst_base / ctx
+        if ctx_src.exists():
+            if ctx_dst.exists():
+                shutil.rmtree(ctx_dst)
+            shutil.copytree(ctx_src, ctx_dst, symlinks=True)
 
     # 4. Update GTK icon cache
     try:
