@@ -51,6 +51,16 @@
 
   nixpkgs.config.allowUnfree = true;
 
+  nixpkgs.overlays = [
+    (final: prev: {
+      niri = prev.niri.overrideAttrs (oldAttrs: {
+        patches = (oldAttrs.patches or []) ++ [
+          ./experimental/liquid-glass.patch
+        ];
+      });
+    })
+  ];
+
   security.polkit = {
     enable = true;
     enablePkexecWrapper = true;
