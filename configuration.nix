@@ -66,9 +66,7 @@
     Defaults env_keep += "DISPLAY WAYLAND_DISPLAY XDG_RUNTIME_DIR"
   '';
 
-  environment.sessionVariables = {
-    PATH = [ "/run/wrappers/bin" ];
-  };
+  environment.homeBinInPath = true;
 
   programs.niri.enable = true;
   programs.xwayland.enable = true;

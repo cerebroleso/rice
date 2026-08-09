@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
-# Intercept notify-send and default to nix-snowflake icon when no icon is provided
+# Intercept notify-send and default to NixOS Flake logo when no icon is specified
+
+# Path to NixOS Flake SVG icon
+ICON_PATH="/run/current-system/sw/share/icons/hicolor/scalable/apps/nix-snowflake.svg"
+if [ ! -f "$ICON_PATH" ]; then
+  ICON_PATH="nix-snowflake"
+fi
+
 has_icon=false
 for arg in "$@"; do
   if [[ "$arg" == "-i" ]] || [[ "$arg" == "--icon"* ]] || [[ "$arg" == -i=* ]]; then
@@ -9,7 +16,7 @@ for arg in "$@"; do
 done
 
 if [ "$has_icon" = false ]; then
-  exec /run/current-system/sw/bin/notify-send -i nix-snowflake "$@"
+  exec /run/current-system/sw/bin/notify-send -i "$ICON_PATH" "$@"
 else
   exec /run/current-system/sw/bin/notify-send "$@"
 fi

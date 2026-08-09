@@ -293,6 +293,16 @@ Type=Scalable
         sym_link = symbolic_path / name
         os.symlink('../../places/symbolic/folder-symbolic.svg', sym_link)
 
+    # Symlink NixOS Snowflake icon into breeze-noctalia theme
+    nix_icon_src = Path('/run/current-system/sw/share/icons/hicolor/scalable/apps/nix-snowflake.svg')
+    if nix_icon_src.exists():
+        for size_dir in ['16', '22', '24', 'scalable']:
+            size_path = apps_dst / size_dir
+            size_path.mkdir(parents=True, exist_ok=True)
+            sym_link = size_path / 'nix-snowflake.svg'
+            if not sym_link.exists():
+                os.symlink(str(nix_icon_src), sym_link)
+
     # 3. Copy mimes (mimetypes) to both mimes and mimetypes directories
     mimes_src = src_base / 'mimes'
     mimes_dst = dst_base / 'mimes'
