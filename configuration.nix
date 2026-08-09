@@ -127,6 +127,9 @@
   };
 
   environment.systemPackages = with pkgs; [
+    (pkgs.writeShellScriptBin "noctalia" ''
+      exec /nix/store/xdp2yvpl0r6qmra8f74xayr7gqksql7n-noctalia-5.0.0/bin/noctalia "$@"
+    '')
     niri
     nirimon
     nirius
