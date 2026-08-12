@@ -214,8 +214,10 @@ directory = "/home/tsui/Pictures"
     wallpaper_scheme = "m3-content"
 
     [[wallpaper.favorite]]
+    palette_source = "wallpaper"
     path = "/home/tsui/Pictures/walls/wp12654773-catalina-4k-wallpapers.jpg"
-    theme_mode = "auto"
+    theme_mode = "dark"
+    wallpaper_scheme = "m3-content"
 
 [weather]
 enabled = false

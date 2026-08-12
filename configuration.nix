@@ -86,6 +86,7 @@
   '';
 
   environment.homeBinInPath = true;
+  environment.variables.EDITOR = "micro";
 
   programs.niri.enable = true;
   programs.xwayland.enable = true;
@@ -180,7 +181,7 @@
     discord
     qbittorrent
     zathura
-    file-roller
+    kdePackages.ark
     loupe
     meld
     qdirstat
@@ -202,7 +203,11 @@ EOF
         ${pkgs.gnused}/bin/sed 's|Exec=.*gparted|Exec=gparted|g' ${pkgs.gparted}/share/applications/gparted.desktop > $out/share/applications/gparted.desktop
       '';
     })
-    nautilus
+    kdePackages.dolphin
+    kdePackages.kio-extras
+    kdePackages.ffmpegthumbs
+    kdePackages.breeze
+    kdePackages.qqc2-desktop-style
     rose-pine-cursor
     xhost
     pavucontrol
@@ -215,7 +220,7 @@ EOF
     vscode
     antigravity-ide
     zed-editor
-    neovim
+    micro
     git
     zsh
     zsh-powerlevel10k

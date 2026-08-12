@@ -359,7 +359,7 @@ Type=Scalable
                     shutil.copy2(src_file, dst_file)
                 places_count += 1
 
-    # 2b. Symlink Nautilus icon to the plain folder icon (without signs) in the apps context
+    # 2b. Symlink Dolphin & file manager app icons to the plain folder icon in the apps context
     apps_dst = dst_base / 'apps'
     if apps_dst.exists():
         shutil.rmtree(apps_dst)
@@ -367,13 +367,13 @@ Type=Scalable
     for size_dir in ['16', '22', '24', 'scalable']:
         size_path = apps_dst / size_dir
         size_path.mkdir(parents=True, exist_ok=True)
-        for name in ['org.gnome.Nautilus.svg', 'nautilus.svg']:
+        for name in ['org.gnome.Nautilus.svg', 'nautilus.svg', 'org.kde.dolphin.svg', 'dolphin.svg', 'system-file-manager.svg']:
             sym_link = size_path / name
             os.symlink(f'../../places/{size_dir}/folder.svg', sym_link)
 
     symbolic_path = apps_dst / 'symbolic'
     symbolic_path.mkdir(parents=True, exist_ok=True)
-    for name in ['org.gnome.Nautilus-symbolic.svg', 'nautilus-symbolic.svg']:
+    for name in ['org.gnome.Nautilus-symbolic.svg', 'nautilus-symbolic.svg', 'org.kde.dolphin-symbolic.svg', 'dolphin-symbolic.svg', 'system-file-manager-symbolic.svg']:
         sym_link = symbolic_path / name
         os.symlink('../../places/symbolic/folder-symbolic.svg', sym_link)
 
@@ -513,17 +513,29 @@ def main():
 
     accent_color = scheme.get('Colors:Selection', 'BackgroundNormal')
 
-    # Read and update kdeglobals
+    # Read and update kdeglobals with complete dark color scheme
     kglobals = configparser.RawConfigParser(strict=False)
     kglobals.optionxform = lambda option: option
     if kglobals_path.exists():
         kglobals.read(kglobals_path)
+
+    # Copy all color sections from noctalia.colors to kdeglobals so Dolphin & Qt apps render in Noctalia dark mode
+    for section in scheme.sections():
+        if not kglobals.has_section(section):
+            kglobals.add_section(section)
+        for option, value in scheme.items(section):
+            kglobals.set(section, option, value)
 
     if not kglobals.has_section('General'):
         kglobals.add_section('General')
 
     kglobals.set('General', 'AccentColor', accent_color)
     kglobals.set('General', 'accentColorFromWallpaper', 'false')
+    kglobals.set('General', 'ColorScheme', 'noctalia')
+
+    if not kglobals.has_section('KDE'):
+        kglobals.add_section('KDE')
+    kglobals.set('KDE', 'ColorScheme', 'noctalia')
 
     if not kglobals.has_section('Icons'):
         kglobals.add_section('Icons')

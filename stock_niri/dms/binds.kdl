@@ -159,7 +159,7 @@ binds {
     Mod+W { spawn "firefox"; }
     Mod+D { spawn "zed-editor"; }
     Mod+Shift+E { spawn-sh "kitty yazi"; }
-    Mod+E { spawn "nautilus"; }
+    Mod+E { spawn "dolphin"; }
     Mod+Shift+R { spawn "bash" "-c" "niri msg action load-config-file && notify-send -e -a 'Niri' -i 'preferences-desktop' 'Niri Configuration' 'Reloaded successfully'"; }
 
     // Noctalia UI Trigger

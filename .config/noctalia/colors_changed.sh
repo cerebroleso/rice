@@ -1,1 +1,0 @@
-/home/tsui/dotfiles/scripts/colors_changed.sh
