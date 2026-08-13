@@ -182,8 +182,9 @@ sudo nixos-rebuild switch
     dbeaver-bin tailscale nmap lshw pciutils usbutils vscode antigravity-ide zed-editor micro
     git zsh zsh-powerlevel10k zsh-autosuggestions zsh-syntax-highlighting python3
     nerd-fonts.jetbrains-mono yazi btop ripgrep procps gnused rsync p7zip unzip ddcutil usbmuxd libimobiledevice ifuse appimage-run
-    (bottles.override { removeWarningPopup = true; }) wineWow64Packages.stable scx.full virt-manager qemu libvirt ebtables dnsmasq OVMF steam ryubing rpcs3 pcsx2
-    moonlight-qt mangohud vkbasalt fastfetch
+    (bottles.override { removeWarningPopup = true; }) wineWow64Packages.stable scx.full virt-manager qemu libvirt ebtables dnsmasq OVMF steam ryubing # pcsx2
+    # moonlight-qt
+    mangohud vkbasalt fastfetch
   ];
 
   system.stateVersion = "26.11";

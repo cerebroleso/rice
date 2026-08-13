@@ -58,6 +58,13 @@
           ./experimental/liquid-glass.patch
         ];
       });
+      antigravity-ide = prev.antigravity-ide.overrideAttrs (oldAttrs: {
+        version = "2.5.5";
+        src = prev.fetchurl {
+          url = "https://edgedl.me.gvt1.com/edgedl/release2/j0qc3/antigravity/stable/2.5.5-4923483625488384/linux-x64/Antigravity%20IDE.tar.gz";
+          sha256 = "0c5233b297d2b3aebb61af49f8944012c2953d361a5ebb16978490636917f831";
+        };
+      });
     })
   ];
 
@@ -254,9 +261,8 @@ EOF
     OVMF
     steam
     ryubing
-    rpcs3
-    pcsx2
-    moonlight-qt
+    # pcsx2
+    # moonlight-qt
     mangohud
     vkbasalt
     fastfetch
