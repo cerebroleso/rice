@@ -182,7 +182,7 @@
     qbittorrent
     zathura
     kdePackages.ark
-    loupe
+    kdePackages.gwenview
     meld
     qdirstat
     (pkgs.symlinkJoin {

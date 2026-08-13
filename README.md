@@ -178,7 +178,7 @@ sudo nixos-rebuild switch
   environment.systemPackages = with pkgs; [
     niri nirimon nirius kitty waybar nwg-look satty grim slurp swayosd playerctl brightnessctl cliphist
     wl-clipboard libnotify udiskie ntfs3g exfat exfatprogs qt5ct qt6ct firefox chromium discord qbittorrent zathura kdePackages.ark
-    loupe meld qdirstat gparted kdePackages.dolphin kdePackages.kio-extras kdePackages.ffmpegthumbs kdePackages.breeze kdePackages.qqc2-desktop-style rose-pine-cursor xhost pavucontrol
+    kdePackages.gwenview meld qdirstat gparted kdePackages.dolphin kdePackages.kio-extras kdePackages.ffmpegthumbs kdePackages.breeze kdePackages.qqc2-desktop-style rose-pine-cursor xhost pavucontrol
     dbeaver-bin tailscale nmap lshw pciutils usbutils vscode antigravity-ide zed-editor micro
     git zsh zsh-powerlevel10k zsh-autosuggestions zsh-syntax-highlighting python3
     nerd-fonts.jetbrains-mono yazi btop ripgrep procps gnused rsync p7zip unzip ddcutil usbmuxd libimobiledevice ifuse appimage-run
