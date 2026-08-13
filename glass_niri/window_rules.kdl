@@ -1,5 +1,10 @@
 // Layer rules
 
+// Uncomment to force all windows to open in floating / stacking mode by default (like KDE Plasma)
+// window-rule {
+//     open-floating true
+// }
+
 
 layer-rule {
   match namespace="ashell-menu-layer"

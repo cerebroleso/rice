@@ -546,7 +546,7 @@ def main():
 
     print(f"Successfully updated kdeglobals AccentColor to {accent_color}")
 
-    # Generate custom icons theme for GTK / Nautilus
+    # Generate custom icons theme for GTK / Qt / Dolphin
     update_icon_theme(accent_color)
 
     # Sync keyboard backlight LED color

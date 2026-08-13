@@ -8,7 +8,6 @@ spawn-at-startup "blueman-applet"
 spawn-at-startup "udiskie" "--automount" "--notify" "--tray"
 spawn-at-startup "noctalia" "--daemon"
 spawn-at-startup "wl-paste" "--watch" "cliphist" "store"
-// spawn-at-startup "pcmanfm-qt" "--desktop"
 
 
 // ==================================================

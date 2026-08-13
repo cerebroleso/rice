@@ -8,7 +8,6 @@ spawn-at-startup "blueman-applet"
 spawn-at-startup "udiskie" "--automount" "--notify" "--tray"
 spawn-at-startup "noctalia" "--daemon"
 spawn-at-startup "wl-paste" "--watch" "cliphist" "store"
-// spawn-at-startup "pcmanfm-qt" "--desktop"
 
 // ==================================================
 // General (Aesthetic customization)
@@ -177,7 +176,7 @@ animations {
 // Window Rules (Aesthetic customization)
 // ==================================================
 window-rule {
-    match app-id="org.gnome.Nautilus"
+    match app-id="org.kde.dolphin"
     opacity 0.85
     draw-border-with-background false
     background-effect {
