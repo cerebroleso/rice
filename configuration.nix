@@ -1,5 +1,115 @@
 { config, pkgs, ... }:
 
+let
+  # Helper script to configure DualSense triggers with gradual curve, max vibration, and LEDs off
+  dualsenseSetup = pkgs.writeShellScriptBin "dualsense-setup" ''
+    DEV="''${1:-$DS_DEV}"
+
+    if [ -n "$DEV" ]; then
+      # Gradual stiffness curve: starts gentle (1) and progressively builds to 6 (lowered by 2 from 8)
+      ${pkgs.dualsensectl}/bin/dualsensectl -d "$DEV" trigger both feedback-raw 1 1 2 2 3 4 5 6 6 6 2>/dev/null || true
+      # Maximum rumble & trigger vibration power (zero attenuation)
+      ${pkgs.dualsensectl}/bin/dualsensectl -d "$DEV" attenuation 0 0 2>/dev/null || true
+      # Turn off all LEDs to maximize battery life (Lightbar, Player LEDs, Mic LED)
+      ${pkgs.dualsensectl}/bin/dualsensectl -d "$DEV" lightbar off 2>/dev/null || true
+      ${pkgs.dualsensectl}/bin/dualsensectl -d "$DEV" player-leds 0 2>/dev/null || true
+      ${pkgs.dualsensectl}/bin/dualsensectl -d "$DEV" microphone-led off 2>/dev/null || true
+    else
+      ${pkgs.dualsensectl}/bin/dualsensectl trigger both feedback-raw 1 1 2 2 3 4 5 6 6 6 2>/dev/null || true
+      ${pkgs.dualsensectl}/bin/dualsensectl attenuation 0 0 2>/dev/null || true
+      ${pkgs.dualsensectl}/bin/dualsensectl lightbar off 2>/dev/null || true
+      ${pkgs.dualsensectl}/bin/dualsensectl player-leds 0 2>/dev/null || true
+      ${pkgs.dualsensectl}/bin/dualsensectl microphone-led off 2>/dev/null || true
+    fi
+  '';
+
+  # Background daemon: enforces gradual trigger stiffness, max vibration, and continuously suppresses LEDs on rumble
+  dualsenseDaemon = pkgs.writeShellScriptBin "dualsense-daemon" ''
+    exec ${pkgs.python3}/bin/python3 - << 'EOF'
+import subprocess
+import time
+import signal
+
+running = True
+
+
+def stop(sig, frame):
+    global running
+    running = False
+
+
+signal.signal(signal.SIGINT, stop)
+signal.signal(signal.SIGTERM, stop)
+
+dualsensectl_bin = "${pkgs.dualsensectl}/bin/dualsensectl"
+
+
+def get_devices():
+    try:
+        res = subprocess.run(
+            [dualsensectl_bin, "-l"],
+            capture_output=True,
+            text=True,
+            timeout=2
+        )
+        devs = []
+        for line in res.stdout.strip().splitlines():
+            line = line.strip()
+            if line and not line.startswith("Devices:"):
+                devs.append(line.split()[0])
+        return devs
+    except Exception:
+        return []
+
+
+trigger_counter = 0
+
+while running:
+    devs = get_devices()
+    if devs:
+        for dev in devs:
+            # Re-assert trigger curve and attenuation periodically (every 2s)
+            if trigger_counter % 4 == 0:
+                subprocess.run(
+                    [
+                        dualsensectl_bin, "-d", dev,
+                        "trigger", "both", "feedback-raw",
+                        "1", "1", "2", "2", "3", "4", "5", "6", "6", "6"
+                    ],
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL
+                )
+                subprocess.run(
+                    [dualsensectl_bin, "-d", dev, "attenuation", "0", "0"],
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL
+                )
+
+            # Continuously suppress LEDs so rumble/vibration packets from games don't reactivate them
+            subprocess.run(
+                [dualsensectl_bin, "-d", dev, "lightbar", "off"],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL
+            )
+            subprocess.run(
+                [dualsensectl_bin, "-d", dev, "player-leds", "0"],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL
+            )
+            subprocess.run(
+                [dualsensectl_bin, "-d", dev, "microphone-led", "off"],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL
+            )
+
+        trigger_counter += 1
+        time.sleep(0.5)
+    else:
+        trigger_counter = 0
+        time.sleep(2.0)
+EOF
+  '';
+in
 {
   imports = [
     ./hardware-configuration.nix
@@ -104,11 +214,61 @@
   programs.nix-ld.enable = true;
   programs.nix-ld.libraries = with pkgs; [
     stdenv.cc.cc.lib
+    zlib
+    glibc
+    glib
+    openssl
   ];
 
   services.tailscale.enable = true;
   services.upower.enable = true;
   services.displayManager.ly.enable = true;
+
+  # Audio (PipeWire & RTKit)
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+    jack.enable = true;
+    wireplumber = {
+      enable = true;
+      extraConfig = {
+        "50-dualsense-audio" = {
+          "monitor.alsa.rules" = [
+            {
+              matches = [
+                { "device.vendor.id" = "0x054c"; "device.product.id" = "0x0ce6"; }
+                { "device.vendor.id" = "0x054c"; "device.product.id" = "0x0df2"; }
+                { "node.name" = "~alsa_output.*Wireless_Controller*"; }
+                { "node.name" = "~alsa_output.*DualSense*"; }
+              ];
+              actions = {
+                update-props = {
+                  "node.description" = "Sony DualSense (Audio & Haptics)";
+                  "priority.driver" = 400;
+                  "priority.session" = 400;
+                };
+              };
+            }
+          ];
+        };
+      };
+    };
+  };
+
+  # DualSense / DualSense Edge udev rules for hidraw permissions
+  services.udev.extraRules = ''
+    # PS5 DualSense controller (USB)
+    KERNEL=="hidraw*", ATTRS{idVendor}=="054c", ATTRS{idProduct}=="0ce6", MODE="0660", TAG+="uaccess", GROUP="input"
+    # PS5 DualSense controller (Bluetooth)
+    KERNEL=="hidraw*", KERNELS=="*054C:0CE6*", MODE="0660", TAG+="uaccess", GROUP="input"
+    # PS5 DualSense Edge controller (USB)
+    KERNEL=="hidraw*", ATTRS{idVendor}=="054c", ATTRS{idProduct}=="0df2", MODE="0660", TAG+="uaccess", GROUP="input"
+    # PS5 DualSense Edge controller (Bluetooth)
+    KERNEL=="hidraw*", KERNELS=="*054C:0DF2*", MODE="0660", TAG+="uaccess", GROUP="input"
+  '';
 
   # USB Automounting, iOS usbmuxd & Storage Services
   services.usbmuxd.enable = true;
@@ -181,6 +341,7 @@
     ntfs3g
     exfat
     exfatprogs
+    tree
     libsForQt5.qt5ct
     qt6Packages.qt6ct
     firefox
@@ -189,6 +350,7 @@
     qbittorrent
     zathura
     kdePackages.ark
+    unar
     kdePackages.gwenview
     meld
     qdirstat
@@ -266,7 +428,22 @@ EOF
     mangohud
     vkbasalt
     fastfetch
+    dualsensectl
+    dualsenseSetup
+    dualsenseDaemon
   ];
+
+  # Systemd user service running daemon for gradual trigger stiffness, max vibration & continuous LED suppression
+  systemd.user.services.dualsense-monitor = {
+    description = "DualSense Controller Daemon (Gradual Triggers, Max Vibration & LED Suppression Loop)";
+    wantedBy = [ "graphical-session.target" "default.target" ];
+    after = [ "graphical-session.target" ];
+    serviceConfig = {
+      ExecStart = "${dualsenseDaemon}/bin/dualsense-daemon";
+      Restart = "always";
+      RestartSec = "3s";
+    };
+  };
 
   system.stateVersion = "26.11";
 }
