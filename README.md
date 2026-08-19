@@ -30,18 +30,21 @@
 
 Follow these exact steps to deploy this complete desktop environment on a fresh NixOS system.
 
-### Step 1: Generate NixOS System Configuration (`/etc/nixos/configuration.nix`)
+### Step 1: One-Click Master Deployment (`./install.sh`)
 
-Copy the master NixOS system configuration file provided in your dotfiles repository:
+On any fresh NixOS install (TTY minimal or existing), simply clone and run:
 
 ```bash
-# Symlink configuration to /etc/nixos
-sudo ln -sf ~/dotfiles/configuration.nix /etc/nixos/configuration.nix
-ln -sf /etc/nixos/hardware-configuration.nix ~/dotfiles/hardware-configuration.nix
-
-# Apply system rebuild
-sudo nixos-rebuild switch
+git clone https://github.com/cerebroleso/rice ~/dotfiles
+cd ~/dotfiles
+./install.sh
 ```
+
+The script will interactively:
+1. Ask whether you are installing on **Laptop** or **Desktop PC**.
+2. Auto-detect/generate your machine's `hardware-configuration.nix`.
+3. Symlink all `.config/` apps, Zsh, and Noctalia configurations.
+4. Build and apply your NixOS system via Flakes (`sudo nixos-rebuild switch --flake .#<host>`).
 
 #### Master Configuration Reference (`configuration.nix`):
 ```nix
