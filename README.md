@@ -60,6 +60,21 @@ The script will interactively:
   boot.loader.timeout = 1;
   boot.kernelPackages = pkgs.linuxPackages_xanmod_latest;
 
+  # In-Memory Compressed Swap (zRAM)
+  zramSwap = {
+    enable = true;
+    algorithm = "zstd";
+    memoryPercent = 100;
+    priority = 100;
+  };
+
+  # Kernel Memory Management Tuning
+  boot.kernel.sysctl = {
+    "vm.max_map_count" = 2147483642;
+    "vm.swappiness" = 100;
+    "vm.page-cluster" = 0;
+  };
+
   networking.hostName = "nixos";
   networking.networkmanager.enable = true;
 
@@ -180,7 +195,7 @@ The script will interactively:
   # System Packages
   environment.systemPackages = with pkgs; [
     niri nirimon nirius kitty waybar nwg-look satty grim slurp swayosd playerctl brightnessctl cliphist
-    wl-clipboard libnotify udiskie ntfs3g exfat exfatprogs qt5ct qt6ct firefox chromium discord qbittorrent zathura kdePackages.ark
+    wl-clipboard libnotify udiskie ntfs3g exfat exfatprogs qt5ct qt6ct firefox chromium discord qbittorrent motrix zathura kdePackages.ark
     kdePackages.gwenview meld qdirstat gparted kdePackages.dolphin kdePackages.kio-extras kdePackages.ffmpegthumbs kdePackages.breeze kdePackages.qqc2-desktop-style rose-pine-cursor xhost pavucontrol
     dbeaver-bin tailscale nmap lshw pciutils usbutils vscode antigravity-ide zed-editor micro
     git zsh zsh-powerlevel10k zsh-autosuggestions zsh-syntax-highlighting python3

@@ -115,7 +115,21 @@ in
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.timeout = 1;
   boot.supportedFilesystems = [ "btrfs" "vfat" "ntfs" "exfat" ];
-  boot.kernel.sysctl."vm.max_map_count" = 2147483642;
+
+  # In-Memory Compressed Swap (zRAM)
+  zramSwap = {
+    enable = true;
+    algorithm = "zstd";
+    memoryPercent = 100;
+    priority = 100;
+  };
+
+  # Kernel Memory Management Tuning
+  boot.kernel.sysctl = {
+    "vm.max_map_count" = 2147483642;
+    "vm.swappiness" = 100;
+    "vm.page-cluster" = 0;
+  };
 
   networking.hostName = "nixos";
   networking.networkmanager.enable = true;
@@ -330,6 +344,7 @@ in
     chromium
     discord
     qbittorrent
+    motrix
     zathura
     kdePackages.ark
     unar
