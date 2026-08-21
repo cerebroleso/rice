@@ -1,29 +1,27 @@
 { config, pkgs, inputs ? {}, ... }:
 
 let
-  # Helper script to configure DualSense triggers with gradual curve, max vibration, and LEDs off
+  # Helper script to configure DualSense triggers with bow profile (1 7 5 8), max vibration, and Lightbar/Player LEDs off (mic LED left alone)
   dualsenseSetup = pkgs.writeShellScriptBin "dualsense-setup" ''
     DEV="''${1:-$DS_DEV}"
 
     if [ -n "$DEV" ]; then
-      # Gradual stiffness curve: starts gentle (1) and progressively builds to 6 (lowered by 2 from 8)
-      ${pkgs.dualsensectl}/bin/dualsensectl -d "$DEV" trigger both feedback-raw 1 1 2 2 3 4 5 6 6 6 2>/dev/null || true
+      # Bow curve: starts at 1, builds to strength 5 at position 7 with heavy snapforce 8
+      ${pkgs.dualsensectl}/bin/dualsensectl -d "$DEV" trigger both bow 1 7 5 8 2>/dev/null || true
       # Maximum rumble & trigger vibration power (zero attenuation)
       ${pkgs.dualsensectl}/bin/dualsensectl -d "$DEV" attenuation 0 0 2>/dev/null || true
-      # Turn off all LEDs to maximize battery life (Lightbar, Player LEDs, Mic LED)
+      # Turn off Lightbar & Player LEDs (leaves microphone LED alone)
       ${pkgs.dualsensectl}/bin/dualsensectl -d "$DEV" lightbar off 2>/dev/null || true
       ${pkgs.dualsensectl}/bin/dualsensectl -d "$DEV" player-leds 0 2>/dev/null || true
-      ${pkgs.dualsensectl}/bin/dualsensectl -d "$DEV" microphone-led off 2>/dev/null || true
     else
-      ${pkgs.dualsensectl}/bin/dualsensectl trigger both feedback-raw 1 1 2 2 3 4 5 6 6 6 2>/dev/null || true
+      ${pkgs.dualsensectl}/bin/dualsensectl trigger both bow 1 7 5 8 2>/dev/null || true
       ${pkgs.dualsensectl}/bin/dualsensectl attenuation 0 0 2>/dev/null || true
       ${pkgs.dualsensectl}/bin/dualsensectl lightbar off 2>/dev/null || true
       ${pkgs.dualsensectl}/bin/dualsensectl player-leds 0 2>/dev/null || true
-      ${pkgs.dualsensectl}/bin/dualsensectl microphone-led off 2>/dev/null || true
     fi
   '';
 
-  # Background daemon: enforces gradual trigger stiffness, max vibration, and continuously suppresses LEDs on rumble
+  # Background daemon: enforces bow 1 7 5 8 triggers, max vibration, and suppresses Lightbar/Player LEDs (leaves mic LED alone)
   dualsenseDaemon = pkgs.writeShellScriptBin "dualsense-daemon" ''
     exec ${pkgs.python3}/bin/python3 - << 'EOF'
 import subprocess
@@ -68,13 +66,13 @@ while running:
     devs = get_devices()
     if devs:
         for dev in devs:
-            # Re-assert trigger curve and attenuation periodically (every 2s)
+            # Re-assert trigger bow profile and attenuation periodically (every 2s)
             if trigger_counter % 4 == 0:
                 subprocess.run(
                     [
                         dualsensectl_bin, "-d", dev,
-                        "trigger", "both", "feedback-raw",
-                        "1", "1", "2", "2", "3", "4", "5", "6", "6", "6"
+                        "trigger", "both", "bow",
+                        "1", "7", "5", "8"
                     ],
                     stdout=subprocess.DEVNULL,
                     stderr=subprocess.DEVNULL
@@ -85,7 +83,7 @@ while running:
                     stderr=subprocess.DEVNULL
                 )
 
-            # Continuously suppress LEDs so rumble/vibration packets from games don't reactivate them
+            # Continuously suppress Lightbar and Player LEDs (leaves microphone LED untouched)
             subprocess.run(
                 [dualsensectl_bin, "-d", dev, "lightbar", "off"],
                 stdout=subprocess.DEVNULL,
@@ -93,11 +91,6 @@ while running:
             )
             subprocess.run(
                 [dualsensectl_bin, "-d", dev, "player-leds", "0"],
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL
-            )
-            subprocess.run(
-                [dualsensectl_bin, "-d", dev, "microphone-led", "off"],
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL
             )
