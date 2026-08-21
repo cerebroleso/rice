@@ -222,7 +222,8 @@ Run this command block to link your repository directly to `~/.config/` and fix 
 
 ```bash
 # 1. Scaffold directories
-mkdir -p ~/.config ~/.local/bin ~/.local/state/noctalia ~/.config/"Antigravity IDE"/User ~/.config/"Code - OSS"/User
+mkdir -p ~/.config ~/.local/bin ~/.local/state/noctalia \
+         ~/.config/"Antigravity IDE"/User ~/.config/"Code - OSS"/User ~/.config/"Code"/User
 
 # 2. Symlink configuration folders (Strategy 2 Live Editable Symlinks)
 for folder in niri noctalia kitty gtk-3.0 gtk-4.0 qt5ct qt6ct micro; do
@@ -235,21 +236,25 @@ rm -f ~/.zshrc ~/.p10k.zsh
 ln -snf ~/dotfiles/.zshrc ~/.zshrc
 ln -snf ~/dotfiles/.p10k.zsh ~/.p10k.zsh
 
-rm -f ~/.local/state/noctalia/settings.toml
+rm -f ~/.local/state/noctalia/settings.toml ~/.config/mimeapps.list
 ln -snf ~/dotfiles/.config/noctalia/settings.toml ~/.local/state/noctalia/settings.toml
+ln -snf ~/dotfiles/.config/mimeapps.list ~/.config/mimeapps.list
 
-rm -f ~/.config/"Antigravity IDE"/User/settings.json ~/.config/"Code - OSS"/User/settings.json
-ln -snf ~/dotfiles/.config/"Antigravity IDE"/User/settings.json ~/.config/"Antigravity IDE"/User/settings.json
-ln -snf ~/dotfiles/.config/"Code - OSS"/User/settings.json ~/.config/"Code - OSS"/User/settings.json
-ln -snf ~/dotfiles/.config/"Antigravity IDE"/User/keybindings.json ~/.config/"Antigravity IDE"/User/keybindings.json
-ln -snf ~/dotfiles/.config/"Code - OSS"/User/keybindings.json ~/.config/"Code - OSS"/User/keybindings.json
+# 4. Symlink IDE settings & keybindings
+for ide in "Antigravity IDE" "Code - OSS" "Code"; do
+    mkdir -p ~/.config/"$ide"/User
+    [ -f ~/dotfiles/.config/"$ide"/User/settings.json ] && ln -snf ~/dotfiles/.config/"$ide"/User/settings.json ~/.config/"$ide"/User/settings.json
+    [ -f ~/dotfiles/.config/"$ide"/User/keybindings.json ] && ln -snf ~/dotfiles/.config/"$ide"/User/keybindings.json ~/.config/"$ide"/User/keybindings.json
+done
 ```
 
 ---
 
-### Step 3: Build & Install Noctalia Desktop Shell
+### Step 3: Noctalia Desktop Shell
 
-Build **Noctalia** from source Flake and link it to your local binary path:
+*(Note: When deploying via `./install.sh` or Flakes, Noctalia is automatically built and installed directly by Nix).*
+
+To manually build Noctalia from source Flake if needed:
 
 ```bash
 # Compile Noctalia via Nix Flake
