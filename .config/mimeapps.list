@@ -1,0 +1,6 @@
+[Default Applications]
+text/plain=code.desktop
+inode/directory=org.kde.dolphin.desktop
+
+[Added Associations]
+text/plain=code.desktop;

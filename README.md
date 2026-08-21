@@ -147,6 +147,11 @@ The script will interactively:
   programs.steam.enable = true;
   programs.virt-manager.enable = true;
 
+  programs.nix-ld.enable = true;
+  programs.nix-ld.libraries = with pkgs; [
+    stdenv.cc.cc.lib zlib glibc glib openssl libxcb libX11 libXext libXrender libXrandr libXinerama libXcursor libXi libXfixes tcl tk libGL libglvnd freetype fontconfig
+  ];
+
   # Tuxedo Hardware & Control Center Module (tailord daemon & tailor-gui)
   hardware.tuxedo-rs = {
     enable = true;
@@ -195,7 +200,7 @@ The script will interactively:
   # System Packages
   environment.systemPackages = with pkgs; [
     niri nirimon nirius kitty waybar nwg-look satty grim slurp swayosd playerctl brightnessctl cliphist
-    wl-clipboard libnotify udiskie ntfs3g exfat exfatprogs qt5ct qt6ct firefox chromium discord qbittorrent motrix zathura kdePackages.ark
+    wl-clipboard libnotify udiskie ntfs3g exfat exfatprogs qt5ct qt6ct firefox chromium discord qbittorrent motrix zathura kdePackages.ark unar unrar
     kdePackages.gwenview meld qdirstat gparted kdePackages.dolphin kdePackages.kio-extras kdePackages.ffmpegthumbs kdePackages.breeze kdePackages.qqc2-desktop-style rose-pine-cursor xhost pavucontrol
     dbeaver-bin tailscale nmap lshw pciutils usbutils vscode antigravity-ide zed-editor micro
     git zsh zsh-powerlevel10k zsh-autosuggestions zsh-syntax-highlighting python3

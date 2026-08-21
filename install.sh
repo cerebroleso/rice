@@ -135,8 +135,9 @@ done
 try_symlink "$DOTFILES_DIR/.zshrc" "$HOME/.zshrc" "~/.zshrc"
 try_symlink "$DOTFILES_DIR/.p10k.zsh" "$HOME/.p10k.zsh" "~/.p10k.zsh"
 
-# Noctalia state
+# Noctalia state & Default MIME Associations
 try_symlink "$DOTFILES_DIR/.config/noctalia/settings.toml" "$HOME/.local/state/noctalia/settings.toml" "~/.local/state/noctalia/settings.toml"
+try_symlink "$DOTFILES_DIR/.config/mimeapps.list" "$HOME/.config/mimeapps.list" "~/.config/mimeapps.list"
 
 # IDE settings and keybindings
 for ide in "Antigravity IDE" "Code - OSS" "Code"; do

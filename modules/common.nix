@@ -227,6 +227,21 @@ in
     glibc
     glib
     openssl
+    libxcb
+    libX11
+    libXext
+    libXrender
+    libXrandr
+    libXinerama
+    libXcursor
+    libXi
+    libXfixes
+    tcl
+    tk
+    libGL
+    libglvnd
+    freetype
+    fontconfig
   ];
 
   services.tailscale.enable = true;
@@ -338,6 +353,7 @@ in
     exfat
     exfatprogs
     tree
+    file
     libsForQt5.qt5ct
     qt6Packages.qt6ct
     firefox
@@ -348,6 +364,7 @@ in
     zathura
     kdePackages.ark
     unar
+    unrar
     kdePackages.gwenview
     meld
     qdirstat
