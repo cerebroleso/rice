@@ -76,9 +76,11 @@ layout {
     }
 
     focus-ring {
-        width 2
-        inactive-color "#505050"
-        active-gradient from="#6ea1f2" to="#89b4fa" angle=45
+        off
+    }
+
+    border {
+        off
     }
 
     struts {
@@ -357,7 +359,6 @@ include "dms/cursor.kdl"
 include "dms/outputs.kdl"
 include "window_rules.kdl"
 
-include "noctalia.kdl"
 
 gestures {
     hot-corners {
