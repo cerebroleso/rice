@@ -21,12 +21,17 @@ let
     fi
   '';
 
-  # Background daemon: enforces bow 1 7 5 8 triggers, max vibration, and suppresses Lightbar/Player LEDs (leaves mic LED alone)
+  # Background daemon: enforces bow 1 7 5 8 triggers, suppresses Lightbar/Player LEDs, and monitors PS + Options hotkey to power-off
   dualsenseDaemon = pkgs.writeShellScriptBin "dualsense-daemon" ''
     exec ${pkgs.python3}/bin/python3 - << 'EOF'
-import subprocess
-import time
+import os
+import re
+import select
 import signal
+import struct
+import subprocess
+import threading
+import time
 
 running = True
 
@@ -40,6 +45,75 @@ signal.signal(signal.SIGINT, stop)
 signal.signal(signal.SIGTERM, stop)
 
 dualsensectl_bin = "${pkgs.dualsensectl}/bin/dualsensectl"
+
+
+def get_dualsense_event():
+    try:
+        with open('/proc/bus/input/devices', 'r') as f:
+            text = f.read()
+        entries = re.split(r'\n(?=I: )', text)
+        for entry in entries:
+            if 'Name="DualSense Wireless Controller"' in entry and not 'Motion' in entry and not 'Touchpad' in entry:
+                match = re.search(r'event\d+', entry)
+                if match:
+                    return f"/dev/input/{match.group(0)}"
+    except Exception:
+        pass
+    return None
+
+
+def hotkey_monitor():
+    EVENT_FORMAT = 'llHHi'
+    EVENT_SIZE = struct.calcsize(EVENT_FORMAT)
+    EV_KEY = 1
+    BTN_START = 315  # Options button
+    BTN_MODE = 316   # PS button
+
+    while running:
+        dev_path = get_dualsense_event()
+        if not dev_path or not os.path.exists(dev_path):
+            time.sleep(1.0)
+            continue
+
+        try:
+            fd = os.open(dev_path, os.O_RDONLY | os.O_NONBLOCK)
+            ps_pressed = False
+            options_pressed = False
+
+            while running:
+                r, _, _ = select.select([fd], [], [], 1.0)
+                if fd in r:
+                    try:
+                        data = os.read(fd, EVENT_SIZE * 16)
+                    except OSError:
+                        break
+                    if not data:
+                        break
+                    for i in range(0, len(data), EVENT_SIZE):
+                        chunk = data[i:i+EVENT_SIZE]
+                        if len(chunk) < EVENT_SIZE:
+                            continue
+                        sec, usec, ev_type, code, value = struct.unpack(EVENT_FORMAT, chunk)
+                        if ev_type == EV_KEY:
+                            if code == BTN_MODE:
+                                ps_pressed = (value == 1 or value == 2)
+                            elif code == BTN_START:
+                                options_pressed = (value == 1 or value == 2)
+
+                            if ps_pressed and options_pressed:
+                                subprocess.run([dualsensectl_bin, "power-off"])
+                                time.sleep(2.0)
+                                ps_pressed = False
+                                options_pressed = False
+                else:
+                    if not os.path.exists(dev_path):
+                        break
+            os.close(fd)
+        except Exception:
+            time.sleep(1.0)
+
+
+threading.Thread(target=hotkey_monitor, daemon=True).start()
 
 
 def get_devices():

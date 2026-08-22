@@ -346,3 +346,6 @@ noctalia msg settings-open
 
 ### B. Keyboard RGB Backlight does not sync with wallpaper?
 Ensure `tuxedo` and `hardware.tuxedo-drivers.enable = true;` are present in `/etc/nixos/configuration.nix`. The script `colors_changed.sh` automatically updates Tuxedo LED colors via D-Bus (`com.tuxedocomputers.tccd`).
+
+### C. DualSense Wireless Power-Off Hotkey
+Press **`PS Button + Options Button`** simultaneously on the DualSense controller to instantly disconnect and power it off into sleep mode.
